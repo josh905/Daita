@@ -1,5 +1,6 @@
 package daita.daita;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
+
+    public Button findBtn, chooseBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,22 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "This button views the map", Snackbar.LENGTH_LONG)
                         .setAction("Map view action", null).show();
+            }
+        });
+
+        findLoc();
+
+    }
+
+    public void findLoc(){
+        findBtn = (Button)findViewById(R.id.findBtn);
+        findBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                Intent findLocIntent = new Intent(MainActivity.this,MapsActivityFind.class);
+
+                startActivity(findLocIntent);
             }
         });
     }
