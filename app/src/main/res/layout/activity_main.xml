@@ -27,4 +27,49 @@
         app:srcCompat="@drawable/house_transp"
         android:id="@+id/imageView2" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="Choose a Location"
+            android:layout_width="290dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="80dp"
+            android:id="@+id/chooseBtn"
+            android:textSize="15sp"
+            android:background="@color/colorAccent"
+            android:layout_alignTop="@+id/findBtn"
+            android:layout_alignRight="@+id/sloganTF"
+            android:layout_alignEnd="@+id/sloganTF" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="Information by Location"
+            android:editable="false"
+            android:ems="10"
+            android:id="@+id/sloganTF"
+            android:textStyle="normal|italic"
+            android:textAlignment="center"
+            android:fontFamily="cursive"
+            android:textSize="24sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:text="Find my Location"
+            android:layout_width="290dp"
+            android:layout_height="56dp"
+            android:id="@+id/findBtn"
+            android:background="@color/colorPrimary"
+            android:textSize="15sp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/sloganTF"
+            android:layout_alignRight="@+id/sloganTF"
+            android:layout_alignEnd="@+id/sloganTF" />
+
+    </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>
