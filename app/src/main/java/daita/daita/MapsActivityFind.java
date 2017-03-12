@@ -14,6 +14,29 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
     private GoogleMap mMap;
 
+    //create instance of interface for MainActivity class
+    //mint for main interface
+    MainInterface mint = new MainActivity();
+
+    //then check is fab clicked
+
+    private void checkWhichClicked(){
+        if(mint.isMainFabClicked()){
+            //call in methods to display the map
+        }
+        else if(mint.isFindBtnClicked()){
+            //call in method to find location and zoom to it
+        }
+        else {
+            //call in error handler
+        }
+    }
+
+    //public void onBackPressed(){
+        //mint.unsetMainFabClicked();
+       // mint.unsetFindBtnClicked();
+   // }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +45,9 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        checkWhichClicked();
+
     }
 
 

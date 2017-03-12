@@ -39,7 +39,11 @@
 
         <activity
             android:name=".MapsActivityFind"
-            android:label="@string/title_activity_maps_find"></activity>
+            android:label="@string/title_activity_maps_find" />
+        <activity
+            android:name=".ActivityIreland"
+            android:label="@string/title_activity_ireland"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

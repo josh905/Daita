@@ -3,16 +3,34 @@ package daita.daita;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainInterface{
 
     public Button findBtn, chooseBtn;
+    private boolean fabClicked, findBtnClicked;
+
+    public boolean isMainFabClicked(){
+        return fabClicked;
+    }
+
+    public boolean unsetMainFabClicked(){
+        return fabClicked = false;
+    }
+
+    public boolean isFindBtnClicked(){
+        return findBtnClicked;
+    }
+
+    public boolean unsetFindBtnClicked(){
+        return findBtnClicked = false;
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +47,21 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "This button views the map", Snackbar.LENGTH_LONG)
-                        .setAction("Map view action", null).show();
+                //Snackbar.make(view, "This button views the map", Snackbar.LENGTH_LONG)
+                       // .setAction("Map view action", null).show();
+
+                //set this so we know to go to location or not
+                fabClicked = true;
+
+                    Intent findLocIntent = new Intent(MainActivity.this,MapsActivityFind.class);
+                    startActivity(findLocIntent);
+
             }
         });
 
         findLoc();
+        chooseLoc();
+
 
     }
 
@@ -50,6 +77,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+    public void chooseLoc(){
+        chooseBtn = (Button)findViewById(R.id.chooseBtn);
+        chooseBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                Intent chooseLocIntent = new Intent(MainActivity.this,ActivityIreland.class);
+
+                startActivity(chooseLocIntent);
+            }
+        });
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
