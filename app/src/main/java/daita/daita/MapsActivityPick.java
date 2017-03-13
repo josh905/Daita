@@ -7,7 +7,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -33,7 +32,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
         mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Marker in Cork"));
 
-        Marker dublinMarker = mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("dublin"));
+        mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("dublin"));
 
 
 
@@ -43,8 +42,14 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
     public void dublinChosen(){
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.dubLoc(), 10.8f));
-        mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Marker in Fingal"));
-        mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Marker in South Dublin"));
+        mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("fingal"));
+        mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("Marker in South Dublin"));
+        mMap.addMarker(new MarkerOptions().position(hand.dubWestLoc()).title("Marker in West Dublin"));
+    }
+
+    public void fingalChosen(){
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.fingalLoc(), 16.8f));
+
     }
 
 
@@ -74,6 +79,9 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
               //  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.midLoc(), 0.8f));
                 if(marker.getTitle().equals("dublin")){
                     dublinChosen();
+                }
+                else if(marker.getTitle().equals("fingal")){
+                    fingalChosen();
                 }
                 return true; //was false by default
             }
