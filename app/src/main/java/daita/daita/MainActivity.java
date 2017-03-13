@@ -65,6 +65,14 @@ public class MainActivity extends AppCompatActivity implements MainInterface{
 
     }
 
+    public void pullJSON(){
+        findLoc();
+        String grabbed = "";
+        if (grabbed.isEmpty()){
+            boolean notGrab = true;
+        }
+    }
+
     public void findLoc(){
         findBtn = (Button)findViewById(R.id.findBtn);
         findBtn.setOnClickListener(new View.OnClickListener(){
