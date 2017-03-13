@@ -43,7 +43,10 @@
         <activity
             android:name=".ActivityIreland"
             android:label="@string/title_activity_ireland"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MapsActivityPick"
+            android:label="@string/title_activity_maps_pick"></activity>
     </application>
 
 </manifest>

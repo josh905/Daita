@@ -1,5 +1,8 @@
 package daita.daita;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -17,35 +20,28 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
     //create instance of interface for MainActivity class
     //mint for main interface
-    MainInterface mint = new MainActivity();
+
 
     //then check is fab clicked
 
 
+    public LatLng nciLoc() {
+        LatLng coord = new LatLng(53.3488234, -6.2432309);
+        return coord;
+    }
 
-    public LatLng getNCI(){
-       LatLng coord = new LatLng(53.3488234,-6.2432309);
+    public LatLng randomLoc(){
+        LatLng coord = new LatLng(22.3488234, -17.2432309);
         return coord;
     }
 
 
 
-    private void checkWhichClicked(){
-        if(mint.isMainFabClicked()){
-            //call in methods to display the map
-        }
-        else if(mint.isFindBtnClicked()){
-            //call in method to find location and zoom to it
-        }
-        else {
-            //call in error handler
-        }
-    }
 
     //public void onBackPressed(){
-        //mint.unsetMainFabClicked();
-       // mint.unsetFindBtnClicked();
-   // }
+    //mint.unsetMainFabClicked();
+    // mint.unsetFindBtnClicked();
+    // }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +58,20 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     }
 
 
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
 
-
-        mMap.addMarker(new MarkerOptions().position(getNCI()).title("Welcome to Daita"));
+        mMap.addMarker(new MarkerOptions().position(nciLoc()).title("Welcome to Daita"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(dublin));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.getNCI(), 16.5f));
+
+
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.randomLoc(), 16.5f));
+
+
+
+
+
     }
 }

@@ -12,6 +12,9 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity implements MainInterface{
 
     public Button findBtn, chooseBtn;
+
+
+    /*
     private boolean fabClicked, findBtnClicked;
 
     public boolean isMainFabClicked(){
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements MainInterface{
     public boolean unsetFindBtnClicked(){
         return findBtnClicked = false;
     }
+    */
+
 
 
 
@@ -51,10 +56,11 @@ public class MainActivity extends AppCompatActivity implements MainInterface{
                        // .setAction("Map view action", null).show();
 
                 //set this so we know to go to location or not
-                fabClicked = true;
 
-                    Intent findLocIntent = new Intent(MainActivity.this,MapsActivityFind.class);
-                    startActivity(findLocIntent);
+
+
+                    Intent pickLocIntent = new Intent(MainActivity.this,MapsActivityPick.class);
+                    startActivity(pickLocIntent);
 
             }
         });
@@ -72,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface{
             @Override
             public void onClick(View v) {
 
+
                 Intent findLocIntent = new Intent(MainActivity.this,MapsActivityFind.class);
 
                 startActivity(findLocIntent);
@@ -87,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface{
             @Override
             public void onClick(View v) {
 
-                Intent chooseLocIntent = new Intent(MainActivity.this,ActivityIreland.class);
+                Intent chooseLocIntent = new Intent(MainActivity.this,MapsActivityPick.class);
 
                 startActivity(chooseLocIntent);
             }
