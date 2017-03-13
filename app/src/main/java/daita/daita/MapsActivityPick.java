@@ -25,13 +25,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
     }
 
-
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
+    public void addMarkers(){
         mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Marker in Galway"));
 
         mMap.addMarker(new MarkerOptions().position(hand.limerickLoc()).title("Marker in Limerick"));
@@ -39,8 +33,16 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Marker in Cork"));
 
         mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("Marker in Dublin"));
+    }
 
 
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        this.addMarkers();
 
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.midLoc(), 6.8f));

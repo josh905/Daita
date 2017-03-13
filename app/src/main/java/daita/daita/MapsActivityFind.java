@@ -18,6 +18,8 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private int test1 = 0;
 
+    MapHandler hand = new MapHandler();
+
     //create instance of interface for MainActivity class
     //mint for main interface
 
@@ -25,15 +27,7 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     //then check is fab clicked
 
 
-    public LatLng nciLoc() {
-        LatLng coord = new LatLng(53.3488234, -6.2432309);
-        return coord;
-    }
 
-    public LatLng randomLoc(){
-        LatLng coord = new LatLng(22.3488234, -17.2432309);
-        return coord;
-    }
 
 
 
@@ -63,11 +57,11 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
         mMap = googleMap;
 
 
-        mMap.addMarker(new MarkerOptions().position(nciLoc()).title("Welcome to Daita"));
+        mMap.addMarker(new MarkerOptions().position(hand.nciLoc()).title("Welcome to Daita"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(dublin));
 
 
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.randomLoc(), 16.5f));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.nciLoc(), 16.5f));
 
 
 

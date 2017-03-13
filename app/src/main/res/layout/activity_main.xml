@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="daita.daita.MainActivity"
-    android:background="@drawable/low_opac_back">
+    android:background="@drawable/greyback">
 
     <include layout="@layout/content_main" />
 

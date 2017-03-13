@@ -14,6 +14,10 @@ public class MapHandler {
         return new LatLng(53.390474, -7.797227);
     }
 
+    public LatLng nciLoc(){
+        return new LatLng(53.348828, -6.243171);
+    }
+
 
 
     public LatLng galwayLoc(){

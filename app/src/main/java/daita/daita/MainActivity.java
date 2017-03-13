@@ -3,6 +3,7 @@ package daita.daita;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
@@ -52,15 +53,15 @@ public class MainActivity extends AppCompatActivity implements MainInterface{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "This button views the map", Snackbar.LENGTH_LONG)
-                       // .setAction("Map view action", null).show();
-
-                //set this so we know to go to location or not
+                Snackbar.make(view, "More features coming soon", Snackbar.LENGTH_LONG)
+                       .setAction("Upgrade to premium for access to additional features", null).show();
 
 
-
-                    Intent pickLocIntent = new Intent(MainActivity.this,MapsActivityPick.class);
+                /*
+                    Intent pickLocIntent = new Intent(MainActivity.this,ActivityIreland.class);
                     startActivity(pickLocIntent);
+
+                    */
 
             }
         });
