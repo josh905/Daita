@@ -1,6 +1,8 @@
 package daita.daita;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created on 13/03/2017.
@@ -35,5 +37,14 @@ public class MapHandler {
     public LatLng dubLoc(){
         return new LatLng(53.347334, -6.258972);
     }
+
+    public LatLng fingalLoc(){
+        return new LatLng(53.458369, -6.220434);
+    }
+
+    public LatLng dubSouthLoc(){
+        return new LatLng(53.284904, -6.240142);
+    }
+
 
 }

@@ -8,6 +8,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivityPick extends FragmentActivity implements OnMapReadyCallback {
@@ -32,8 +33,28 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
         mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Marker in Cork"));
 
-        mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("Marker in Dublin"));
+        Marker dublinMarker = mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("dublin"));
+
+
+
+
     }
+
+
+    public void dublinChosen(){
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.dubLoc(), 10.8f));
+        mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Marker in Fingal"));
+        mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Marker in South Dublin"));
+    }
+
+
+
+
+    public void handleClicks(){
+
+    }
+
+
 
 
 
@@ -46,6 +67,21 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.midLoc(), 6.8f));
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+              //  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.midLoc(), 0.8f));
+                if(marker.getTitle().equals("dublin")){
+                    dublinChosen();
+                }
+                return true; //was false by default
+            }
+        });
+
+
+        handleClicks();
+
 
     }
 }

@@ -31,18 +31,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:text="Choose a Location"
-            android:layout_width="290dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="80dp"
-            android:id="@+id/chooseBtn"
-            android:textSize="15sp"
-            android:background="@color/colorAccent"
-            android:layout_alignTop="@+id/findBtn"
-            android:layout_alignRight="@+id/sloganTF"
-            android:layout_alignEnd="@+id/sloganTF" />
-
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,16 +47,30 @@
             android:layout_centerHorizontal="true" />
 
         <Button
+            android:text="Choose a Location"
+            android:layout_width="290dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:id="@+id/chooseBtn"
+            android:textSize="15sp"
+            android:background="@color/greenie"
+            android:textColor="@color/colorPrimary"
+            android:layout_below="@+id/findBtn"
+            android:layout_alignLeft="@+id/findBtn"
+            android:layout_alignStart="@+id/findBtn" />
+
+        <Button
             android:text="Find my Location"
             android:layout_width="290dp"
             android:layout_height="56dp"
             android:id="@+id/findBtn"
-            android:background="@color/colorPrimary"
+            android:background="@color/darkishBlue"
             android:textSize="15sp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="11dp"
             android:layout_below="@+id/sloganTF"
             android:layout_alignRight="@+id/sloganTF"
-            android:layout_alignEnd="@+id/sloganTF" />
+            android:layout_alignEnd="@+id/sloganTF"
+            android:textColor="@color/common_google_signin_btn_text_dark_pressed" />
 
     </RelativeLayout>
 
