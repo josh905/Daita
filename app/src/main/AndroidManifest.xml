@@ -52,7 +52,7 @@
             android:label="@string/title_activity_display_data"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FingalActivity"
+            android:name=".Fingal.FingalActivity"
             android:label="@string/title_activity_fingal"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
