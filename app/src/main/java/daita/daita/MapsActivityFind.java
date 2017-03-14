@@ -18,13 +18,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivityFind extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private int test1 = 0;
+    private int test12 = 0;
 
 
     MapHandler hand = new MapHandler();
 
     public boolean grabLocation(){
-        if (test1 == 2){
+        if (test12 == 2){
             if(mMap.isMyLocationEnabled()){
                 mMap.setOnMarkerClickListener(null);
 
