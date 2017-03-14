@@ -16,13 +16,6 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
     MapHandler hand = new MapHandler();
 
-    private String locationChosen = "none";
-
-    PlaceHandler place = new PlaceHandler();
-
-    MainInterface mint;
-
-
 
 
     @Override
@@ -36,13 +29,17 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
     public void addMarkers(){
-        mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("galway"));
+        Marker galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Galway"));
 
-        mMap.addMarker(new MarkerOptions().position(hand.limerickLoc()).title("limerick"));
 
-        mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("cork"));
+        Marker limerick = mMap.addMarker(new MarkerOptions().position(hand.limerickLoc()).title("Limerick"));
 
-        mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("dublin"));
+
+        Marker cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Cork"));
+
+
+        Marker dublin = mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("Dublin"));
+
 
 
 
@@ -53,21 +50,34 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     public void dublinChosen(){
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.dubLoc(), 10.8f));
-        mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("fingal"));
-        mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("dubsouth"));
-        mMap.addMarker(new MarkerOptions().position(hand.dubWestLoc()).title("dubwest"));
-        mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("dubcity"));
+
+        Marker fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Fingal"));
+
+
+        Marker dubsouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("Dublin South"));
+
+
+        Marker dubwest = mMap.addMarker(new MarkerOptions().position(hand.dubWestLoc()).title("Dublin West"));
+
+
+        Marker dubcen = mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("Dublin Central"));
+
+
     }
 
     public void fingalChosen(){
-        locationChosen = "fingal";
-        place.setLocationChosen(locationChosen);
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.fingalLoc(), 16.8f));
 
-        Intent fingalIntent = new Intent(MapsActivityPick.this,DisplayDataActivity.class);
+
+
+
+        Intent fingalIntent = new Intent(MapsActivityPick.this,FingalActivity.class);
 
         startActivity(fingalIntent);
+    }
+
+    public void galwayChosen(){
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.galwayLoc(), 10.8f));
     }
 
 
@@ -86,14 +96,22 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.midLoc(), 0.8f));
-                if(marker.getTitle().equals("dublin")){
+                if(marker.getTitle().equals("Dublin")){
                     dublinChosen();
+                    return true;
                 }
-                else if(marker.getTitle().equals("fingal")){
+                if(marker.getTitle().equals("Fingal")){
                     fingalChosen();
+                    return true;
                 }
-                return true; //was false by default
+                if(marker.getTitle().equals("Galway")){
+                    galwayChosen();
+                    return true;
+                }
+                return false; //was false by default
             }
+
+
         });
 
 
