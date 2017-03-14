@@ -20,6 +20,20 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
     MapHandler hand = new MapHandler();
 
+    public boolean grabLocation(){
+        if(mMap.isMyLocationEnabled()){
+            mMap.setOnMarkerClickListener(null);
+
+        }
+        else if(!(mMap.isMyLocationEnabled())){
+            mMap.setMapType(0);
+        }
+        else{
+            return false;
+        }
+        return true;
+    }
+
     //create instance of interface for MainActivity class
     //mint for main interface
 
