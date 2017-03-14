@@ -42,7 +42,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
     public void dublinChosen(){
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.dubLoc(), 10.8f));
-        mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("fingal"));
+        mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("fingal").snippet("Finglas yeah"));
         mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("Marker in South Dublin"));
         mMap.addMarker(new MarkerOptions().position(hand.dubWestLoc()).title("Marker in West Dublin"));
     }
