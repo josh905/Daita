@@ -20,6 +20,8 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
     PlaceHandler place = new PlaceHandler();
 
+    MainInterface mint;
+
 
 
 
