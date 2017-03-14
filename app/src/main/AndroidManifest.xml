@@ -46,7 +46,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MapsActivityPick"
-            android:label="@string/title_activity_maps_pick"></activity>
+            android:label="@string/title_activity_maps_pick" />
+        <activity
+            android:name=".DisplayDataActivity"
+            android:label="@string/title_activity_display_data"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

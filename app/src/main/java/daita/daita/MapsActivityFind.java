@@ -8,9 +8,11 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivityFind extends FragmentActivity implements OnMapReadyCallback {
@@ -18,7 +20,27 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private int test1 = 0;
 
+
     MapHandler hand = new MapHandler();
+
+    public boolean grabLocation(){
+        if (test1 == 2){
+            if(mMap.isMyLocationEnabled()){
+                mMap.setOnMarkerClickListener(null);
+
+            }
+            else if(!(mMap.isMyLocationEnabled())){
+                mMap.setMapType(0);
+            }
+            else{
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
 
     //create instance of interface for MainActivity class
     //mint for main interface
