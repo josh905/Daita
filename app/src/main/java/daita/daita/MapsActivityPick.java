@@ -1,5 +1,6 @@
 package daita.daita;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -10,16 +11,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivityPick extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivityPick extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
     MapHandler hand = new MapHandler();
 
-    private String locPicked = "none"; //location picked
+    private String locationChosen = "none";
 
-   // public MapsActivityPick(String locPicked){
-    //    this.locPicked = locPicked;
-    //}
+    PlaceHandler place = new PlaceHandler();
+
 
 
 
@@ -58,18 +58,15 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
     public void fingalChosen(){
-        locPicked = "fingal";
+        locationChosen = "fingal";
+        place.setLocationChosen(locationChosen);
+
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.fingalLoc(), 16.8f));
 
+        Intent fingalIntent = new Intent(MapsActivityPick.this,DisplayDataActivity.class);
+
+        startActivity(fingalIntent);
     }
-
-
-
-
-    public void handleClicks(){
-
-    }
-
 
 
 
@@ -97,7 +94,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
             }
         });
 
-        this.handleClicks();
+
 
 
     }

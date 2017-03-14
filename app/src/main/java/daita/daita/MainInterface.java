@@ -14,6 +14,6 @@ public interface MainInterface {
     boolean unsetFindBtnClicked();
 */
 
-    String locPicked(String locPicked);
+
 
 }

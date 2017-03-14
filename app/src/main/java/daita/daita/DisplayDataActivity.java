@@ -8,9 +8,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 public class DisplayDataActivity extends AppCompatActivity {
-    private String locPicked;
 
-    //MapsActivityPick pick = new MapsActivityPick(locPicked);
+
+
+
+    PlaceHandler place = new PlaceHandler();
+    private String locationChosen = place.getLocationChosen();
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +31,13 @@ public class DisplayDataActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(locPicked.equals("fingal")){
+
+
+                if(locationChosen.equals("fingal")){
                     Snackbar.make(view, "fingal", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
-                else if(locPicked.equals("none")){
+                else if(locationChosen.equals("none")){
                     Snackbar.make(view, "none", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
