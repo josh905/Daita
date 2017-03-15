@@ -35,6 +35,8 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
     MapHandler hand = new MapHandler();
 
+    private int sourceDecoder = -1;
+
 
 
 
