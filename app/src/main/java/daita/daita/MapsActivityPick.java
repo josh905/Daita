@@ -33,28 +33,28 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
     private void dubCenGO(){
-        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
         startActivity(i);
     }
 
     private void galwayGO(){
-        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
         startActivity(i);
     }
 
     private void dubSouthGO(){
-        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
         startActivity(i);
     }
 
     private void dubWestGO(){
-        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
         startActivity(i);
     }
 
 
     private void corkGO(){
-        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
         startActivity(i);
     }
 

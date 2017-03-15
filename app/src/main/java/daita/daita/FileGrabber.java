@@ -23,7 +23,8 @@ import daita.daita.R;
 public class FileGrabber extends ArrayAdapter<FileSender>{
 
     private Context con;
-    private FileSender ob;
+    private FileSender fs;
+    private FileChoice fc = new FileChoice();
 
 
     public FileGrabber(Context con, int res){
@@ -38,9 +39,9 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
 
 
     private void parse(){
-        int qaz = R.raw.fingal_population;
+
         try{
-            InputStream input = con.getResources().openRawResource(qaz);
+            InputStream input = con.getResources().openRawResource(fc.getFileChoice());
             BufferedReader buff = new BufferedReader(new InputStreamReader(input));
             String row;
 
@@ -49,8 +50,8 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
                 String[] array = row.split(",");
 
 
-                ob = new FileSender(array);
-                this.add(ob);
+                fs = new FileSender(array);
+                this.add(fs);
 
             }
 

@@ -35,7 +35,14 @@ public class FingalActivity extends AppCompatActivity{
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                //add for or while loop in this front end not back end
+
+
                 Toast.makeText(view.getContext(),adapter.getItem(position).getC1981(),Toast.LENGTH_SHORT).show();
+
+
+
             }
         });
 

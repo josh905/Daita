@@ -14,8 +14,8 @@ public interface MainInterface {
     boolean unsetFindBtnClicked();
 */
 
-    public void setFile(int file);
-    public int getFile();
+    //public void setFile(int file);
+    //public int getFile();
 
 
 

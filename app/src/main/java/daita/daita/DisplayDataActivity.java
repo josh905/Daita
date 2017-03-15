@@ -20,32 +20,36 @@ public class DisplayDataActivity extends AppCompatActivity{
 
     private ListView theLV;
     private FileGrabber adapter;
+    private FileChoice fc = new FileChoice();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_data);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                    Snackbar.make(view, "More features coming soon", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-
-                displayData();
 
 
-            }
-        });
+
+        //displayData();
+        if(fc.getFileChoice()==R.raw.crime_rates){
+            Toast bread = Toast.makeText(getApplicationContext(), "yes", Toast.LENGTH_LONG);
+            bread.show();
+        }
+        else{
+            Toast bread = Toast.makeText(getApplicationContext(), "no", Toast.LENGTH_LONG);
+            bread.show();
+        }
+
+
+
+
     }
 
-
+/*
     public void displayData(){
-        theLV = (ListView)findViewById(R.id.list);
+
+        theLV = (ListView)findViewById(R.id.theLV);
 
         adapter = new FileGrabber(this, 0); //zero is a dummy value which does nothing
 
@@ -54,6 +58,5 @@ public class DisplayDataActivity extends AppCompatActivity{
 
 
     }
-
-
+*/
 }

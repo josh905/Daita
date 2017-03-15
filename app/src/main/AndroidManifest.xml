@@ -59,6 +59,10 @@
         <activity
             android:name=".DublinCentralActivity"
             android:label="@string/title_activity_dublin_central"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".TheCatcherActivity"
+            android:label="@string/title_activity_the_catcher"
             android:theme="@style/AppTheme"></activity>
     </application>
 

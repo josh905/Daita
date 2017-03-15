@@ -39,6 +39,9 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     private LocationManager locman;
     private CameraPosition where;
     private Marker markLoc;
+    private Intent yourArea = null;
+
+
 
 
     MapHandler hand = new MapHandler();
@@ -63,9 +66,15 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
     }
 
-    public void handleLoc(){
-        markLoc = mMap.addMarker(new MarkerOptions().position(myLoc).title("You are here"));
+    public void detectClosest(){
+        if (yourArea!=null){
+            startActivity(yourArea);
+        }
+    }
 
+    public void handleLoc(){
+        markLoc = mMap.addMarker(new MarkerOptions().position(myLoc).title("Click this pin for stats on your area"));
+        markLoc.showInfoWindow();
     }
 
     public void goToLocation() {
@@ -88,6 +97,7 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
             myLoc = new LatLng(curLoc.getLatitude(),curLoc.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 13));
             this.where = new CameraPosition.Builder().target(myLoc).zoom(17).tilt(65).bearing(45).build();
+            yourArea = new Intent(MapsActivityFind.this, DublinCentralActivity.class);
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
             handleLoc();
         }
@@ -101,6 +111,24 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
         mMap = googleMap;
         goToLocation();
 
+
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                if(marker.getTitle().equals("Click this pin for stats on your area")){
+                    detectClosest();
+                    return true;
+                }
+
+                return false;
+
+
+            }
+
+
+        });
 
 
     }
