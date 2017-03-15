@@ -26,7 +26,7 @@ public class FingalActivity extends AppCompatActivity{
 
         ListView list = (ListView)findViewById(R.id.list);
 
-        adapter = new FingalPopulationReader(this, -1);
+        adapter = new FingalPopulationReader(this, 0); //zero is a dummy value which does nothing
 
         list.setAdapter(adapter);
 
