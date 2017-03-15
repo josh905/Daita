@@ -1,4 +1,6 @@
-package daita.daita.Fingal;
+package daita.daita;
+
+
 
 import android.content.Context;
 import android.view.View;
@@ -13,17 +15,18 @@ import java.io.InputStreamReader;
 
 import daita.daita.R;
 
+
 /**
- * Created on 14/03/2017.
+ * Created on 15/03/2017.
  */
 
-public class FingalPopulationReader extends ArrayAdapter<FingalPopulation>{
+public class FileGrabber extends ArrayAdapter<FileSender>{
 
     private Context con;
-    private FingalPopulation ob;
+    private FileSender ob;
 
 
-    public FingalPopulationReader(Context con, int res){
+    public FileGrabber(Context con, int res){
         super(con,res);
 
         this.con = con;
@@ -46,7 +49,7 @@ public class FingalPopulationReader extends ArrayAdapter<FingalPopulation>{
                 String[] array = row.split(",");
 
 
-                ob = new FingalPopulation(array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8]);
+                ob = new FileSender(array);
                 this.add(ob);
 
             }
@@ -68,13 +71,10 @@ public class FingalPopulationReader extends ArrayAdapter<FingalPopulation>{
             theView.setTextSize(28);
         }
 
-        theView.setText(getItem(pos).getPlace());
+        theView.setText(getItem(pos).getList().toString());
 
         return theView;
     }
-
-
-
 
 
 }

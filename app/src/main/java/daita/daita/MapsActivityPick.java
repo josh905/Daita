@@ -8,6 +8,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -17,7 +18,45 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
     private GoogleMap mMap;
     MapHandler hand = new MapHandler();
+    private CameraPosition where;
 
+    private Marker fingal, dubCen, dubWest, dubSouth, galway, cork;
+
+
+
+
+
+
+    private void fingalGO(){
+        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        startActivity(i);
+    }
+
+    private void dubCenGO(){
+        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        startActivity(i);
+    }
+
+    private void galwayGO(){
+        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        startActivity(i);
+    }
+
+    private void dubSouthGO(){
+        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        startActivity(i);
+    }
+
+    private void dubWestGO(){
+        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        startActivity(i);
+    }
+
+
+    private void corkGO(){
+        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        startActivity(i);
+    }
 
 
     @Override
@@ -28,19 +67,21 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
     public void addMarkers(){
-        Marker galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Galway"));
 
 
-        Marker limerick = mMap.addMarker(new MarkerOptions().position(hand.limerickLoc()).title("Limerick"));
+        galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Galway"));
 
 
-        Marker cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Cork"));
+
+        cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Cork"));
 
 
-        Marker dublin = mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("Dublin"));
+
+        dubCen = mMap.addMarker(new MarkerOptions().position(hand.dubCenLoc()).title("Dublin"));
 
 
 
@@ -49,38 +90,94 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
 
-    public void dublinChosen(){
+    public void dublinZoom(){
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.dubLoc(), 10.8f));
+        where = new CameraPosition.Builder().target(hand.dubCenLoc()).zoom(11).tilt(80).bearing(1).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
 
-        Marker fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Fingal"));
+        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.dubLoc(), 10.8f));
 
-
-        Marker dubsouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("Dublin South"));
-
-
-        Marker dubwest = mMap.addMarker(new MarkerOptions().position(hand.dubWestLoc()).title("Dublin West"));
+        fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Fingal"));
 
 
-        Marker dubcen = mMap.addMarker(new MarkerOptions().position(hand.dubLoc()).title("Dublin Central"));
+
+       dubSouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("Dublin South"));
 
 
+        dubWest = mMap.addMarker(new MarkerOptions().position(hand.dubWestLoc()).title("Dublin West"));
+
+
+
+        dubCen.setTitle("Dublin Central");
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+    public void dubCenChosen(){
+        where = new CameraPosition.Builder().target(hand.dubCenLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        dubCen.setTitle("Click this pin for Dublin Central stats");
+        dubCen.showInfoWindow();
     }
 
     public void fingalChosen(){
+        where = new CameraPosition.Builder().target(hand.fingalLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
 
+        fingal.setTitle("Click this pin for Fingal stats");
+        fingal.showInfoWindow();
+    }
 
+    public void dubWestChosen(){
+        where = new CameraPosition.Builder().target(hand.dubWestLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
 
+        dubWest.setTitle("Click this pin for Dublin West stats");
+        dubWest.showInfoWindow();
+    }
 
+    public void dubSouthChosen(){
+        where = new CameraPosition.Builder().target(hand.dubSouthLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
 
-        Intent fingalIntent = new Intent(MapsActivityPick.this,FingalActivity.class);
-
-        startActivity(fingalIntent);
+        dubSouth.setTitle("Click this pin for Dublin South stats");
+        dubSouth.showInfoWindow();
     }
 
     public void galwayChosen(){
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.galwayLoc(), 10.8f));
+        where = new CameraPosition.Builder().target(hand.galwayLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        galway.setTitle("Click this pin for Galway stats");
+        galway.showInfoWindow();
     }
+
+    public void corkChosen(){
+        where = new CameraPosition.Builder().target(hand.corkLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        cork.setTitle("Click this pin for Cork stats");
+        cork.showInfoWindow();
+    }
+
+
+
+
+
+
+
+
 
 
 
@@ -97,11 +194,14 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                //  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.midLoc(), 0.8f));
+
+
                 if(marker.getTitle().equals("Dublin")){
-                    dublinChosen();
+                    dublinZoom();
                     return true;
                 }
+
+
                 if(marker.getTitle().equals("Fingal")){
                     fingalChosen();
                     return true;
@@ -110,7 +210,55 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
                     galwayChosen();
                     return true;
                 }
-                return false; //was false by default
+                if(marker.getTitle().equals("Cork")){
+                    corkChosen();
+                    return true;
+                }
+                if(marker.getTitle().equals("Dublin Central")){
+                    dubCenChosen();
+                    return true;
+                }
+                if(marker.getTitle().equals("Dublin West")){
+                    dubWestChosen();
+                    return true;
+                }
+                if(marker.getTitle().equals("Dublin South")){
+                    dubSouthChosen();
+                    return true;
+                }
+
+
+
+                if(marker.getTitle().equals("Click this pin for Fingal stats")){
+                    fingalGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Dublin Central stats")){
+                    dubCenGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Dublin West stats")){
+                    dubWestGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Dublin South stats")){
+                    dubSouthGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Galway stats")){
+                    galwayGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Cork stats")){
+                    corkGO();
+                    return true;
+                }
+
+
+
+                return false; //must be false unless user clicks something
+
+
             }
 
 

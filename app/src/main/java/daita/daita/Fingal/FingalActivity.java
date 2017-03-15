@@ -15,6 +15,7 @@ import daita.daita.R;
 public class FingalActivity extends AppCompatActivity{
 
     private FingalPopulationReader adapter;
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class FingalActivity extends AppCompatActivity{
 
         //callPopulation();
 
-        ListView list = (ListView)findViewById(R.id.list);
+        list = (ListView)findViewById(R.id.list);
 
         adapter = new FingalPopulationReader(this, 0); //zero is a dummy value which does nothing
 

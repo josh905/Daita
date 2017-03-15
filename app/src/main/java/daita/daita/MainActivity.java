@@ -50,20 +50,20 @@ public class MainActivity extends AppCompatActivity{
         //toolbar is unnecessary
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "More features coming soon", Snackbar.LENGTH_LONG)
-                       .setAction("Upgrade to premium for access to additional features", null).show();
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "More features coming soon", Snackbar.LENGTH_LONG)
+                            .setAction("Upgrade to premium for access to additional features", null).show();
 
 
-                /*
-                    Intent pickLocIntent = new Intent(MainActivity.this,ActivityIreland.class);
-                    startActivity(pickLocIntent);
 
-                    */
+                    Intent irlIntent = new Intent(MainActivity.this,ActivityIreland.class);
+                    startActivity(irlIntent);
 
-            }
+
+
+                }
         });
 
         findLoc();

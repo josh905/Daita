@@ -6,25 +6,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import daita.daita.R;
-
-
-public class DisplayDataActivity extends AppCompatActivity{
-
-
-    MainInterface mint;
-
-    private ListView theLV;
-    private FileGrabber adapter;
+public class DublinCentralActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_data);
+        setContentView(R.layout.activity_dublin_central);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -32,28 +20,10 @@ public class DisplayDataActivity extends AppCompatActivity{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                    Snackbar.make(view, "More features coming soon", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-
-                displayData();
-
-
+                Snackbar.make(view, "More features coming soon", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
     }
-
-
-    public void displayData(){
-        theLV = (ListView)findViewById(R.id.list);
-
-        adapter = new FileGrabber(this, 0); //zero is a dummy value which does nothing
-
-        theLV.setAdapter(adapter);
-
-
-
-    }
-
 
 }
