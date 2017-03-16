@@ -34,23 +34,29 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
 
         parse();
 
-    }
+}
 
 
 
     private void parse(){
 
         try{
-            InputStream input = con.getResources().openRawResource(fc.getFileChoice());
+            InputStream input = con.getResources().openRawResource(R.raw.fingal_population);
             BufferedReader buff = new BufferedReader(new InputStreamReader(input));
             String row;
 
             while ((row = buff.readLine())!=null){
                 //make an array for this data
                 String[] array = row.split(",");
+                fs = new FileSender();
+                for (int i = 0; i<row.length();i++){ //or array.length ?
+                    fs.setVal(i,array[i]);
+                }
 
 
-                fs = new FileSender(array);
+
+
+
                 this.add(fs);
 
             }
@@ -65,16 +71,24 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
 
     //possibly re-do this into its own class ? (a generic version suited for all data)
     public View getView(final int pos, View convertView, final ViewGroup parent){
-        TextView theView = (TextView)convertView;
-
-        if(theView==null){
-            theView = new TextView(parent.getContext());
-            theView.setTextSize(28);
+        TextView theLV = (TextView)convertView;
+        //LV stands for list view
+        if(theLV==null){
+            theLV = new TextView(parent.getContext());
+            theLV.setTextSize(28);
         }
 
-        theView.setText(getItem(pos).getList().toString());
+        theLV.append(getItem(pos).getN1());
+        theLV.append("   ");
+        theLV.append(getItem(pos).getN2());
+        theLV.append("   ");
+        theLV.append(getItem(pos).getN3());
+        theLV.append("   ");
+        theLV.append(getItem(pos).getN4());
+        theLV.append("   ");
+        theLV.append(getItem(pos).getN5());
 
-        return theView;
+        return theLV;
     }
 
 

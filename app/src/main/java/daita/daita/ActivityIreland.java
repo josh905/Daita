@@ -29,7 +29,14 @@ public class ActivityIreland extends AppCompatActivity{
 
     }
 
-   
+    private void display(){
+        Intent i = new Intent(ActivityIreland.this,DisplayDataActivity.class);
+        startActivity(i);
+
+    }
+
+
+
 
     public void handleChoice(){
         crimeBtn = (Button)findViewById(R.id.crimeBtn);
@@ -37,17 +44,15 @@ public class ActivityIreland extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
-                choice = R.raw.crime_rates;
+                //choice = R.raw.crime_rates;
 
 
                 //this line passes the file choice into the FileChoice class
-                fc.setFileChoice(choice);
+                //fc.setFileChoice(choice);
 
 
 
-                crimeIntent = new Intent(ActivityIreland.this,DisplayDataActivity.class);
-
-                startActivity(crimeIntent);
+                display();
             }
         });
     }

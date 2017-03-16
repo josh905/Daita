@@ -31,22 +31,14 @@ public class DisplayDataActivity extends AppCompatActivity{
 
 
 
-        //displayData();
-        if(fc.getFileChoice()==R.raw.crime_rates){
-            Toast bread = Toast.makeText(getApplicationContext(), "yes", Toast.LENGTH_LONG);
-            bread.show();
-        }
-        else{
-            Toast bread = Toast.makeText(getApplicationContext(), "no", Toast.LENGTH_LONG);
-            bread.show();
-        }
+        displayData();
 
 
 
 
     }
 
-/*
+
     public void displayData(){
 
         theLV = (ListView)findViewById(R.id.theLV);
@@ -58,5 +50,5 @@ public class DisplayDataActivity extends AppCompatActivity{
 
 
     }
-*/
+
 }

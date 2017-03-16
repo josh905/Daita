@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import daita.daita.Fingal.FingalActivity;
+
 public class MainActivity extends AppCompatActivity{
 
     public Button findBtn, chooseBtn;
@@ -53,12 +55,9 @@ public class MainActivity extends AppCompatActivity{
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "More features coming soon", Snackbar.LENGTH_LONG)
-                            .setAction("Upgrade to premium for access to additional features", null).show();
 
 
-
-                    Intent irlIntent = new Intent(MainActivity.this,ActivityIreland.class);
+                    Intent irlIntent = new Intent(MainActivity.this,FingalActivity.class);
                     startActivity(irlIntent);
 
 

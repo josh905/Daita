@@ -1,30 +1,29 @@
 package daita.daita.Fingal;
 
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+    import android.content.Context;
+    import android.view.View;
+    import android.view.ViewGroup;
+    import android.widget.ArrayAdapter;
+    import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+    import java.io.BufferedReader;
+    import java.io.IOException;
+    import java.io.InputStream;
+    import java.io.InputStreamReader;
 
-import daita.daita.R;
+    import daita.daita.R;
 
-/**
- * Created on 14/03/2017.
- */
+    /**
+     * Created on 14/03/2017.
+     */
 
-public class FingalPopulationReader extends ArrayAdapter<FingalPopulation>{
+public class FingalPopulationTitles extends ArrayAdapter<FingalPopulation> {
 
     private Context con;
     private FingalPopulation ob;
 
 
-
-    public FingalPopulationReader(Context con, int res){
+    public FingalPopulationTitles(Context con, int res){
         super(con,res);
 
         this.con = con;
@@ -36,7 +35,7 @@ public class FingalPopulationReader extends ArrayAdapter<FingalPopulation>{
 
 
     private void parse(){
-        int r = R.raw.fingal_population;
+        int r = R.raw.fingal_population_titles;
         try{
             InputStream input = con.getResources().openRawResource(r);
             BufferedReader buff = new BufferedReader(new InputStreamReader(input));
@@ -48,14 +47,7 @@ public class FingalPopulationReader extends ArrayAdapter<FingalPopulation>{
 
 
                 ob = new FingalPopulation();
-                ob.setPlace(array[1]);
-                ob.setC2011(array[2]);
-                ob.setC2006(array[3]);
-                ob.setC2002(array[4]);
-                ob.setC1996(array[5]);
-                ob.setC1991(array[6]);
-                ob.setC1986(array[7]);
-                ob.setC1981(array[8]);
+                ob.setTitles(array[0]);
                 this.add(ob);
 
             }
@@ -76,10 +68,10 @@ public class FingalPopulationReader extends ArrayAdapter<FingalPopulation>{
 
         if(theView==null){
             theView = new TextView(parent.getContext());
-            theView.setTextSize(26);
+            theView.setTextSize(29);
         }
 
-        theView.setText(getItem(pos).getPlace());
+        theView.setText(getItem(pos).getTitles());
 
         return theView;
     }
