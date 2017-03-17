@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,21 +44,24 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
         try{
             InputStream input = con.getResources().openRawResource(R.raw.fingal_population);
             BufferedReader buff = new BufferedReader(new InputStreamReader(input));
-            String row;
+            String col;
 
-            while ((row = buff.readLine())!=null){
+            while ((col = buff.readLine())!=null){
                 //make an array for this data
-                String[] array = row.split(",");
-                fs = new FileSender();
-                for (int i = 0; i<row.length();i++){ //or array.length ?
-                    fs.setVal(i,array[i]);
+                String[] array = col.split(",");
+
+                if(array.length==9){
+                    fs = new FileSender(array[0],array[1],array[2],array[3],array[4],array[5],array[6],array[7],array[8],"","","","","","","","","","","");
+                    this.add(fs);
+
+                }
+                else{
+                    Toast.makeText(this.getContext(),"WRONG AMOUNT OF COLUMNS",Toast.LENGTH_LONG).show();
                 }
 
 
 
 
-
-                this.add(fs);
 
             }
 
@@ -71,25 +75,19 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
 
     //possibly re-do this into its own class ? (a generic version suited for all data)
     public View getView(final int pos, View convertView, final ViewGroup parent){
-        TextView theLV = (TextView)convertView;
-        //LV stands for list view
-        if(theLV==null){
-            theLV = new TextView(parent.getContext());
-            theLV.setTextSize(28);
+        TextView theView = (TextView)convertView;
+
+        if(theView==null){
+            theView = new TextView(parent.getContext());
+            theView.setTextSize(26);
         }
 
-        theLV.append(getItem(pos).getN1());
-        theLV.append("   ");
-        theLV.append(getItem(pos).getN2());
-        theLV.append("   ");
-        theLV.append(getItem(pos).getN3());
-        theLV.append("   ");
-        theLV.append(getItem(pos).getN4());
-        theLV.append("   ");
-        theLV.append(getItem(pos).getN5());
+        theView.setText(getItem(pos).getC2());
 
-        return theLV;
+        return theView;
     }
+
+
 
 
 }
