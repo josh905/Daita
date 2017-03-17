@@ -5,23 +5,19 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import daita.daita.R;
 
 
 public class DisplayDataActivity extends AppCompatActivity{
 
 
-
-
     private ListView theLV;
     private FileGrabber adapter1;
     private FileGrabRow adapter2;
+
 
     private String c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,
             c11,c12,c13,c14,c15,c16,c17,c18,c19,c20;
@@ -131,7 +127,6 @@ public class DisplayDataActivity extends AppCompatActivity{
 
 
 
-
     public void print(String msg){
         if(msg.isEmpty()){
             msg = "N/A";
@@ -153,7 +148,6 @@ public class DisplayDataActivity extends AppCompatActivity{
     public void ad1(){
 
         theLV.setAdapter(adapter1);
-
 
 
         theLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import daita.daita.Fingal.FingalPopulation;
 
 /**
  * Created on 17/03/2017.

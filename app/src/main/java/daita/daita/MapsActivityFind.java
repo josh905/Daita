@@ -98,7 +98,12 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
             myLoc = new LatLng(curLoc.getLatitude(),curLoc.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 13));
             where = new CameraPosition.Builder().target(myLoc).zoom(17).tilt(65).bearing(45).build();
-            yourArea = new Intent(MapsActivityFind.this, DublinCentralActivity.class);
+
+            //need to set choice to dublin central
+
+            yourArea = new Intent(MapsActivityFind.this, PlaceActivity.class);
+
+
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
             handleLoc();
         }

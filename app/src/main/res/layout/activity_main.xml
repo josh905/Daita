@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="daita.daita.MainActivity"
-    android:background="@drawable/greyback">
+    android:background="@drawable/greyback"
+    android:id="@+id/wrap">
 
     <include layout="@layout/content_main" />
 
