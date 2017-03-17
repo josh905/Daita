@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="daita.daita.DisplayDataActivity">
+    tools:context="daita.daita.DisplayDataActivity"
+    android:id="@+id/wrap">
 
     <RelativeLayout
         android:layout_width="match_parent"

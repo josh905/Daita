@@ -35,7 +35,7 @@ public class FingalPopulationTitles extends ArrayAdapter<FingalPopulation> {
 
 
     private void parse(){
-        int r = R.raw.fingal_population_titles;
+        int r = R.raw.fingal_population_res;
         try{
             InputStream input = con.getResources().openRawResource(r);
             BufferedReader buff = new BufferedReader(new InputStreamReader(input));

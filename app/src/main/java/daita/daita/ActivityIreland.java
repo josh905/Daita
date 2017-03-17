@@ -37,7 +37,6 @@ public class ActivityIreland extends AppCompatActivity{
 
 
 
-
     public void handleChoice(){
         crimeBtn = (Button)findViewById(R.id.crimeBtn);
         crimeBtn.setOnClickListener(new View.OnClickListener(){

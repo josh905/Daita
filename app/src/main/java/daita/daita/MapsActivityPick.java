@@ -26,9 +26,8 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
 
-
     private void fingalGO(){
-        Intent i = new Intent(MapsActivityPick.this, FingalActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, DisplayDataActivity.class);
         startActivity(i);
     }
 

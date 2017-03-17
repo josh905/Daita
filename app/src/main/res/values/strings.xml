@@ -8,4 +8,5 @@
     <string name="title_activity_fingal">FingalActivity</string>
     <string name="title_activity_dublin_central">DublinCentralActivity</string>
     <string name="title_activity_the_catcher">TheCatcher</string>
+    <string name="title_activity_place">PlaceActivity</string>
 </resources>

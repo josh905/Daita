@@ -7,16 +7,14 @@ package daita.daita;
 public interface MainInterface {
 
     //writing public before these methods/objects is redundant
-/*
-    boolean isMainFabClicked();
-    boolean unsetMainFabClicked();
-    boolean isFindBtnClicked();
-    boolean unsetFindBtnClicked();
-*/
 
-    //public void setFile(int file);
-    //public int getFile();
+    void setFile(int file);
+    void setRes(int res);
+    int getFile();
+    int getRes();
 
+    void setPlace(String place);
+    String getPlace();
 
 
 

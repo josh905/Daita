@@ -12,6 +12,9 @@ public class FileSender {
     private String c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,
     c11,c12,c13,c14,c15,c16,c17,c18,c19,c20;
 
+    private int numCols;
+
+
 
     public FileSender(String c1, String c2, String c3, String c4, String c5, String c6, String c7, String c8, String c9, String c10, String c11, String c12, String c13, String c14, String c15, String c16, String c17, String c18, String c19, String c20) {
         this.c1 = c1;
@@ -34,6 +37,7 @@ public class FileSender {
         this.c18 = c18;
         this.c19 = c19;
         this.c20 = c20;
+        numCols=0;
     }
 
 
@@ -115,5 +119,13 @@ public class FileSender {
 
     public String getC20() {
         return c20;
+    }
+
+    public int getNumCols() {
+        return numCols;
+    }
+
+    public void setNumCols(int numCols) {
+        this.numCols = numCols;
     }
 }

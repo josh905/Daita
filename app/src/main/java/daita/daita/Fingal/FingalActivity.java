@@ -77,7 +77,7 @@ public class FingalActivity extends AppCompatActivity{
                 c2011 = adapter1.getItem(position).getC2011();
 
                 ad2();
-                //Toast.makeText(view.getContext(),adapter.getItem(position).getC1981(),Toast.LENGTH_SHORT).show();
+
 
 
 

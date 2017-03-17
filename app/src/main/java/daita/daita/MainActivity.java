@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity{
                 public void onClick(View view) {
 
 
-                    Intent irlIntent = new Intent(MainActivity.this,DisplayDataActivity.class);
-                    startActivity(irlIntent);
+                    Intent in = new Intent(MainActivity.this,DisplayDataActivity.class);
+                    startActivity(in);
 
 
 

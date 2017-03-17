@@ -89,6 +89,7 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(MapsActivityFind.this, "Please allow location services", Toast.LENGTH_LONG).show();
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -96,7 +97,7 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
         if (curLoc != null) {
             myLoc = new LatLng(curLoc.getLatitude(),curLoc.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 13));
-            this.where = new CameraPosition.Builder().target(myLoc).zoom(17).tilt(65).bearing(45).build();
+            where = new CameraPosition.Builder().target(myLoc).zoom(17).tilt(65).bearing(45).build();
             yourArea = new Intent(MapsActivityFind.this, DublinCentralActivity.class);
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
             handleLoc();
