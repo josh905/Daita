@@ -18,6 +18,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
     MapHandler hand = new MapHandler();
     private CameraPosition where;
+    private String place;
 
     private Marker fingal, dubCen, dubWest, dubSouth, galway, cork;
 
@@ -25,34 +26,43 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
 
+
+
     private void fingalGO(){
-        Intent i = new Intent(MapsActivityPick.this, DisplayDataActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        String thePlace = "fingal";
+        i.putExtra("place", thePlace);
         startActivity(i);
     }
 
     private void dubCenGO(){
-        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        i.putExtra("place", "dubcen");
         startActivity(i);
     }
 
     private void galwayGO(){
         Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
+        i.putExtra("place", "galway");
         startActivity(i);
     }
 
     private void dubSouthGO(){
         Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
+        i.putExtra("place", "dubsouth");
         startActivity(i);
     }
 
     private void dubWestGO(){
         Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
+        i.putExtra("place", "dubwest");
         startActivity(i);
     }
 
 
     private void corkGO(){
         Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
+        i.putExtra("place", "cork");
         startActivity(i);
     }
 
@@ -177,10 +187,6 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
 
-
-
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -266,4 +272,11 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
     }
+
+
+    public String getPlace(){
+        return place;
+    }
+
+
 }

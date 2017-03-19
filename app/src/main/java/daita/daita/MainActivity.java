@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import java.security.spec.PKCS8EncodedKeySpec;
+
 
 public class MainActivity extends AppCompatActivity{
 
@@ -49,7 +51,9 @@ public class MainActivity extends AppCompatActivity{
                 @Override
                 public void onClick(View view) {
 
-                    Intent in = new Intent(MainActivity.this,DisplayDataActivity.class);
+                    Intent in = new Intent(MainActivity.this,PlaceActivity.class);
+                    String thePlace = "all";
+                    in.putExtra("place", thePlace);
                     startActivity(in);
 
 

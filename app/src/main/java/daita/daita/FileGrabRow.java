@@ -22,12 +22,14 @@ public class FileGrabRow extends ArrayAdapter<FileSender>{
     private FileSender ob;
 
 
+    private int res;
 
 
-    public FileGrabRow(Context con, int res){
-        super(con,res);
+    public FileGrabRow(Context con, int def, int res){
+        super(con,def);
 
         this.con = con;
+        this.res = res;
 
         parse();
 
@@ -37,7 +39,7 @@ public class FileGrabRow extends ArrayAdapter<FileSender>{
     private void parse(){
 
         try{
-            InputStream input = con.getResources().openRawResource(R.raw.fingal_population_res);
+            InputStream input = con.getResources().openRawResource(res);
             BufferedReader buff = new BufferedReader(new InputStreamReader(input));
             String col;
 

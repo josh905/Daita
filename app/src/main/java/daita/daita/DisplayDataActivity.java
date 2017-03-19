@@ -8,7 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 public class DisplayDataActivity extends AppCompatActivity{
@@ -26,84 +29,8 @@ public class DisplayDataActivity extends AppCompatActivity{
 
     private int row = 0;
     private int col = 0;
+    private int file, res;
 
-
-
-
-
-
-    /*
-    public int endsAt(){
-
-
-        //get item 0 means the title of column
-
-        if(adapter1.getItem(0).getC1().equals("")){
-            return 1;
-        }
-        if(adapter1.getItem(0).getC2().equals("")){
-            return 2;
-        }
-        if(adapter1.getItem(0).getC3().equals("")){
-            return 3;
-        }
-        if(adapter1.getItem(0).getC4().equals("")){
-            return 4;
-        }
-        if(adapter1.getItem(0).getC5().equals("")){
-            return 5;
-        }
-        if(adapter1.getItem(0).getC6().equals("")){
-            return 6;
-        }
-        if(adapter1.getItem(0).getC7().equals("")){
-            return 7;
-        }
-        if(adapter1.getItem(0).getC8().equals("")){
-            return 8;
-        }
-        if(adapter1.getItem(0).getC9().equals("")){
-            return 9;
-        }
-        if(adapter1.getItem(0).getC10().equals("")){
-            return 10;
-        }
-        if(adapter1.getItem(0).getC11().equals("")){
-            return 11;
-        }
-        if(adapter1.getItem(0).getC12().equals("")){
-            return 12;
-        }
-        if(adapter1.getItem(0).getC13().equals("")){
-            return 13;
-        }
-        if(adapter1.getItem(0).getC14().equals("")){
-            return 14;
-        }
-        if(adapter1.getItem(0).getC15().equals("")){
-            return 15;
-        }
-        if(adapter1.getItem(0).getC16().equals("")){
-            return 16;
-        }
-        if(adapter1.getItem(0).getC17().equals("")){
-            return 17;
-        }
-        if(adapter1.getItem(0).getC18().equals("")){
-            return 18;
-        }
-        if(adapter1.getItem(0).getC19().equals("")){
-            return 19;
-        }
-        if(adapter1.getItem(0).getC20().equals("")){
-            return 20;
-        }
-
-        //otherwise...
-        return 0;
-
-    }
-    */
 
 
     @Override
@@ -111,24 +38,28 @@ public class DisplayDataActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_data);
 
+        Intent tent = getIntent();
+        file = tent.getIntExtra("file", 0);
+        res = tent.getIntExtra("res", 0);
+
+
         theLV = (ListView)findViewById(R.id.theLV);
 
-        adapter1 = new FileGrabber(this, 0);
-        adapter2 = new FileGrabRow(this, 0);
+        adapter1 = new FileGrabber(this, 0, file);
+        adapter2 = new FileGrabRow(this, 0, res);
+
 
 
         numCols = adapter1.getItem(0).getNumCols();
 
         ad1();
 
-
-
     }
 
 
 
     public void print(String msg){
-        if(msg.isEmpty()){
+        if(msg.isEmpty()||msg.equals(" ")){
             msg = "N/A";
         }
         View v = findViewById(R.id.wrap);
@@ -274,6 +205,10 @@ public class DisplayDataActivity extends AppCompatActivity{
 
 
     }
+
+
+    //TO:DO : figure out displaying functionality
+
 
 
 

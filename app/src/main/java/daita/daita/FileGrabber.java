@@ -28,10 +28,15 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
     private int numCols;
 
 
-    public FileGrabber(Context con, int res){
-        super(con,res);
+    private int file;
+
+
+    public FileGrabber(Context con, int def, int file){
+        super(con,def);
 
         this.con = con;
+        this.file = file;
+
 
         parse();
 
@@ -42,7 +47,7 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
     private void parse(){
 
         try{
-            InputStream input = con.getResources().openRawResource(R.raw.fingal_population);
+            InputStream input = con.getResources().openRawResource(file);
             BufferedReader buff = new BufferedReader(new InputStreamReader(input));
             String col;
 
@@ -52,7 +57,7 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
 
 
 
-                /**
+                /*
                  * LOOPS ARE NOT COMPATIBLE WITH THIS CONTEXT OF THE ARRAY ADAPTER
                  * THESE IF STATEMENTS TURNED OUT TO BE THE FASTEST WAY FOR THE SYSTEM TO CHECK FOR NUMBER OF COLUMNS
                  * AND ADD THEM TO THE FILESENDER OBJECT
