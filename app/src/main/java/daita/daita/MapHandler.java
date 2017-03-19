@@ -37,9 +37,5 @@ public class MapHandler {
         return new LatLng(53.284904, -6.240142);
     }
 
-    public LatLng dubWestLoc(){
-        return new LatLng(53.382671, -6.362973);
-    }
-
 
 }

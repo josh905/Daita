@@ -1,13 +1,12 @@
 package daita.daita;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuAdapter;
-import android.support.v7.widget.Toolbar;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,10 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,12 +74,28 @@ public class PlaceActivity extends AppCompatActivity {
             img.setImageResource(R.drawable.dubcenpic);
         }
 
+        if(place.equals("fingal")){
+            img.setImageResource(R.drawable.fingalpic);
+        }
+
+        if(place.equals("dubsouth")){
+            img.setImageResource(R.drawable.dubsouthpic);
+        }
+
+        if(place.equals("galway")){
+            img.setImageResource(R.drawable.galwaypic);
+        }
+
+        if(place.equals("cork")){
+            img.setImageResource(R.drawable.corkpic);
+        }
+
+
 
         //now populate list
-        list.add("Select a topic");
+        list.add("Press here to select a topic");
         list.add("Population");
-        list.add("Third item");
-
+        list.add("Crime");
 
 
         //now do this
@@ -132,24 +144,22 @@ public class PlaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 chosen = spinner.getSelectedItem().toString();
 
 
-                if(chosen.equals("Select a topic")){
-                    print("Please select a topic to view");
-                }
-                if(place.equals("fingal")){
-                    if (chosen.equals("Population")){
-                        open(R.raw.fingal_population, R.raw.fingal_population_res);
-                    }
+                //create nested if statements for place and chosen topic
 
+                if(chosen.equals("Crime")){
+                    open(R.raw.crime_by_station, R.raw.crime_by_station_res);
                 }
-                if(place.equals("dubcen")){
-                    if (chosen.equals("")){
 
-                    }
+                if(chosen.equals("Population")){
+                    open(R.raw.fingal_population, R.raw.fingal_population_res);
                 }
+
             }
+
         });
 
 
@@ -179,6 +189,7 @@ public class PlaceActivity extends AppCompatActivity {
         Intent dispin = new Intent(PlaceActivity.this, DisplayDataActivity.class);
         dispin.putExtra("file", file);
         dispin.putExtra("res", res);
+        dispin.putExtra("place", place);
         startActivity(dispin);
 
     }

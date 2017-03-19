@@ -20,9 +20,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     private CameraPosition where;
     private String place;
 
-    private Marker fingal, dubCen, dubWest, dubSouth, galway, cork;
-
-
+    private Marker fingal, dubCen, dubSouth, galway, cork;
 
 
 
@@ -37,32 +35,30 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
     private void dubCenGO(){
         Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
-        i.putExtra("place", "dubcen");
+        String thePlace = "dubcen";
+        i.putExtra("place", thePlace);
         startActivity(i);
     }
 
     private void galwayGO(){
-        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
-        i.putExtra("place", "galway");
+        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        String thePlace = "galway";
+        i.putExtra("place", thePlace);
         startActivity(i);
     }
 
     private void dubSouthGO(){
-        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
-        i.putExtra("place", "dubsouth");
-        startActivity(i);
-    }
-
-    private void dubWestGO(){
-        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
-        i.putExtra("place", "dubwest");
+        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        String thePlace = "dubsouth";
+        i.putExtra("place", thePlace);
         startActivity(i);
     }
 
 
     private void corkGO(){
-        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
-        i.putExtra("place", "cork");
+        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        String thePlace = "cork";
+        i.putExtra("place", thePlace);
         startActivity(i);
     }
 
@@ -112,7 +108,6 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
        dubSouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("Dublin South"));
 
 
-        dubWest = mMap.addMarker(new MarkerOptions().position(hand.dubWestLoc()).title("Dublin West"));
 
 
 
@@ -147,13 +142,6 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         fingal.showInfoWindow();
     }
 
-    public void dubWestChosen(){
-        where = new CameraPosition.Builder().target(hand.dubWestLoc()).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        dubWest.setTitle("Click this pin for Dublin West stats");
-        dubWest.showInfoWindow();
-    }
 
     public void dubSouthChosen(){
         where = new CameraPosition.Builder().target(hand.dubSouthLoc()).zoom(18).tilt(80).bearing(10).build();
@@ -222,10 +210,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
                     dubCenChosen();
                     return true;
                 }
-                if(marker.getTitle().equals("Dublin West")){
-                    dubWestChosen();
-                    return true;
-                }
+
                 if(marker.getTitle().equals("Dublin South")){
                     dubSouthChosen();
                     return true;
@@ -241,10 +226,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
                     dubCenGO();
                     return true;
                 }
-                if(marker.getTitle().equals("Click this pin for Dublin West stats")){
-                    dubWestGO();
-                    return true;
-                }
+
                 if(marker.getTitle().equals("Click this pin for Dublin South stats")){
                     dubSouthGO();
                     return true;
@@ -271,11 +253,6 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
 
-    }
-
-
-    public String getPlace(){
-        return place;
     }
 
 

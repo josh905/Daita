@@ -1,15 +1,19 @@
 package daita.daita;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
+
+
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -29,7 +33,13 @@ public class DisplayDataActivity extends AppCompatActivity{
 
     private int row = 0;
     private int col = 0;
-    private int file, res;
+    private int file, res; //res for resource
+    private String place;
+
+    private String visible;
+    private TextView resultView;
+    private ImageView img;
+
 
 
 
@@ -41,9 +51,14 @@ public class DisplayDataActivity extends AppCompatActivity{
         Intent tent = getIntent();
         file = tent.getIntExtra("file", 0);
         res = tent.getIntExtra("res", 0);
+        place = tent.getStringExtra("place");
+
+        img = (ImageView) findViewById(R.id.resultBG);
 
 
+        resultView = (TextView)findViewById(R.id.resultView);
         theLV = (ListView)findViewById(R.id.theLV);
+
 
         adapter1 = new FileGrabber(this, 0, file);
         adapter2 = new FileGrabRow(this, 0, res);
@@ -51,6 +66,9 @@ public class DisplayDataActivity extends AppCompatActivity{
 
 
         numCols = adapter1.getItem(0).getNumCols();
+
+
+
 
         ad1();
 
@@ -78,6 +96,12 @@ public class DisplayDataActivity extends AppCompatActivity{
 
     public void ad1(){
 
+        img.setBackgroundResource(R.drawable.verylightgrey);
+
+        visible = "ad1";
+        resultView.setVisibility(View.GONE);
+        theLV.setVisibility(View.VISIBLE);
+
         theLV.setAdapter(adapter1);
 
 
@@ -91,6 +115,8 @@ public class DisplayDataActivity extends AppCompatActivity{
                     return;
                     //we dont want to read the title
                 }
+
+
 
                 c1 = adapter1.getItem(position).getC1();
                 c2 = adapter1.getItem(position).getC2();
@@ -122,7 +148,41 @@ public class DisplayDataActivity extends AppCompatActivity{
 
     }
 
+    @Override
+    public void onBackPressed(){
+
+        if(visible.equals("result")){
+            ad2();
+
+            return;
+
+        }
+        if(visible.equals("ad2")){
+            ad1();
+
+            return;
+        }
+        if(visible.equals("ad1")){
+            super.onBackPressed();
+            /*
+            Intent plain = new Intent(DisplayDataActivity.this, PlaceActivity.class);
+            plain.putExtra("place", place);
+            startActivity(plain);
+            return;
+            */
+
+        }
+
+        //dont add else here.
+    }
+
     public void ad2(){
+
+        img.setBackgroundResource(R.drawable.verylightgrey);
+
+        visible = "ad2";
+        resultView.setVisibility(View.GONE);
+        theLV.setVisibility(View.VISIBLE);
 
         theLV.setAdapter(adapter2);
 
@@ -139,64 +199,64 @@ public class DisplayDataActivity extends AppCompatActivity{
                 }
 
                 if(col==1){
-                    print(c1);
+                    show(c1);
                 }
                 if(col==2){
-                    print(c2);
+                    show(c2);
                 }
                 if(col==3){
-                    print(c3);
+                    show(c3);
                 }
                 if(col==4){
-                    print(c4);
+                    show(c4);
                 }
                 if(col==5){
-                    print(c5);
+                    show(c5);
                 }
                 if(col==6){
-                    print(c6);
+                    show(c6);
                 }
                 if(col==7){
-                    print(c7);
+                    show(c7);
                 }
                 if(col==8){
-                    print(c8);
+                    show(c8);
                 }
                 if(col==9){
-                    print(c9);
+                    show(c9);
                 }
                 if(col==10){
-                    print(c10);
+                    show(c10);
                 }
                 if(col==11){
-                    print(c11);
+                    show(c11);
                 }
                 if(col==12){
-                    print(c12);
+                    show(c12);
                 }
                 if(col==13){
-                    print(c13);
+                    show(c13);
                 }
                 if(col==14){
-                    print(c14);
+                    show(c14);
                 }
                 if(col==15){
-                    print(c15);
+                    show(c15);
                 }
                 if(col==16){
-                    print(c16);
+                    show(c16);
                 }
                 if(col==17){
-                    print(c17);
+                    show(c17);
                 }
                 if(col==18){
-                    print(c18);
+                    show(c18);
                 }
                 if(col==19){
-                    print(c19);
+                    show(c19);
                 }
                 if(col==20){
-                    print(c20);
+                    show(c20);
                 }
 
 
@@ -206,8 +266,27 @@ public class DisplayDataActivity extends AppCompatActivity{
 
     }
 
+    public void show(String result){
 
-    //TO:DO : figure out displaying functionality
+        img.setBackgroundResource(R.drawable.lightback);
+
+        visible = "result"; //this is for the back button
+
+
+        theLV.setVisibility(View.GONE);
+        resultView.setText(result);
+        resultView.setVisibility(View.VISIBLE);
+
+
+        ObjectAnimator resultAnimation = ObjectAnimator.ofFloat(resultView, "alpha", 0.1f, 1.5f);
+        resultAnimation.setDuration(2000);
+        AnimatorSet aset = new AnimatorSet();
+        aset.play(resultAnimation);
+        aset.start();
+    }
+
+
+
     private void displayFiles(){
         ArrayList<String> fileList = new ArrayList<>();
         for(int i = 0; i<numCols; i++){
@@ -217,6 +296,7 @@ public class DisplayDataActivity extends AppCompatActivity{
             }
         }
     }
+
 
 
 
