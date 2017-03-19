@@ -208,6 +208,15 @@ public class DisplayDataActivity extends AppCompatActivity{
 
 
     //TO:DO : figure out displaying functionality
+    private void displayFiles(){
+        ArrayList<String> fileList = new ArrayList<>();
+        for(int i = 0; i<numCols; i++){
+            fileList.add(adapter1.getItem(i).toString());
+            if(adapter1.getItem(i)==null){
+                break;
+            }
+        }
+    }
 
 
 
