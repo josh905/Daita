@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 
@@ -18,7 +20,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class DisplayDataActivity extends AppCompatActivity{
+public class DisplayDataActivity extends AppCompatActivity implements View.OnTouchListener {
 
 
     private ListView theLV;
@@ -31,15 +33,30 @@ public class DisplayDataActivity extends AppCompatActivity{
 
     private int numCols = 0;
 
-    private int row = 0;
+    private String choice1, choice2;
+
     private int col = 0;
+
     private int file, res; //res for resource
-    private String place;
+
+    private String place, result;
+
+    private boolean right;
+
+
+
 
     private String visible;
     private TextView resultView;
     private ImageView img;
+    private GestureDetector theSwiper;
 
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return theSwiper.onTouchEvent(event);
+    }
 
 
 
@@ -109,11 +126,11 @@ public class DisplayDataActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                row = position+1;
 
-                if(row==1){
+
+                if(position==0){
+                    print("You can't select the "+adapter1.getItem(position).getC1()+" row");
                     return;
-                    //we dont want to read the title
                 }
 
 
@@ -139,6 +156,8 @@ public class DisplayDataActivity extends AppCompatActivity{
                 c19 = adapter1.getItem(position).getC19();
                 c20 = adapter1.getItem(position).getC20();
 
+                choice1 = c1;
+
                 ad2();
 
 
@@ -162,18 +181,12 @@ public class DisplayDataActivity extends AppCompatActivity{
 
             return;
         }
-        if(visible.equals("ad1")){
-            super.onBackPressed();
-            /*
-            Intent plain = new Intent(DisplayDataActivity.this, PlaceActivity.class);
-            plain.putExtra("place", place);
-            startActivity(plain);
-            return;
-            */
 
-        }
+            super.onBackPressed();
+
 
         //dont add else here.
+
     }
 
     public void ad2(){
@@ -190,74 +203,20 @@ public class DisplayDataActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+
+                if(position == 0 ){ //for the title item
+                    print("You can't select the "+adapter2.getItem(position).getC1()+" row");
+                    return;
+                }
+
+
+                choice2 = adapter2.getItem(position).getC1();
                 col = position + 1;
+                //MUST ALWAYS GET C1 HERE COZ C1 IS TITLES.
 
+                checkCols();
 
-
-                if(col<1||col>20){
-                    print("You can't choose this item");
-                }
-
-                if(col==1){
-                    show(c1);
-                }
-                if(col==2){
-                    show(c2);
-                }
-                if(col==3){
-                    show(c3);
-                }
-                if(col==4){
-                    show(c4);
-                }
-                if(col==5){
-                    show(c5);
-                }
-                if(col==6){
-                    show(c6);
-                }
-                if(col==7){
-                    show(c7);
-                }
-                if(col==8){
-                    show(c8);
-                }
-                if(col==9){
-                    show(c9);
-                }
-                if(col==10){
-                    show(c10);
-                }
-                if(col==11){
-                    show(c11);
-                }
-                if(col==12){
-                    show(c12);
-                }
-                if(col==13){
-                    show(c13);
-                }
-                if(col==14){
-                    show(c14);
-                }
-                if(col==15){
-                    show(c15);
-                }
-                if(col==16){
-                    show(c16);
-                }
-                if(col==17){
-                    show(c17);
-                }
-                if(col==18){
-                    show(c18);
-                }
-                if(col==19){
-                    show(c19);
-                }
-                if(col==20){
-                    show(c20);
-                }
+                show();
 
 
             }
@@ -266,7 +225,92 @@ public class DisplayDataActivity extends AppCompatActivity{
 
     }
 
-    public void show(String result){
+    public void checkCols(){
+
+
+        if(col==2){
+            result = c2;
+        }
+
+        if(col==3){
+            result = c3;
+        }
+
+        if(col==4){
+            result = c4;
+        }
+
+        if(col==5){
+            result = c5;
+        }
+
+        if(col==6){
+            result = c6;
+        }
+
+        if(col==7){
+            result = c7;
+        }
+
+        if(col==8){
+            result = c8;
+        }
+
+        if(col==9){
+            result = c9;
+        }
+
+        if(col==10){
+            result = c10;
+        }
+
+        if(col==11){
+            result = c11;
+        }
+
+        if(col==12){
+            result = c12;
+        }
+
+        if(col==13){
+            result = c13;
+        }
+
+        if(col==14){
+            result = c14;
+        }
+
+        if(col==15){
+            result = c15;
+        }
+
+        if(col==16){
+            result = c16;
+        }
+
+        if(col==17){
+            result = c17;
+        }
+
+        if(col==18){
+            result = c18;
+        }
+
+        if(col==19){
+            result = c19;
+        }
+
+        if(col==20){
+            result = c20;
+        }
+
+
+    }
+
+
+
+    public void show(){
+
 
         img.setBackgroundResource(R.drawable.lightback);
 
@@ -274,28 +318,113 @@ public class DisplayDataActivity extends AppCompatActivity{
 
 
         theLV.setVisibility(View.GONE);
-        resultView.setText(result);
+
+
+        resultView.setText("\n"+choice1 + "\n\n" + choice2 + "\n\n" + result);
+
+
         resultView.setVisibility(View.VISIBLE);
 
 
         ObjectAnimator resultAnimation = ObjectAnimator.ofFloat(resultView, "alpha", 0.1f, 1.5f);
-        resultAnimation.setDuration(2000);
+
+                                                                    //the above string stay as alpha.
+
+        resultAnimation.setDuration(1750); //1.75 seconds
         AnimatorSet aset = new AnimatorSet();
         aset.play(resultAnimation);
         aset.start();
+
+        handleSwipes();
+
     }
 
 
 
-    private void displayFiles(){
-        ArrayList<String> fileList = new ArrayList<>();
-        for(int i = 0; i<numCols; i++){
-            fileList.add(adapter1.getItem(i).toString());
-            if(adapter1.getItem(i)==null){
-                break;
+    public void handleSwipes(){
+
+
+
+        img.setOnTouchListener(new Swiper(getApplicationContext()) { //or a context created in onCreate method ?
+
+            @Override
+            public void onSwipeLeft() {
+
+                whenSwipeLeft();
+
             }
-        }
+
+            @Override
+            public void onSwipeRight() {
+
+                whenSwipeRight();
+
+            }
+
+
+
+        });
+
+
     }
+
+
+
+    public void whenSwipeLeft(){
+
+        if(col != numCols){
+
+            col++;
+            choice2 = adapter2.getItem(col-1).getC1();
+
+
+            checkCols();
+
+
+
+            right = false;
+
+            show();
+
+
+        }
+
+        else{
+
+            print("You have reached the last result");
+
+        }
+
+    }
+
+    public void whenSwipeRight(){
+
+        if(col >2){
+            col--;
+            choice2 = adapter2.getItem(col-1).getC1();
+
+
+            checkCols();
+
+
+
+            right = true;
+
+            show();
+
+
+        }
+
+        else{
+
+            print("This is the first result");
+
+        }
+
+    }
+
+
+
 
 
 
