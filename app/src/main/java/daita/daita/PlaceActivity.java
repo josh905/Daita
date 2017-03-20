@@ -65,30 +65,32 @@ public class PlaceActivity extends AppCompatActivity {
     public void display(){
 
 
-        if(place.equals("all")){
+        if(place.equals("All of Ireland")){
             img.setImageResource(R.drawable.irelandtransp);
         }
 
 
-        if(place.equals("dubcen")){
+        if(place.equals("Central Dublin")){
             img.setImageResource(R.drawable.dubcenpic);
         }
 
-        if(place.equals("fingal")){
+        if(place.equals("Fingal")){
             img.setImageResource(R.drawable.fingalpic);
         }
 
-        if(place.equals("dubsouth")){
+        if(place.equals("South Dublin")){
             img.setImageResource(R.drawable.dubsouthpic);
         }
 
-        if(place.equals("galway")){
+        if(place.equals("Galway")){
             img.setImageResource(R.drawable.galwaypic);
         }
 
-        if(place.equals("cork")){
+        if(place.equals("Cork")){
             img.setImageResource(R.drawable.corkpic);
         }
+
+        if(place.equals("Italia"))
 
 
 

@@ -37,5 +37,9 @@ public class MapHandler {
         return new LatLng(53.284904, -6.240142);
     }
 
+    public LatLng italyLoc(){
+        return new LatLng(41.936549, 12.471702);
+    }
+
 
 }

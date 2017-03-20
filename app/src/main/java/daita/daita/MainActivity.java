@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
                 public void onClick(View view) {
 
                     Intent in = new Intent(MainActivity.this,PlaceActivity.class);
-                    String thePlace = "all";
+                    String thePlace = "All of Ireland";
                     in.putExtra("place", thePlace);
                     startActivity(in);
 
