@@ -8,6 +8,24 @@
     tools:context="daita.daita.DisplayDataActivity"
     android:id="@+id/wrap">
 
+    <TextView
+        android:text="Swipe left or right"
+        android:layout_width="258dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="470dp"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
+
+        android:id="@+id/swipeTV"
+        android:textSize="24dp"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/swipeImage"
+        app:srcCompat="@drawable/swipepic" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -48,14 +48,14 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
     private void galwayGO(){
-        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
         String thePlace = "Galway";
         i.putExtra("place", thePlace);
         startActivity(i);
     }
 
     private void dubSouthGO(){
-        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
         String thePlace = "South Dublin";
         i.putExtra("place", thePlace);
         startActivity(i);
@@ -63,7 +63,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
     private void corkGO(){
-        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
         String thePlace = "Cork";
         i.putExtra("place", thePlace);
         startActivity(i);
@@ -179,8 +179,8 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         where = new CameraPosition.Builder().target(hand.italyLoc()).zoom(18).tilt(80).bearing(10).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
 
-        cork.setTitle("Clicca qui per i dati per l'Italia");
-        cork.showInfoWindow();
+        italy.setTitle("Clicca qui per i dati per l'Italia");
+        italy.showInfoWindow();
     }
 
 

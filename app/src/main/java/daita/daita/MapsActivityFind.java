@@ -9,10 +9,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 
 public class MapsActivityFind extends FragmentActivity implements OnMapReadyCallback {
 
@@ -36,6 +39,14 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     private CameraPosition where;
     private String place;
     private Marker myLocMarker;
+    private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
+    fingalDistance, italyDistance;
+
+    private int nearest, furthest;
+
+
+    private Marker fingal, dubCen, dubSouth, galway, cork, italy;
+
 
 
 
@@ -49,10 +60,7 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     //then check is fab clicked
 
 
-    //public void onBackPressed(){
-    //mint.unsetMainFabClicked();
-    // mint.unsetFindBtnClicked();
-    // }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,19 +71,94 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //checkWhichClicked();
-        //zoomToNCI();
+
+
+    }
+
+    public double myCurrentRadius(LatLng firstLoc, LatLng secondLoc) {
+
+        //these values are in metres
+
+        if (firstLoc == null || secondLoc == null) {
+            return 0;
+        }
+
+        return SphericalUtil.computeDistanceBetween(firstLoc, secondLoc);
+
 
     }
 
 
-    public void myLocationGO(){
 
-        Intent myLocIntent = new Intent(MapsActivityFind.this, PlaceActivity.class);
-        myLocIntent.putExtra("place", "Dublin Central");
-        startActivity(myLocIntent);
+    public int checkNearest(){
+
+        corkDistance = (int) Math.round(myCurrentRadius(myLoc, hand.corkLoc()));
+        galwayDistance = (int) Math.round(myCurrentRadius(myLoc, hand.galwayLoc()));
+        dubCenDistance = (int) Math.round(myCurrentRadius(myLoc, hand.dubCenLoc()));
+        dubSouthDistance = (int) Math.round(myCurrentRadius(myLoc, hand.dubSouthLoc()));
+        fingalDistance = (int) Math.round(myCurrentRadius(myLoc, hand.fingalLoc()));
+        italyDistance = (int) Math.round(myCurrentRadius(myLoc, hand.italyLoc()));
+
+
+        int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance};
+
+
+        nearest= myDistanceArray[0];
+        furthest = myDistanceArray[0];
+
+        for(int i=0; i< myDistanceArray.length; i++)
+        {
+            if(myDistanceArray[i] > furthest)
+                furthest = myDistanceArray[i];
+            else if (myDistanceArray[i] < nearest)
+                nearest = myDistanceArray[i];
+
+        }
+
+        return nearest;
 
     }
+
+
+    public void handleNearest(){
+
+        nearest = checkNearest();  //this updates the nearest location
+
+        if(nearest==dubCenDistance){
+            dubCenHandler();
+        }
+
+        else if(nearest==fingalDistance){
+            fingalHandler();
+        }
+
+        else if(nearest==dubSouthDistance){
+            dubSouthHandler();
+        }
+
+        else if(nearest==galwayDistance){
+            galwayHandler();
+        }
+
+        else if(nearest==italyDistance){
+            italyHandler();
+        }
+
+        else if(nearest==corkDistance){
+            corkHandler();
+        }
+
+        else{
+            print ("Please ensure your location services are enabled");
+        }
+
+
+    }
+
+
+
+
+
 
 
 
@@ -105,9 +188,9 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
                 return;
             }
         } else {
+
+
             doLoc();
-
-
 
 
 
@@ -173,8 +256,69 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
         handleRequests();
 
-
     }
+
+
+    public void dubCenHandler(){
+        dubCen = mMap.addMarker(new MarkerOptions().position(hand.dubCenLoc()));
+        where = new CameraPosition.Builder().target(hand.dubCenLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        dubCen.setTitle("Click this pin for Central Dublin stats");
+        dubCen.showInfoWindow();
+    }
+
+    public void fingalHandler(){
+       fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()));
+        where = new CameraPosition.Builder().target(hand.fingalLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        fingal.setTitle("Click this pin for Fingal stats");
+        fingal.showInfoWindow();
+    }
+
+
+    public void dubSouthHandler(){
+
+        dubSouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()));
+
+        where = new CameraPosition.Builder().target(hand.dubSouthLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        dubSouth.setTitle("Click this pin for South Dublin stats");
+        dubSouth.showInfoWindow();
+    }
+
+    public void galwayHandler(){
+        galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()));
+        where = new CameraPosition.Builder().target(hand.galwayLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        galway.setTitle("Click this pin for Galway stats");
+        galway.showInfoWindow();
+    }
+
+    public void corkHandler(){
+        cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()));
+        where = new CameraPosition.Builder().target(hand.corkLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        cork.setTitle("Click this pin for Cork stats");
+        cork.showInfoWindow();
+    }
+
+
+
+    public void italyHandler(){
+        italy = mMap.addMarker(new MarkerOptions().position(hand.italyLoc()));
+        where = new CameraPosition.Builder().target(hand.italyLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        italy.setTitle("Clicca qui per i dati per l'Italia");
+        italy.showInfoWindow();
+    }
+
+
 
     public void whenClicked(){
 
@@ -183,10 +327,37 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
             public boolean onMarkerClick(Marker marker) {
 
 
-                if(marker.getTitle().equals("Click here for data for your location")){
+                if(marker.getTitle().equals("Click this pin to detect nearest data")){
 
-                    myLocationGO();
+                    handleNearest();
 
+                    return true;
+                }
+
+
+                if(marker.getTitle().equals("Click this pin for Fingal stats")){
+                    fingalGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Central Dublin stats")){
+                    dubCenGO();
+                    return true;
+                }
+
+                if(marker.getTitle().equals("Click this pin for South Dublin stats")){
+                    dubSouthGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Galway stats")){
+                    galwayGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Cork stats")){
+                    corkGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Clicca qui per i dati per l'Italia")){
+                    italyGO();
                     return true;
                 }
 
@@ -202,12 +373,31 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
     }
 
+
+    public void print(String msg){
+        if(msg.isEmpty()){
+            msg = "N/A";
+        }
+        View v = findViewById(R.id.map);
+        Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                .setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                })
+                //ignore the line through getColor, its "deprecated" but its best this way for us
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                .show();
+    }
+
+
     public void handleRequests(){
         if(myLoc == null){
             return;
         }
 
-        myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Click here for data for your location"));
+        myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Click this pin to detect nearest data"));
 
         where = new CameraPosition.Builder().target(myLoc).zoom(18).tilt(80).bearing(10).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
@@ -242,6 +432,52 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
 
     }
+
+
+    private void italyGO(){
+        Intent i = new Intent(MapsActivityFind.this, PlaceActivity.class);
+        String thePlace = "Italia";
+        i.putExtra("place", thePlace);
+        startActivity(i);
+    }
+
+
+    private void fingalGO(){
+        Intent i = new Intent(MapsActivityFind.this, PlaceActivity.class);
+        String thePlace = "Fingal";
+        i.putExtra("place", thePlace);
+        startActivity(i);
+    }
+
+    private void dubCenGO(){
+        Intent i = new Intent(MapsActivityFind.this, PlaceActivity.class);
+        String thePlace = "Central Dublin";
+        i.putExtra("place", thePlace);
+        startActivity(i);
+    }
+
+    private void galwayGO(){
+        Intent i = new Intent(MapsActivityFind.this, TheCatcherActivity.class);
+        String thePlace = "Galway";
+        i.putExtra("place", thePlace);
+        startActivity(i);
+    }
+
+    private void dubSouthGO(){
+        Intent i = new Intent(MapsActivityFind.this, TheCatcherActivity.class);
+        String thePlace = "South Dublin";
+        i.putExtra("place", thePlace);
+        startActivity(i);
+    }
+
+
+    private void corkGO(){
+        Intent i = new Intent(MapsActivityFind.this, TheCatcherActivity.class);
+        String thePlace = "Cork";
+        i.putExtra("place", thePlace);
+        startActivity(i);
+    }
+
 
 
 }

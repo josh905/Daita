@@ -79,6 +79,8 @@ public class FileGrabRow extends ArrayAdapter<FileSender>{
 
         theView.setText(getItem(pos).getC1());
 
+
+
         return theView;
     }
 

@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -16,8 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 
 public class DisplayDataActivity extends AppCompatActivity implements View.OnTouchListener {
@@ -43,7 +42,13 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     private boolean right;
 
+    private ImageView swipeImage;
 
+    private int swipeCount = 0;
+
+    private CountDownTimer theTimer;
+
+    private boolean noSwipes = false;
 
 
     private String visible;
@@ -71,6 +76,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         place = tent.getStringExtra("place");
 
         img = (ImageView) findViewById(R.id.resultBG);
+        swipeImage = (ImageView) findViewById(R.id.swipeImage);
 
 
         resultView = (TextView)findViewById(R.id.resultView);
@@ -114,8 +120,10 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     public void ad1(){
 
         img.setBackgroundResource(R.drawable.verylightgrey);
+        img.setVisibility(View.VISIBLE);
 
         visible = "ad1";
+        swipeImage.setVisibility(View.GONE);
         resultView.setVisibility(View.GONE);
         theLV.setVisibility(View.VISIBLE);
 
@@ -192,8 +200,10 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     public void ad2(){
 
         img.setBackgroundResource(R.drawable.verylightgrey);
+        img.setVisibility(View.VISIBLE);
 
         visible = "ad2";
+        swipeImage.setVisibility(View.GONE);
         resultView.setVisibility(View.GONE);
         theLV.setVisibility(View.VISIBLE);
 
@@ -320,22 +330,31 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         theLV.setVisibility(View.GONE);
 
 
-        resultView.setText("\n"+choice1 + "\n\n" + choice2 + "\n\n" + result);
+        if(result.isEmpty()||result.equals(" ")||result.equalsIgnoreCase("null")){
+            result = "N/A";
+        }
 
 
+        handleSwipes();
+
+    }
+
+
+    public void doResult(){
+
+        swipeCount++;
+        swipeImage.setVisibility(View.GONE);
+        img.setVisibility(View.VISIBLE);
         resultView.setVisibility(View.VISIBLE);
 
-
+        resultView.setText("\n"+choice1 + "\n\n" + choice2 + "\n\n" + result);
         ObjectAnimator resultAnimation = ObjectAnimator.ofFloat(resultView, "alpha", 0.1f, 1.5f);
 
-                                                                    //the above string stay as alpha.
 
         resultAnimation.setDuration(1750); //1.75 seconds
         AnimatorSet aset = new AnimatorSet();
         aset.play(resultAnimation);
         aset.start();
-
-        handleSwipes();
 
     }
 
@@ -344,20 +363,75 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     public void handleSwipes(){
 
 
+        if(swipeCount==0){
+
+            resultView.setVisibility(View.GONE);
+            img.setVisibility(View.GONE);
+            swipeImage.setVisibility(View.VISIBLE);
+
+
+            ObjectAnimator swipeAnimation = ObjectAnimator.ofFloat(swipeImage, "alpha", 0.1f, 1.5f);
+
+
+            swipeAnimation.setDuration(1250); //1.25 seconds
+            AnimatorSet aset = new AnimatorSet();
+            aset.play(swipeAnimation);
+            aset.start();
+
+            theTimer = new CountDownTimer(1200, 1200) {
+
+                public void onTick(long untilDone) {
+                    noSwipes = true;
+                }
+
+                public void onFinish()
+                {
+                    noSwipes = false;
+                    doResult();
+                }
+
+            };
+
+            theTimer.start();
+
+
+
+        }
+
+        else{
+
+            doResult();
+
+
+
+        }
+
+
+
 
         img.setOnTouchListener(new Swiper(getApplicationContext()) { //or a context created in onCreate method ?
 
             @Override
             public void onSwipeLeft() {
 
-                whenSwipeLeft();
+                if(!noSwipes){
+                    swipeCount++;
+                    whenSwipeLeft();
+                }
+
+
 
             }
 
             @Override
             public void onSwipeRight() {
 
-                whenSwipeRight();
+                if(!noSwipes){
+                    swipeCount++;
+                    whenSwipeRight();
+                }
+
+
 
             }
 
