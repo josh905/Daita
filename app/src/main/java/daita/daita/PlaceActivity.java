@@ -34,7 +34,7 @@ public class PlaceActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private RelativeLayout rel;
     private TextView infoTV;
-
+    private String checkPlaceInfo;
 
     private int file;
     private int res;
