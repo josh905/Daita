@@ -92,6 +92,10 @@ public class PlaceActivity extends AppCompatActivity {
         if(place.equals("all of Ireland")){
             img.setImageResource(R.drawable.irelandtransp);
             list.add("Crime");
+            list.add("Construction");
+            list.add("New House Prices");
+            list.add("Primary Schools");
+            list.add("Secondary Schools");
 
         }
 
@@ -99,12 +103,19 @@ public class PlaceActivity extends AppCompatActivity {
         if(place.equals("Central Dublin")){
             img.setImageResource(R.drawable.dubcenpic);
 
+            list.add("Parking Permits");
+            list.add("Primary Schools");
+            list.add("Secondary Schools");
+            list.add("Top Tourist Attractions");
+            list.add("Wheelchair Access");
 
         }
 
         if(place.equals("Fingal")){
             img.setImageResource(R.drawable.fingalpic);
+            list.add("Education");
             list.add("Population");
+
         }
 
         if(place.equals("South Dublin")){
@@ -246,32 +257,74 @@ public class PlaceActivity extends AppCompatActivity {
                         open(R.raw.ireland_crime_by_station, R.raw.ireland_crime_by_station_res);
                     }
 
+                    if(chosen.equals("Construction")){
+                        open(R.raw.ireland_construction_status, R.raw.ireland_construction_status_res);
+                    }
+
+                    if(chosen.equals("New House Prices")){
+                        open(R.raw.ireland_new_house_prices, R.raw.ireland_new_house_prices_res);
+                    }
+
+                    if(chosen.equals("Primary Schools")){
+                        open(R.raw.ireland_primary_schools, R.raw.ireland_primary_schools_res);
+                    }
+
+                    if(chosen.equals("Secondary Schools")){
+                        open(R.raw.ireland_secondary_schools, R.raw.ireland_secondary_schools_res);
+                    }
+
                 }
 
 
-                if(place.equals("Dublin Central")){
+                if(place.equals("Central Dublin")){
 
+                    if(chosen.equals("Wheelchair Access")){
+                        open(R.raw.dublin_central_wheelchair, R.raw.dublin_central_wheelchair_res);
+                    }
 
+                    if(chosen.equals("Parking Permits")){
+                        open(R.raw.dublin_central_parking_permits, R.raw.dublin_central_parking_permits_res);
+                    }
+
+                    if(chosen.equals("Top Tourist Attractions")){
+                        open(R.raw.dublin_central_top_tourist_attractions, R.raw.dublin_central_top_tourist_attractions_res);
+                    }
+
+                    if(chosen.equals("Primary Schools")){
+                        open(R.raw.dublin_central_primary_schools, R.raw.dublin_central_primary_schools_res);
+                    }
+
+                    if(chosen.equals("Secondary Schools")){
+                        open(R.raw.dublin_central_secondary_schools, R.raw.dublin_central_secondary_schools_res);
+                    }
+
+                }
+
+                if(place.equals("Fingal")){
+
+                    if(chosen.equals("Population")){
+                        open(R.raw.fingal_population, R.raw.fingal_population_res);
+                    }
+                    if(chosen.equals("Education")){
+                        open(R.raw.fingal_schools, R.raw.fingal_schools_res);
+                    }
+
+                }
+
+                if(place.equals("Italia")){
+
+                    if(chosen.equals("Elezioni Comunali 2014")){
+                        open(R.raw.italy_electorial_one, R.raw.italy_electorial_one_res);
+                    }
+
+                    if(chosen.equals("Numeri Civici Bari")){
+                        open(R.raw.italy_bari_house_phones, R.raw.italy_bari_house_phones_res);
+                    }
 
                 }
 
 
 
-                if(chosen.equals("Crime")){
-                    open(R.raw.ireland_crime_by_station, R.raw.ireland_crime_by_station_res);
-                }
-
-                if(chosen.equals("Population")){
-                    open(R.raw.fingal_population, R.raw.fingal_population_res);
-                }
-
-                if(chosen.equals("Elezioni Comunali 2014")){
-                    open(R.raw.italy_electorial_one, R.raw.italy_electorial_one_res);
-                }
-
-                if(chosen.equals("Numeri Civici Bari")){
-                    open(R.raw.italy_bari_house_phones, R.raw.italy_bari_house_phones_res);
-                }
 
             }
 
