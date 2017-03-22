@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="none"
-            android:text="Information by Location"
+            android:text="@string/information_by_location"
             android:editable="false"
             android:ems="10"
             android:id="@+id/sloganTF"
@@ -48,7 +48,7 @@
             android:layout_centerHorizontal="true" />
 
         <Button
-            android:text="Choose a Location"
+            android:text="@string/choose_a_location"
             android:layout_width="290dp"
             android:layout_height="56dp"
             android:layout_centerHorizontal="true"
@@ -62,7 +62,7 @@
             android:layout_alignStart="@+id/findBtn" />
 
         <Button
-            android:text="Find my Location"
+            android:text="@string/find_my_location"
             android:layout_width="290dp"
             android:layout_centerHorizontal="true"
             android:layout_height="56dp"

@@ -9,4 +9,7 @@
     <string name="title_activity_dublin_central">DublinCentralActivity</string>
     <string name="title_activity_the_catcher">TheCatcher</string>
     <string name="title_activity_place">PlaceActivity</string>
+    <string name="information_by_location">Information by Location</string>
+    <string name="choose_a_location">Choose a Location</string>
+    <string name="find_my_location">Find my Location</string>
 </resources>
