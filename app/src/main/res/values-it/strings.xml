@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Daita</string>
-    <string name="information_by_location">Informazioni per Localita</string>
-    <string name="find_my_location">Trova la mia posizione</string>
-    <string name="choose_a_location">Scegli una localita</string>
-</resources>

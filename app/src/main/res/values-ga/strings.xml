@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Daita</string>
-    <string name="choose_a_location">Roghnu Suiomh</string>
-    <string name="find_my_location">Aimsigh mo Suiomh</string>
-    <string name="information_by_location">Eolas le Suiomh</string>
-</resources>
