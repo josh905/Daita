@@ -33,10 +33,18 @@
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+
+
+        the line below used to be :
+        android:name="com.google.android.geo.API_KEY"
         -->
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
+            android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyA28HviHyfrDBoMYPKKvdr9MsJJXqox52U" />
+
+        <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name=".MapsActivityFind"
@@ -58,7 +66,7 @@
         <activity
             android:name=".PlaceActivity"
             android:label="@string/title_activity_place"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
