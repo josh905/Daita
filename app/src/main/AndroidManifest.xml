@@ -8,7 +8,6 @@
          location permissions for the 'MyLocation' functionality. 
     -->
 
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -40,18 +39,14 @@
         the line below used to be :
         android:name="com.google.android.geo.API_KEY"
         -->
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCMBuBl6by-CnHnxZyr3xMG7GydG2V3Ylo" />
 
         <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version"/>
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".MapsActivityFind"
             android:label="@string/title_activity_maps_find" />
-
         <activity
             android:name=".MapsActivityPick"
             android:label="@string/title_activity_maps_pick" />
@@ -59,8 +54,6 @@
             android:name=".DisplayDataActivity"
             android:label="@string/title_activity_display_data"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
         <activity
             android:name=".TheCatcherActivity"
             android:label="@string/title_activity_the_catcher"
@@ -68,7 +61,13 @@
         <activity
             android:name=".PlaceActivity"
             android:label="@string/title_activity_place"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyA28HviHyfrDBoMYPKKvdr9MsJJXqox52U" />
+
     </application>
 
 </manifest>

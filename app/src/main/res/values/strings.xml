@@ -12,4 +12,5 @@
     <string name="information_by_location">Information by Location</string>
     <string name="choose_a_location">Choose a Location</string>
     <string name="find_my_location">Find my Location</string>
+    <string name="title_activity_test_map">Map</string>
 </resources>
