@@ -163,7 +163,11 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
         if (theNewLoc==null)  return false;
         else if(theNewLoc==myLoc) return true;
+        else if(theNewLoc==hand.italyLoc()) return false;
+
         return false;
+
+
 
     }
 
