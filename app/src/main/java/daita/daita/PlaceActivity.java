@@ -79,6 +79,10 @@ public class PlaceActivity extends AppCompatActivity {
 
     }
 
+    public void choosePlace(){
+        String newPlace = "place";
+    }
+
 
 
     public void display(){
