@@ -14,6 +14,7 @@ import java.io.File;
 public class TheCatcherActivity extends AppCompatActivity{
 
     private Button returnBtn;
+    private boolean caught;
 
 
 

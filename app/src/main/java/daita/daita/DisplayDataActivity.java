@@ -32,7 +32,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     private int numCols = 0;
 
-    private String choice1, choice2, theNUM;
+    private String choice1, choice2;
 
     private int col = 0;
 
