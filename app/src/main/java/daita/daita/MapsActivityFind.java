@@ -159,6 +159,13 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
 
 
+    public boolean locationFound(LatLng theNewLoc){
+
+        if (theNewLoc==null)  return false;
+        else if(theNewLoc==myLoc) return true;
+        return false;
+
+    }
 
 
 
