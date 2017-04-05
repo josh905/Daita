@@ -26,6 +26,7 @@ public class FileGrabber extends ArrayAdapter<FileSender>{
     private Context con;
     private FileSender fs;
     private int numCols;
+    private String grab;
 
 
     private int file;
