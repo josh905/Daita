@@ -20,7 +20,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     private CameraPosition where;
     private String place;
 
-    private Marker fingal, dubCen, dubSouth, galway, cork, italy;
+    private Marker fingal, dubCen, dubSouth, galway, cork, italy, northIre;
 
 
 
@@ -70,6 +70,14 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
 
+    private void northIreGO(){
+        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
+        String thePlace = "north";
+        i.putExtra("place", thePlace);
+        startActivity(i);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +104,9 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
         italy = mMap.addMarker(new MarkerOptions().position(hand.italyLoc()).title("Italia"));
+
+
+        northIre = mMap.addMarker(new MarkerOptions().position(hand.northIreLoc()).title("North Ireland"));
 
 
     }
@@ -184,6 +195,14 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
 
+    public void northIreChosen(){
+        where = new CameraPosition.Builder().target(hand.northIreLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        cork.setTitle("Click this pin for Nothern Ireland stats");
+        cork.showInfoWindow();
+    }
+
 
 
 
@@ -234,35 +253,43 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
                     return true;
                 }
 
-
-
-
-
-                if(marker.getTitle().equals("Click this pin for Fingal stats")){
-                    fingalGO();
-                    return true;
-                }
-                if(marker.getTitle().equals("Click this pin for Central Dublin stats")){
-                    dubCenGO();
+                if(marker.getTitle().equals("Northern Ireland")) {
+                    northIreChosen();
                     return true;
                 }
 
-                if(marker.getTitle().equals("Click this pin for South Dublin stats")){
-                    dubSouthGO();
-                    return true;
-                }
-                if(marker.getTitle().equals("Click this pin for Galway stats")){
-                    galwayGO();
-                    return true;
-                }
-                if(marker.getTitle().equals("Click this pin for Cork stats")){
-                    corkGO();
-                    return true;
-                }
-                if(marker.getTitle().equals("Clicca qui per i dati per l'Italia")){
-                    italyGO();
-                    return true;
-                }
+
+                    if (marker.getTitle().equals("Click this pin for Fingal stats")) {
+                        fingalGO();
+                        return true;
+                    }
+                    if (marker.getTitle().equals("Click this pin for Central Dublin stats")) {
+                        dubCenGO();
+                        return true;
+                    }
+
+                    if (marker.getTitle().equals("Click this pin for South Dublin stats")) {
+                        dubSouthGO();
+                        return true;
+                    }
+                    if (marker.getTitle().equals("Click this pin for Galway stats")) {
+                        galwayGO();
+                        return true;
+                    }
+                    if (marker.getTitle().equals("Click this pin for Cork stats")) {
+                        corkGO();
+                        return true;
+                    }
+                    if (marker.getTitle().equals("Clicca qui per i dati per l'Italia")) {
+                        italyGO();
+                        return true;
+                    }
+                    if (marker.getTitle().equals("Click this pin for Nothern Ireland stats")) {
+                        northIreGO();
+                        return true;
+                    }
+
+
 
 
 
