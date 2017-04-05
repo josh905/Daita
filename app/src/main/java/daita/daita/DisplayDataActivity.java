@@ -97,6 +97,15 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     }
 
+    public boolean isAdapter1(){
+        if(adapter1==adapter1) return true;
+        return false;
+    }
+
+    public boolean isAdapter2(){
+        if(adapter2==adapter2) return true;
+        return false;
+    }
 
 
     public void print(String msg){
