@@ -20,7 +20,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     private CameraPosition where;
     private String place;
 
-    private Marker fingal, dubCen, dubSouth, galway, cork, italy, northIre;
+    private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, derry;
 
 
 
@@ -70,9 +70,9 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
 
-    private void northIreGO(){
-        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
-        String thePlace = "north";
+    private void belfastGO(){
+        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
+        String thePlace = "Belfast";
         i.putExtra("place", thePlace);
         startActivity(i);
     }
@@ -106,7 +106,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         italy = mMap.addMarker(new MarkerOptions().position(hand.italyLoc()).title("Italia"));
 
 
-        northIre = mMap.addMarker(new MarkerOptions().position(hand.northIreLoc()).title("North Ireland"));
+        belfast = mMap.addMarker(new MarkerOptions().position(hand.belfastLoc()).title("Belfast"));
 
 
     }
@@ -195,12 +195,12 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     }
 
 
-    public void northIreChosen(){
-        where = new CameraPosition.Builder().target(hand.northIreLoc()).zoom(18).tilt(80).bearing(10).build();
+    public void belfastChosen(){
+        where = new CameraPosition.Builder().target(hand.belfastLoc()).zoom(18).tilt(80).bearing(10).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
 
-        cork.setTitle("Click this pin for Nothern Ireland stats");
-        cork.showInfoWindow();
+        belfast.setTitle("Click this pin for Belfast stats");
+        belfast.showInfoWindow();
     }
 
 
@@ -253,8 +253,8 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
                     return true;
                 }
 
-                if(marker.getTitle().equals("Northern Ireland")) {
-                    northIreChosen();
+                if(marker.getTitle().equals("Belfast")) {
+                    belfastChosen();
                     return true;
                 }
 
@@ -284,8 +284,8 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
                         italyGO();
                         return true;
                     }
-                    if (marker.getTitle().equals("Click this pin for Nothern Ireland stats")) {
-                        northIreGO();
+                    if (marker.getTitle().equals("Click this pin for Belfast stats")) {
+                        belfastGO();
                         return true;
                     }
 
