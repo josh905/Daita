@@ -146,6 +146,7 @@ public class PlaceActivity extends AppCompatActivity {
         if(place.equals("Belfast")){
             img.setImageResource(R.drawable.belfast);
             list.add("House Price Index");
+            list.add("Crime for Jan 2017");
         }
 
 
@@ -336,9 +337,13 @@ public class PlaceActivity extends AppCompatActivity {
 
                     if(chosen.equals("House Price Index")){
                         open(R.raw.ni_hpi_by_property, R.raw.ni_hpi_by_property_res);
+                    }
 
+                    if(chosen.equals("Crime for Jan 2017")){
+                        open(R.raw.jan_northern_ireland_streetcrime, R.raw.jan_northern_ireland_streetcrime_res);
                     }
                 }
+
 
 
 
