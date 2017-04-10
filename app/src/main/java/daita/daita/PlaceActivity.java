@@ -143,6 +143,10 @@ public class PlaceActivity extends AppCompatActivity {
             viewBtn.setText("Visualizzazione");
             img.setImageResource(R.drawable.italypic);
         }
+        if(place.equals("Belfast")){
+            img.setImageResource(R.drawable.belfast);
+        }
+
 
 
 
