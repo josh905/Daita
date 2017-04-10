@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity{
 
     public Button findBtn, chooseBtn;
+
+
+
 
 
 
@@ -39,6 +42,9 @@ public class MainActivity extends AppCompatActivity{
 
 
 
+    public void print(String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

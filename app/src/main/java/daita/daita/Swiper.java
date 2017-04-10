@@ -22,6 +22,8 @@ public class Swiper implements View.OnTouchListener {
 
 
 
+
+
     public boolean onTouch(View v, MotionEvent touchEvent) {
         return mySwipe.onTouchEvent(touchEvent);
     }
