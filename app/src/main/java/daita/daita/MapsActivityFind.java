@@ -40,12 +40,12 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     private String place;
     private Marker myLocMarker;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
-    fingalDistance, italyDistance;
+    fingalDistance, italyDistance, belfastDistance;
 
     private int nearest, furthest;
 
 
-    private Marker fingal, dubCen, dubSouth, galway, cork, italy;
+    private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast;
 
 
 
@@ -98,9 +98,10 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
         dubSouthDistance = (int) Math.round(myCurrentRadius(myLoc, hand.dubSouthLoc()));
         fingalDistance = (int) Math.round(myCurrentRadius(myLoc, hand.fingalLoc()));
         italyDistance = (int) Math.round(myCurrentRadius(myLoc, hand.italyLoc()));
+        belfastDistance = (int) Math.round(myCurrentRadius(myLoc, hand.belfastLoc()));
 
 
-        int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance};
+        int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance, belfastDistance};
 
 
         nearest= myDistanceArray[0];
@@ -146,6 +147,10 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
         else if(nearest==corkDistance){
             corkHandler();
+        }
+
+        else if(nearest==belfastDistance){
+            belfastHandler();
         }
 
         else{
@@ -329,6 +334,15 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
         italy.showInfoWindow();
     }
 
+    public void belfastHandler(){
+        belfast = mMap.addMarker(new MarkerOptions().position(hand.belfastLoc()));
+        where = new CameraPosition.Builder().target(hand.belfastLoc()).zoom(18).tilt(80).bearing(10).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
+
+        belfast.setTitle("Click this pin for Belfast stats");
+        belfast.showInfoWindow();
+    }
+
 
 
     public void whenClicked(){
@@ -369,6 +383,10 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
                 }
                 if(marker.getTitle().equals("Clicca qui per i dati per l'Italia")){
                     italyGO();
+                    return true;
+                }
+                if(marker.getTitle().equals("Click this pin for Belfast stats")) {
+                    belfastGO();
                     return true;
                 }
 
@@ -444,6 +462,12 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    private void belfastGO(){
+        Intent i = new Intent(MapsActivityFind.this, TheCatcherActivity.class);
+        String thePlace = "Belfast";
+        i.putExtra("place", thePlace);
+        startActivity(i);
+    }
 
     private void italyGO(){
         Intent i = new Intent(MapsActivityFind.this, PlaceActivity.class);
@@ -488,6 +512,10 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
         i.putExtra("place", thePlace);
         startActivity(i);
     }
+
+
+
+
 
 
 
