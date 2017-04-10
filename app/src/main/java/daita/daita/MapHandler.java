@@ -41,7 +41,7 @@ public class MapHandler {
         return new LatLng(41.936549, 12.471702);
     }
 
-    public LatLng northIreLoc() { return new LatLng (54.602642, -5.919522);}
+    public LatLng belfastLoc() { return new LatLng (54.602642, -5.919522);}
 
 
 }

@@ -3,22 +3,14 @@ package daita.daita;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.kml.KmlGroundOverlay;
-import com.google.maps.android.kml.KmlLayer;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 
 
 public class MapsActivityPick extends FragmentActivity implements OnMapReadyCallback{
@@ -29,18 +21,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     private String place;
 
     private Marker fingal, dubCen, dubSouth, galway, cork, italy, northIre;
-    private KmlLayer layer;
 
-
-
-
-
-
-
-
-    public void print(String message){
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
 
 
 
@@ -108,39 +89,6 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
     }
 
-
-    public void showKML(){
-
-
-        try {
-            layer = new KmlLayer(mMap, R.raw.counties, getApplicationContext());
-            layer.addLayerToMap();
-
-
-
-
-
-
-
-
-
-
-
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
-
-    }
-
-
-
     public void addMarkers(){
 
 
@@ -160,8 +108,6 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
         northIre = mMap.addMarker(new MarkerOptions().position(hand.northIreLoc()).title("North Ireland"));
 
-
-        showKML();
 
     }
 
@@ -267,10 +213,6 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         mMap = googleMap;
 
         this.addMarkers();
-
-
-
-
 
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.midLoc(), 6.8f));

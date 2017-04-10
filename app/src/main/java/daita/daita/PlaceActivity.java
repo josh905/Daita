@@ -143,6 +143,11 @@ public class PlaceActivity extends AppCompatActivity {
             viewBtn.setText("Visualizzazione");
             img.setImageResource(R.drawable.italypic);
         }
+        if(place.equals("Belfast")){
+            img.setImageResource(R.drawable.belfast);
+            list.add("House Price Index");
+        }
+
 
 
 
@@ -325,6 +330,14 @@ public class PlaceActivity extends AppCompatActivity {
                         open(R.raw.italy_bari_house_phones, R.raw.italy_bari_house_phones_res);
                     }
 
+                }
+
+                if(place.equals("Belfast")){
+
+                    if(chosen.equals("House Price Index")){
+                        open(R.raw.ni_hpi_by_property, R.raw.ni_hpi_by_property_res);
+
+                    }
                 }
 
 
