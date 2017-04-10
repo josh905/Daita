@@ -1,6 +1,7 @@
 package daita.daita;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -9,6 +10,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -21,6 +25,9 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     private String place;
 
     private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, derry;
+
+    private Circle overlay;
+    private CircleOptions overlayOptions;
 
 
 
@@ -108,6 +115,17 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
         belfast = mMap.addMarker(new MarkerOptions().position(hand.belfastLoc()).title("Belfast"));
 
+
+        addNewOverlay(hand.dubCenLoc());
+
+    }
+
+
+    public void addNewOverlay(LatLng middle){
+
+        overlayOptions = new CircleOptions().strokeColor(Color.RED).center(middle).strokeWidth(3).radius(2500).fillColor(0x25FF0000);
+
+        mMap.addCircle(overlayOptions);
 
     }
 
