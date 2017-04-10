@@ -71,7 +71,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
 
 
     private void belfastGO(){
-        Intent i = new Intent(MapsActivityPick.this, TheCatcherActivity.class);
+        Intent i = new Intent(MapsActivityPick.this, PlaceActivity.class);
         String thePlace = "Belfast";
         i.putExtra("place", thePlace);
         startActivity(i);
@@ -199,8 +199,8 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
         where = new CameraPosition.Builder().target(hand.belfastLoc()).zoom(18).tilt(80).bearing(10).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
 
-        cork.setTitle("Click this pin for Nothern Ireland stats");
-        cork.showInfoWindow();
+        belfast.setTitle("Click this pin for Belfast stats");
+        belfast.showInfoWindow();
     }
 
 
