@@ -13,7 +13,13 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity{
 
-    public Button findBtn, chooseBtn;
+    private Button findBtn, chooseBtn;
+
+    public void goToMap(String choice){
+         Intent firstIntent= new Intent(MainActivity.this,MapActivity.class);
+        firstIntent.putExtra("choice",choice);
+        startActivity(firstIntent);
+    }
 
 
 
@@ -65,41 +71,49 @@ public class MainActivity extends AppCompatActivity{
                 }
         });
 
-        findLoc();
-        chooseLoc();
+
+
+
+        handleButtons();
 
 
     }
 
 
-    public void findLoc(){
+
+
+    private void handleButtons(){
+
+        Intent firstIntent = new Intent(MainActivity.this,MapActivity.class);
+
         findBtn = (Button)findViewById(R.id.findBtn);
         findBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
 
-                Intent findLocIntent = new Intent(MainActivity.this,MapsActivityFind.class);
-
-                startActivity(findLocIntent);
+                goToMap("find");
             }
         });
-    }
 
 
-
-    public void chooseLoc(){
         chooseBtn = (Button)findViewById(R.id.chooseBtn);
         chooseBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
-                Intent chooseLocIntent = new Intent(MainActivity.this,MapsActivityPick.class);
 
-                startActivity(chooseLocIntent);
+
+                goToMap("choose");
             }
         });
+
+
+
+
     }
+
+
 
 
 

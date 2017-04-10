@@ -27,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -45,7 +46,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MapsActivityFind"
+            android:name=".MapActivity"
             android:label="@string/title_activity_maps_find" />
         <activity
             android:name=".MapsActivityPick"
