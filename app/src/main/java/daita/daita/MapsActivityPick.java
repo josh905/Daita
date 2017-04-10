@@ -20,7 +20,7 @@ public class MapsActivityPick extends FragmentActivity implements OnMapReadyCall
     private CameraPosition where;
     private String place;
 
-    private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast;
+    private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, derry;
 
 
 
