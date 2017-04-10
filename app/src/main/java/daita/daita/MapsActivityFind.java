@@ -45,7 +45,7 @@ public class MapsActivityFind extends FragmentActivity implements OnMapReadyCall
     private int nearest, furthest;
 
 
-    private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast;
+    private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, derry;
 
 
 
