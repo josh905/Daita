@@ -9,6 +9,7 @@
     -->
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -48,17 +49,12 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_maps_find" />
-        <activity
-            android:name=".MapsActivityPick"
-            android:label="@string/title_activity_maps_pick" />
+
         <activity
             android:name=".DisplayDataActivity"
             android:label="@string/title_activity_display_data"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".TheCatcherActivity"
-            android:label="@string/title_activity_the_catcher"
-            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".PlaceActivity"
             android:label="@string/title_activity_place"

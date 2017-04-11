@@ -7,8 +7,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -33,6 +34,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -43,7 +49,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private LocationListener listen;
     private LocationManager locman;
     private CameraPosition where;
-    private String place;
+    private FileGrabValue value;
+    private String theValue;
+
     private String choice = "";
     private Marker myLocMarker;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
@@ -57,6 +65,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
     private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast;
+
+    private NetworkInfo netInfo;
+    private ConnectivityManager conman;
 
 
 
@@ -90,7 +101,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    public void goToPlace(String thePlace){
+    public void openPlace(String thePlace){
         Intent i = new Intent(MapActivity.this, PlaceActivity.class);
         i.putExtra("place", thePlace);
         startActivity(i);
@@ -131,34 +142,43 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     public void handleNearest(){
 
-        nearest = checkNearest();  //this updates the nearest location
+        nearest = checkNearest()/1000;  //this updates the nearest location
 
-        if(nearest==dubCenDistance){
-            goToPlace("Central Dublin");
+
+        if(nearest > 5000){
+            print("Sorry, you are "+(nearest-5000)+"km away from the closest data");
+
+        }
+
+        else if(nearest==dubCenDistance){
+
+            dubCen.setTitle("Click this pin for Central Dublin stats");
+            dubCen.showInfoWindow();
+            hand.zoomToPlace(mMap,hand.dubCenLoc());
         }
 
         else if(nearest==fingalDistance){
-            goToPlace("Fingal");
+            openPlace("Fingal");
         }
 
         else if(nearest==dubSouthDistance){
-            goToPlace("South Dublin");
+            openPlace("South Dublin");
         }
 
         else if(nearest==galwayDistance){
-            goToPlace("Galway");
+            openPlace("Galway");
         }
 
         else if(nearest==italyDistance){
-            goToPlace("Italia");
+            openPlace("Italia");
         }
 
         else if(nearest==corkDistance){
-            goToPlace("Cork");
+            openPlace("Cork");
         }
 
         else if(nearest==belfastDistance){
-            goToPlace("Belfast");
+            openPlace("Belfast");
         }
 
         else{
@@ -202,6 +222,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap = googleMap;
 
         addFirstMarkers();   //add markers regardless of choice
+
+        value = new FileGrabValue();
 
 
 
@@ -314,38 +336,39 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                     handleNearest();
 
+
                     return true;
                 }
 
 
                 if(marker.getTitle().equals("Click this pin for Fingal stats")){
-                    goToPlace("Fingal");
+                    openPlace("Fingal");
                     return true;
                 }
                 if(marker.getTitle().equals("Click this pin for Central Dublin stats")){
-                    goToPlace("Central Dublin");
+                    openPlace("Central Dublin");
                     return true;
                 }
 
                 if(marker.getTitle().equals("Click this pin for South Dublin stats")){
-                    goToPlace("South Dublin");
+                    openPlace("South Dublin");
                     return true;
                 }
                 if(marker.getTitle().equals("Click this pin for Galway stats")){
-                    goToPlace("Galway");
+                    openPlace("Galway");
 
                     return true;
                 }
                 if(marker.getTitle().equals("Click this pin for Cork stats")){
-                    goToPlace("Cork");
+                    openPlace("Cork");
                     return true;
                 }
                 if(marker.getTitle().equals("Clicca qui per i dati per l'Italia")){
-                    goToPlace("Italia");
+                    openPlace("Italia");
                     return true;
                 }
                 if(marker.getTitle().equals("Click this pin for Belfast stats")) {
-                    goToPlace("Belfast");
+                    openPlace("Belfast");
                     return true;
                 }
 
@@ -436,75 +459,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
-    public void dubCenHandler(){
-        dubCen = mMap.addMarker(new MarkerOptions().position(hand.dubCenLoc()));
-        where = new CameraPosition.Builder().target(hand.dubCenLoc()).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        dubCen.setTitle("Click this pin for Central Dublin stats");
-        dubCen.showInfoWindow();
-    }
-
-    public void fingalHandler(){
-       fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()));
-        where = new CameraPosition.Builder().target(hand.fingalLoc()).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        fingal.setTitle("Click this pin for Fingal stats");
-        fingal.showInfoWindow();
-    }
-
-
-    public void dubSouthHandler(){
-
-        dubSouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()));
-
-        where = new CameraPosition.Builder().target(hand.dubSouthLoc()).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        dubSouth.setTitle("Click this pin for South Dublin stats");
-        dubSouth.showInfoWindow();
-    }
-
-    public void galwayHandler(){
-        galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()));
-        where = new CameraPosition.Builder().target(hand.galwayLoc()).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        galway.setTitle("Click this pin for Galway stats");
-        galway.showInfoWindow();
-    }
-
-    public void corkHandler(){
-        cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()));
-        where = new CameraPosition.Builder().target(hand.corkLoc()).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        cork.setTitle("Click this pin for Cork stats");
-        cork.showInfoWindow();
-    }
-
-
-
-    public void italyHandler(){
-        italy = mMap.addMarker(new MarkerOptions().position(hand.italyLoc()));
-        where = new CameraPosition.Builder().target(hand.italyLoc()).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        italy.setTitle("Clicca qui per i dati per l'Italia");
-        italy.showInfoWindow();
-    }
-
-    public void belfastHandler(){
-        belfast = mMap.addMarker(new MarkerOptions().position(hand.belfastLoc()));
-        where = new CameraPosition.Builder().target(hand.belfastLoc()).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        belfast.setTitle("Click this pin for Belfast stats");
-        belfast.showInfoWindow();
-    }
-
-
 
 
 
@@ -573,13 +527,19 @@ print("CHECKED");
     private void findLoc() {
 
 
+        conman = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if (!netInfo.isConnected()) {
+            print("Turn on Wifi if you wish to improve location accuracy");
+        }
 
         fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Click this pin for Fingal stats"));
         dubSouth = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Click this pin for South Dublin stats"));
         dubCen.setTitle("Click this pin for Central Dublin stats");
 
         //hand.handleOverlays();
-        addNewOverlay(hand.dubCenLoc());
+        addOverlays(hand.dubCenLoc());
 
 
     }
@@ -592,8 +552,7 @@ print("CHECKED");
 
 
         //hand.handleOverlays();
-        addNewOverlay(hand.dubCenLoc());
-
+        addOverlays(hand.dubCenLoc());
 
 
     }
@@ -602,11 +561,16 @@ print("CHECKED");
 
 
 
-    public void addNewOverlay(LatLng middle){
+    public void addOverlays(LatLng middle){
 
         overlayOptions = new CircleOptions().strokeColor(Color.RED).center(middle).strokeWidth(3).radius(2500).fillColor(0x25FF0000);
 
         mMap.addCircle(overlayOptions);
+
+        theValue = value.getValue(getApplicationContext(), R.raw.overlay_info_test);
+        print(theValue);
+
+
 
     }
 
