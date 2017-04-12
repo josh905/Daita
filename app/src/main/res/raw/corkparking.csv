@@ -1,0 +1,9 @@
+_id,identifier,name,spaces,free_spaces,opening_times,notes,latitude,longitude,date
+8,104,Saint Finbarr's,350,39,24/7,,51.896723,-8.482056,2017-04-12T13:13:02.209000
+7,108,Merchants Quay,710,80,"Monday - Thursday and Saturday 08.00 - 19.00, Friday 08.00 - 21.00, Sunday 12.00 - 18.30",,51.8995765,-8.4686481,2017-04-12T13:13:02.256000
+6,101,Grand Parade,352,54,24/7,,51.896562,-8.474557,2017-04-12T13:13:02.161000
+5,102,Carrolls Quay,376,64,24/7,,51.901788,-8.472013,2017-04-12T13:13:02.112000
+4,103,City Hall - Eglington Street,436,43,24/7,,51.896579,-8.464302,2017-04-12T13:13:02.063000
+3,9,Black Ash Park & Ride,935,425,Monday - Saturday 07:30AM - 7:30PM,,51.878279,-8.466956,2017-04-12T13:10:28.014000
+2,2,North Main Street,410,190,Monday - Saturday 08.30 - 18.30,,51.901008,-8.477804,2017-04-12T13:11:22.960000
+1,1,Paul Street,749,134,"Monday - Saturday 07.30 -00.00, Sunday 11.30 - 00.00",,51.900542,-8.475415,2017-04-12T13:11:22.960000
