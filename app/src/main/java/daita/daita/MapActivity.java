@@ -553,6 +553,7 @@ print("CHECKED");
 
         //hand.handleOverlays();
         addOverlays(hand.dubCenLoc());
+        addOverlays(hand.corkLoc());
 
 
     }
