@@ -64,10 +64,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     private TextView resultView;
     private ImageView img;
     private GestureDetector theSwiper;
-    private SearchView theSearch;
-    private Toolbar theToolbar;
-    private MenuInflater inflater;
-    private MenuItem mItem;
+
 
     /*
     @Override
