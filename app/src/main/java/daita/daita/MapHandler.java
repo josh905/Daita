@@ -47,6 +47,40 @@ public class MapHandler {
 
     public LatLng belfastLoc() { return new LatLng (54.602642, -5.919522);}
 
+    public LatLng dubCity1(){
+
+        return new LatLng(53.407156, -6.149158);
+
+    }
+
+    public LatLng dubCity2(){
+
+        return new LatLng(53.381002, -6.120705);
+
+    }
+
+    public LatLng dubCity3(){
+
+        return new LatLng(53.312958, -6.199670);
+
+    }
+
+    public LatLng dubCity4(){
+
+        return new LatLng(53.329979, -6.378541);
+
+    }
+
+    public LatLng dubCity5(){
+
+        return new LatLng(53.364515, -6.326452);
+
+    }
+
+    public LatLng dubCity6(){
+        return new LatLng(53.406486, -6.347180);
+    }
+
 
 
     public double myCurrentRadius(LatLng firstLoc, LatLng secondLoc) {

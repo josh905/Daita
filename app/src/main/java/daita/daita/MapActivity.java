@@ -33,6 +33,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -49,7 +51,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private LocationListener listen;
     private LocationManager locman;
     private CameraPosition where;
-    private FileGrabValue value;
+    private FileGrabValue grab;
     private String theValue;
 
     private String choice = "";
@@ -70,6 +72,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private ConnectivityManager conman;
 
 
+    private PolygonOptions polyOp;
+    private Polygon poly;
 
 
     MapHandler hand = new MapHandler();
@@ -223,7 +227,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         addFirstMarkers();   //add markers regardless of choice
 
-        value = new FileGrabValue();
+        grab = new FileGrabValue();
 
 
 
@@ -251,7 +255,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             } else {
 
 
-                checkGPS();
 
 
             }
@@ -499,28 +502,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     }
 
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 10:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    checkGPS();
-
-        }
-    }
 
 
 
-    private void checkGPS() {
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        //locman.requestLocationUpdates("gps", 8000, 0, listen);
-
-print("CHECKED");
-
-
-    }
 
 
 
@@ -538,12 +522,12 @@ print("CHECKED");
         dubSouth = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Click this pin for South Dublin stats"));
         dubCen.setTitle("Click this pin for Central Dublin stats");
 
-        //hand.handleOverlays();
-        addOverlays(hand.dubCenLoc());
 
+
+
+        mergeFindChoose();
 
     }
-
 
     private void chooseLoc(){
 
@@ -557,6 +541,29 @@ print("CHECKED");
         addOverlays(hand.galwayLoc());
 
 
+        mergeFindChoose();
+    }
+
+
+
+    public void mergeFindChoose(){
+
+        //hand.handleOverlays();
+        addOverlays(hand.dubCenLoc());
+        addOverlays(hand.corkLoc());
+        addOverlays(hand.galwayLoc());
+
+        fingalPolygon();
+
+        addSchoolCircles();
+
+    }
+
+    public void addSchoolCircles(){
+
+        LatLng theLoc = grab.location(getApplicationContext(), R.raw.full_read_primary_schools, 32);
+
+        mMap.addMarker(new MarkerOptions().position(theLoc).title("zzzz"));
     }
 
 
@@ -569,14 +576,36 @@ print("CHECKED");
 
         mMap.addCircle(overlayOptions);
 
-        theValue = value.getValue(getApplicationContext(), R.raw.overlay_info_test);
-        print(theValue);
+        //theValue = value.getValue(getApplicationContext(), R.raw.overlay_info_test);
+        //print(theValue);
 
 
 
     }
 
 
+    public void fingalPolygon(){
+
+
+
+        polyOp = new PolygonOptions();
+                polyOp.add(
+
+                        hand.dubCity1(),hand.dubCity2(),hand.dubCity3(),hand.dubCity4(),hand.dubCity5(),hand.dubCity6()
+
+                        );
+
+        polyOp.strokeColor(Color.RED)
+                .fillColor(0x25FF0000)
+        .strokeWidth(3);
+
+        poly = mMap.addPolygon(polyOp);
+
+
+
+
+
+    }
 
 
 

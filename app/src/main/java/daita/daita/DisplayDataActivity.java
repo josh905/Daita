@@ -55,7 +55,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     private String place, result;
 
-    private boolean right;
+
 
     private ImageView swipeImage;
 
@@ -70,10 +70,6 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     private TextView resultView;
     private ImageView img;
     private GestureDetector theSwiper;
-    private EditText theEdit;
-    private Toolbar theToolbar;
-
-
 
 
 
@@ -96,12 +92,11 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         res = tent.getIntExtra("res", 0);
         place = tent.getStringExtra("place");
 
-        theToolbar = (Toolbar)findViewById(R.id.theToolbar);
+
 
         img = (ImageView) findViewById(R.id.resultBG);
         swipeImage = (ImageView) findViewById(R.id.swipeImage);
 
-        theEdit = (EditText)findViewById(R.id.theEdit) ;
 
 
 
@@ -121,30 +116,6 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         numCols = adapter1.getItem(0).getNumCols();
 
         swipeImage.setVisibility(View.GONE);
-        theToolbar.bringToFront();
-        theEdit.setPressed(false);
-
-        theEdit.bringToFront();
-
-        theEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ArrayList<String> searchList = new ArrayList<>();
-
-
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
 
 
 
@@ -192,18 +163,11 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         }
     }
 
-    public void editToBack() {
-        final EditText child = theEdit;
-        final ViewGroup parent = (ViewGroup)child.getParent();
-        if (null != parent) {
-            parent.removeView(child);
-            parent.addView(child, 0);
-        }
-    }
+
 
     public void ad1(){
 
-        theEdit.setVisibility(View.VISIBLE);
+
 
 
         img.setBackgroundResource(R.drawable.verylightgrey);
@@ -289,7 +253,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     public void ad2(){
 
-        theEdit.setVisibility(View.VISIBLE);
+
 
         img.setBackgroundResource(R.drawable.verylightgrey);
         img.setVisibility(View.VISIBLE);
@@ -413,7 +377,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     public void show(){
 
-        theEdit.setVisibility(View.GONE);
+
 
         img.setBackgroundResource(R.drawable.lightback);
 
@@ -548,9 +512,6 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
             checkCols();
 
 
-
-            right = false;
-
             show();
 
 
@@ -573,9 +534,6 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
             checkCols();
 
-
-
-            right = true;
 
             show();
 
