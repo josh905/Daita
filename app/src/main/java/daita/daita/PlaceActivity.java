@@ -119,6 +119,7 @@ public class PlaceActivity extends AppCompatActivity {
             img.setImageResource(R.drawable.fingalpic);
             list.add("Education");
             list.add("Population");
+            list.add("Road Accident Locations");
 
         }
 
@@ -318,6 +319,9 @@ public class PlaceActivity extends AppCompatActivity {
                     }
                     if(chosen.equals("Education")){
                         open(R.raw.fingal_schools, R.raw.fingal_schools_res);
+                    }
+                    if(chosen.equals("Road Accident Locations")){
+                        open(R.raw.road_accidents, R.raw.road_accidents_res);
                     }
 
                 }
