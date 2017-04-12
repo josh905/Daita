@@ -130,6 +130,7 @@ public class PlaceActivity extends AppCompatActivity {
         if(place.equals("Galway")){
             img.setImageResource(R.drawable.galwaypic);
             list.add("Galway City Attractions");
+            list.add("Galway City Property Prices");
         }
 
         if(place.equals("Cork")){
@@ -351,12 +352,16 @@ public class PlaceActivity extends AppCompatActivity {
                     if(chosen.equals("Belfast Bikes Information")){
                         open(R.raw.belfastbikes_stations, R.raw.belfastbikes_stations_res);
                     }
+
                 }
 
                 if(place.equals("Galway")){
 
                     if(chosen.equals("Galway City Attractions")){
                         open(R.raw.galway_city_public_visitor_attractions, R.raw.galway_city_public_visitor_attractions_res);
+                    }
+                    if(chosen.equals("Galway City Property Prices")){
+                        open(R.raw.galway_prop_price, R.raw.galway_prop_price_res);
                     }
 
                 }
