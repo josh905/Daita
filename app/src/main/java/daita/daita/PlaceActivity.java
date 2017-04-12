@@ -128,6 +128,7 @@ public class PlaceActivity extends AppCompatActivity {
 
         if(place.equals("Galway")){
             img.setImageResource(R.drawable.galwaypic);
+            list.add("Galway City Attractions");
         }
 
         if(place.equals("Cork")){
@@ -342,6 +343,14 @@ public class PlaceActivity extends AppCompatActivity {
                     if(chosen.equals("Crime for Jan 2017")){
                         open(R.raw.jan_northern_ireland_streetcrime, R.raw.jan_northern_ireland_streetcrime_res);
                     }
+                }
+
+                if(place.equals("Galway")){
+
+                    if(chosen.equals("Galway City Attractions")){
+                        open(R.raw.galway_city_public_visitor_attractions, R.raw.galway_city_public_visitor_attractions_res);
+                    }
+
                 }
 
 
