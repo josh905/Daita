@@ -135,6 +135,7 @@ public class PlaceActivity extends AppCompatActivity {
 
         if(place.equals("Cork")){
             img.setImageResource(R.drawable.corkpic);
+            list.add("Parking Locations");
         }
 
         if(place.equals("Italia")){
