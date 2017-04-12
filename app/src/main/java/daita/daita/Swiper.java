@@ -4,6 +4,10 @@ import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Adapter;
+
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created on 20/03/2017.
@@ -17,8 +21,6 @@ public class Swiper implements View.OnTouchListener {
     public Swiper(Context resultContext) {
         mySwipe = new GestureDetector(resultContext, new GestureListener());
     }
-
-
 
 
 

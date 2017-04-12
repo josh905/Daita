@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
@@ -23,9 +25,13 @@ import android.view.View;
 
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class DisplayDataActivity extends AppCompatActivity implements View.OnTouchListener {
@@ -64,29 +70,19 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     private TextView resultView;
     private ImageView img;
     private GestureDetector theSwiper;
+    private EditText theEdit;
+    private Toolbar theToolbar;
 
 
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu theMenu){
-        inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu,theMenu);
 
-        theSearch = (SearchView) findViewById(R.id.theSearch);
 
-        theSearch.bringToFront();
-
-        //mItem = theMenu.findItem(R.id.the_search);
-        //theSearch = (SearchView) MenuItemCompat.getActionView(mItem);
-        return super.onCreateOptionsMenu(theMenu);
-    }
-    */
 
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return theSwiper.onTouchEvent(event);
     }
+
 
 
 
@@ -100,29 +96,55 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         res = tent.getIntExtra("res", 0);
         place = tent.getStringExtra("place");
 
+        theToolbar = (Toolbar)findViewById(R.id.theToolbar);
+
         img = (ImageView) findViewById(R.id.resultBG);
         swipeImage = (ImageView) findViewById(R.id.swipeImage);
 
+        theEdit = (EditText)findViewById(R.id.theEdit) ;
 
 
 
 
-
-        //View view = View.inflate(getApplicationContext(), R.id.wrap, null);
-        //SearchView searchView = (SearchView) view.findViewById(R.id.theSearch);
 
         resultView = (TextView)findViewById(R.id.resultView);
         theLV = (ListView)findViewById(R.id.theLV);
 
-        sendToBackLV(theLV);
+        //sendToBackLV(theLV);
 
         adapter1 = new FileGrabber(this, 0, file);
         adapter2 = new FileGrabRow(this, 0, res);
 
 
 
+
         numCols = adapter1.getItem(0).getNumCols();
 
+        swipeImage.setVisibility(View.GONE);
+        theToolbar.bringToFront();
+        theEdit.setPressed(false);
+
+        theEdit.bringToFront();
+
+        theEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ArrayList<String> searchList = new ArrayList<>();
+
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
 
 
@@ -130,10 +152,10 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     }
 
-    public boolean isAdapter1(){
-        if(adapter1==adapter1) return true;
-        return false;
-    }
+
+
+
+
 
     public int transparent(){
         return getResources().getColor(android.R.color.transparent);
@@ -161,7 +183,17 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
 
 
-    public void sendToBackLV(final ListView child) {
+    public void theLVToBack() {
+        final ListView child = theLV;
+        final ViewGroup parent = (ViewGroup)child.getParent();
+        if (null != parent) {
+            parent.removeView(child);
+            parent.addView(child, 0);
+        }
+    }
+
+    public void editToBack() {
+        final EditText child = theEdit;
         final ViewGroup parent = (ViewGroup)child.getParent();
         if (null != parent) {
             parent.removeView(child);
@@ -170,6 +202,8 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     }
 
     public void ad1(){
+
+        theEdit.setVisibility(View.VISIBLE);
 
 
         img.setBackgroundResource(R.drawable.verylightgrey);
@@ -254,6 +288,8 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     }
 
     public void ad2(){
+
+        theEdit.setVisibility(View.VISIBLE);
 
         img.setBackgroundResource(R.drawable.verylightgrey);
         img.setVisibility(View.VISIBLE);
@@ -377,6 +413,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     public void show(){
 
+        theEdit.setVisibility(View.GONE);
 
         img.setBackgroundResource(R.drawable.lightback);
 
