@@ -367,6 +367,14 @@ public class PlaceActivity extends AppCompatActivity {
 
                 }
 
+                if(place.equals("Cork")){
+
+                    if(chosen.equals("Parking Locations")){
+                        open(R.raw.corkparking, R.raw.corkparking_res);
+                    }
+
+                }
+
 
 
 
