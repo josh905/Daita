@@ -9,6 +9,7 @@ public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
@@ -20,7 +21,6 @@ public class SplashScreen extends AppCompatActivity {
                 finish();
             }
         },2000);
-
 
     }
 }

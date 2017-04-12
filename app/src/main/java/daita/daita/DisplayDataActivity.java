@@ -3,16 +3,21 @@ package daita.daita;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 
 
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -55,6 +60,10 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     private TextView resultView;
     private ImageView img;
     private GestureDetector theSwiper;
+    private SearchView theSearch;
+    private Toolbar theToolbar;
+
+
 
 
 
@@ -78,10 +87,19 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         img = (ImageView) findViewById(R.id.resultBG);
         swipeImage = (ImageView) findViewById(R.id.swipeImage);
 
+        theToolbar = (Toolbar) findViewById(R.id.theToolbar);
+        setSupportActionBar(theToolbar);
+        theToolbar.bringToFront();
+        theToolbar.setTitleTextColor(transparent());
+
+
+        //View view = View.inflate(getApplicationContext(), R.id.wrap, null);
+        //SearchView searchView = (SearchView) view.findViewById(R.id.theSearch);
 
         resultView = (TextView)findViewById(R.id.resultView);
         theLV = (ListView)findViewById(R.id.theLV);
 
+        sendToBackLV(theLV);
 
         adapter1 = new FileGrabber(this, 0, file);
         adapter2 = new FileGrabRow(this, 0, res);
@@ -102,9 +120,8 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         return false;
     }
 
-    public boolean isAdapter2(){
-        if(adapter2==adapter2) return true;
-        return false;
+    public int transparent(){
+        return getResources().getColor(android.R.color.transparent);
     }
 
 
@@ -126,7 +143,19 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     }
 
 
+
+
+
+    public void sendToBackLV(final ListView child) {
+        final ViewGroup parent = (ViewGroup)child.getParent();
+        if (null != parent) {
+            parent.removeView(child);
+            parent.addView(child, 0);
+        }
+    }
+
     public void ad1(){
+
 
         img.setBackgroundResource(R.drawable.verylightgrey);
         img.setVisibility(View.VISIBLE);
@@ -136,7 +165,10 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         resultView.setVisibility(View.GONE);
         theLV.setVisibility(View.VISIBLE);
 
+
         theLV.setAdapter(adapter1);
+
+
 
 
         theLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {

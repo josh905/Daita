@@ -9,6 +9,7 @@
     -->
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -45,19 +47,14 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MapsActivityFind"
+            android:name=".MapActivity"
             android:label="@string/title_activity_maps_find" />
-        <activity
-            android:name=".MapsActivityPick"
-            android:label="@string/title_activity_maps_pick" />
+
         <activity
             android:name=".DisplayDataActivity"
             android:label="@string/title_activity_display_data"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".TheCatcherActivity"
-            android:label="@string/title_activity_the_catcher"
-            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".PlaceActivity"
             android:label="@string/title_activity_place"

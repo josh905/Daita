@@ -1,7 +1,11 @@
 package daita.daita;
 
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 
 /**
@@ -40,6 +44,32 @@ public class MapHandler {
     public LatLng italyLoc(){
         return new LatLng(41.936549, 12.471702);
     }
+
+    public LatLng belfastLoc() { return new LatLng (54.602642, -5.919522);}
+
+
+
+    public double myCurrentRadius(LatLng firstLoc, LatLng secondLoc) {
+
+        //these values are in metres
+
+        if (firstLoc == null || secondLoc == null) {
+            return 0;
+        }
+
+        return SphericalUtil.computeDistanceBetween(firstLoc, secondLoc);
+
+
+    }
+
+
+    public void zoomToPlace(GoogleMap theMap, LatLng thePlace){
+        CameraPosition pos = new CameraPosition.Builder().target(thePlace).zoom(18).tilt(80).bearing(10).build();
+        theMap.animateCamera(CameraUpdateFactory.newCameraPosition(pos));
+    }
+
+
+
 
 
 }
