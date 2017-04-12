@@ -55,7 +55,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private String choice = "";
     private Marker myLocMarker;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
-    fingalDistance, italyDistance, belfastDistance;
+    fingalDistance, italyDistance, belfastDistance, londonDistance;
 
 
     private Circle overlay;
@@ -554,6 +554,7 @@ print("CHECKED");
         //hand.handleOverlays();
         addOverlays(hand.dubCenLoc());
         addOverlays(hand.corkLoc());
+        addOverlays(hand.galwayLoc());
 
 
     }
