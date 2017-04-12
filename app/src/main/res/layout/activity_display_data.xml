@@ -38,6 +38,7 @@
         android:layout_height="match_parent">
 
 
+        <!--
         <android.support.v7.widget.Toolbar
             android:id="@+id/theToolbar"
             android:layout_width="match_parent"
@@ -45,6 +46,7 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme" />
+            -->
 
         <SearchView
             android:id="@+id/theSearch"

@@ -7,12 +7,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -62,9 +66,24 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     private GestureDetector theSwiper;
     private SearchView theSearch;
     private Toolbar theToolbar;
+    private MenuInflater inflater;
+    private MenuItem mItem;
 
+    /*
+    @Override
+    public boolean onCreateOptionsMenu(Menu theMenu){
+        inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu,theMenu);
 
+        theSearch = (SearchView) findViewById(R.id.theSearch);
 
+        theSearch.bringToFront();
+
+        //mItem = theMenu.findItem(R.id.the_search);
+        //theSearch = (SearchView) MenuItemCompat.getActionView(mItem);
+        return super.onCreateOptionsMenu(theMenu);
+    }
+    */
 
 
     @Override
@@ -87,10 +106,9 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
         img = (ImageView) findViewById(R.id.resultBG);
         swipeImage = (ImageView) findViewById(R.id.swipeImage);
 
-        theToolbar = (Toolbar) findViewById(R.id.theToolbar);
-        setSupportActionBar(theToolbar);
-        theToolbar.bringToFront();
-        theToolbar.setTitleTextColor(transparent());
+
+
+
 
 
         //View view = View.inflate(getApplicationContext(), R.id.wrap, null);

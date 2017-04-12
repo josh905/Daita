@@ -64,7 +64,7 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyA28HviHyfrDBoMYPKKvdr9MsJJXqox52U" />
-
+z
     </application>
 
 </manifest>
