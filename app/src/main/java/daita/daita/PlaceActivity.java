@@ -153,6 +153,10 @@ public class PlaceActivity extends AppCompatActivity {
             list.add("Crime for Jan 2017");
             list.add("Belfast Bikes Information");
         }
+        if(place.equals("Sydney")){
+            img.setImageResource(R.drawable.sydneypic);
+            list.add("Natural Gas Consumption");
+        }
 
 
 
@@ -371,6 +375,13 @@ public class PlaceActivity extends AppCompatActivity {
 
                     if(chosen.equals("Parking Locations")){
                         open(R.raw.corkparking, R.raw.corkparking_res);
+                    }
+
+                }
+                if(place.equals("Sydney")){
+
+                    if(chosen.equals("Natural Gas Consumption")){
+                        open(R.raw.sydney_gas, R.raw.sydney_gas_res);
                     }
 
                 }

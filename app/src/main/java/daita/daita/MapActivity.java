@@ -60,7 +60,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private String choice = "";
     private Marker myLocMarker;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
-    fingalDistance, italyDistance, belfastDistance, londonDistance;
+    fingalDistance, italyDistance, belfastDistance, londonDistance, sydneyDistance;
 
 
     private Circle overlay;
@@ -69,7 +69,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private int nearest, furthest;
 
 
-    private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast;
+    private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, sydney;
 
     private NetworkInfo netInfo;
     private ConnectivityManager conman;
@@ -126,6 +126,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         fingalDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.fingalLoc()));
         italyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.italyLoc()));
         belfastDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.belfastLoc()));
+        sydneyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.sydneyLoc()));
 
 
         int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance, belfastDistance};
@@ -190,6 +191,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             openPlace("Belfast");
         }
 
+        else if(nearest==sydneyDistance){
+            openPlace("Sydney");
+        }
+
         else{
             print ("Please ensure your location services are enabled");
         }
@@ -217,6 +222,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
         belfast = mMap.addMarker(new MarkerOptions().position(hand.belfastLoc()).title("Belfast"));
+
+
+        sydney = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Sydney"));
 
 
 
@@ -387,6 +395,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     openPlace("Belfast");
                     return true;
                 }
+                if(marker.getTitle().equals("Click this pin for Sydney stats")) {
+                    openPlace("Sydney");
+                    return true;
+                }
 
 
                 if(marker.getTitle().equals("Dublin")){
@@ -442,11 +454,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     italy.showInfoWindow();
                     return true;
                 }
-
                 if(marker.getTitle().equals("Belfast")) {
                     hand.zoomToPlace(mMap, hand.belfastLoc());
                     belfast.setTitle("Click this pin for Belfast stats");
                     belfast.showInfoWindow();
+                    return true;
+                }
+                if(marker.getTitle().equals("Sydney")) {
+                    hand.zoomToPlace(mMap, hand.sydneyLoc());
+                    sydney.setTitle("Click this pin for Sydney stats");
+                    sydney.showInfoWindow();
                     return true;
                 }
 
