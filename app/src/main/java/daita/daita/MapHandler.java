@@ -47,6 +47,8 @@ public class MapHandler {
 
     public LatLng belfastLoc() { return new LatLng (54.602642, -5.919522);}
 
+    public LatLng sydneyLoc() { return new LatLng (-33.856765, 151.215248);}
+
     public LatLng dubCity1(){
 
         return new LatLng(53.407156, -6.149158);
