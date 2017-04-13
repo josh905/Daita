@@ -561,9 +561,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     public void addSchoolCircles(){
 
-        LatLng theLoc = grab.location(getApplicationContext(), R.raw.full_read_primary_schools, 32);
+        LatLng theLoc;
+        for(int i=755;i<1194;i++){
+            theLoc = grab.location(getApplicationContext(), R.raw.full_read_primary_schools, i);
 
-        mMap.addMarker(new MarkerOptions().position(theLoc).title("zzzz"));
+            overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(250).fillColor(Color.LTGRAY);
+
+            mMap.addCircle(overlayOptions);
+        }
+
     }
 
 
@@ -572,9 +578,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     public void addOverlays(LatLng middle){
 
-        overlayOptions = new CircleOptions().strokeColor(Color.RED).center(middle).strokeWidth(3).radius(2500).fillColor(0x25FF0000);
 
-        mMap.addCircle(overlayOptions);
 
         //theValue = value.getValue(getApplicationContext(), R.raw.overlay_info_test);
         //print(theValue);
