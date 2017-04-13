@@ -17,9 +17,10 @@ public class MainActivity extends AppCompatActivity{
 
     private Button findBtn, chooseBtn;
 
-    public void goToMap(String choice){
-         Intent firstIntent= new Intent(MainActivity.this,MapActivity.class);
+    public void goToMap(String choice, String whatToDisplay){
+        Intent firstIntent= new Intent(MainActivity.this,MapActivity.class);
         firstIntent.putExtra("choice",choice);
+        firstIntent.putExtra("whatToDisplay", whatToDisplay);
         startActivity(firstIntent);
     }
 
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity{
                     Intent in = new Intent(MainActivity.this,PlaceActivity.class);
                     String thePlace = "all of Ireland";
                     in.putExtra("place", thePlace);
+
                     startActivity(in);
 
 
@@ -90,7 +92,6 @@ public class MainActivity extends AppCompatActivity{
 
     private void handleButtons(){
 
-        Intent firstIntent = new Intent(MainActivity.this,MapActivity.class);
 
         findBtn = (Button)findViewById(R.id.findBtn);
         findBtn.setOnClickListener(new View.OnClickListener(){
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
 
 
-                goToMap("find");
+                goToMap("find", "none");
             }
         });
 
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-                goToMap("choose");
+                goToMap("choose", "none");
             }
         });
 

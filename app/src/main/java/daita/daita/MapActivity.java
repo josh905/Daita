@@ -7,17 +7,25 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
@@ -38,11 +46,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Timer;
 
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -77,10 +82,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     private PolygonOptions polyOp;
     private Polygon poly;
+
+
+
     private Button schoolBtn;
+    private ImageView loadingpic;
+    private ProgressBar theBar;
+    private RelativeLayout mapSplashLayout;
+    private String whatToDisplay = "";
+
 
 
     MapHandler hand = new MapHandler();
+
+
+
 
 
     //create instance of interface for MainActivity class
@@ -101,10 +117,85 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        theBar = (ProgressBar)findViewById(R.id.theBar);
+        loadingpic = (ImageView)findViewById(R.id.loadingpic);
+        schoolBtn = (Button)findViewById(R.id.schoolBtn);
+        mapSplashLayout = (RelativeLayout)findViewById(R.id.mapSplashLayout) ;
 
-        Intent in = getIntent();
-        choice = in.getStringExtra("choice");
+        schoolBtn.setVisibility(View.GONE);
 
+        hideSplash();
+
+
+
+        Intent getIn = getIntent();
+        choice = getIn.getStringExtra("choice");
+
+
+        whatToDisplay = getIn.getStringExtra("whatToDisplay"); //this key is sent from PlaceActivity
+
+
+    }
+
+
+
+    public void showSplashFor(long mil){
+
+
+        theBar.setVisibility(View.VISIBLE);
+        loadingpic.setVisibility(View.VISIBLE);
+        mapSplashLayout.setVisibility(View.VISIBLE);
+        schoolBtn.setVisibility(View.GONE);
+        CountDownTimer theTimer = new CountDownTimer(mil,mil) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                hideSplash();
+
+            }
+        };
+
+        theTimer.start();
+
+
+    }
+
+
+
+
+    public void showBarFor(long mil){
+
+
+        theBar.setVisibility(View.VISIBLE);
+
+        CountDownTimer theTimer = new CountDownTimer(mil,mil) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+               theBar.setVisibility(View.GONE);
+
+            }
+        };
+
+        theTimer.start();
+
+
+    }
+
+
+    public void hideSplash(){
+        theBar.setVisibility(View.GONE);
+        loadingpic.setVisibility(View.GONE);
+        mapSplashLayout.setVisibility(View.GONE);
+        schoolBtn.setVisibility(View.VISIBLE);
     }
 
 
@@ -113,6 +204,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         Intent i = new Intent(MapActivity.this, PlaceActivity.class);
         i.putExtra("place", thePlace);
         startActivity(i);
+    }
+
+
+
+
+    public void imageToBack(ImageView theImage) {
+        final ImageView child = theImage;
+        final ViewGroup parent = (ViewGroup)child.getParent();
+        if (null != parent) {
+            parent.removeView(child);
+            parent.addView(child, 0);
+        }
     }
 
 
@@ -129,7 +232,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         sydneyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.sydneyLoc()));
 
 
-        int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance, belfastDistance};
+        int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance, belfastDistance, sydneyDistance};
 
 
         nearest= myDistanceArray[0];
@@ -243,12 +346,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         grab = new FileGrabValue();
 
 
-        schoolBtn = (Button)findViewById(R.id.schoolBtn);
+
 
         schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addSchoolCircles();
+                showSplashFor(2000);
+               addSchoolCircles();
+
+
             }
         });
 
@@ -273,11 +379,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     //Toast.makeText(MapActivity.this, "Please allow location for this app", Toast.LENGTH_SHORT).show();
                     return;
                 }
-            } else {
-
-
-
-
             }
 
 
@@ -482,13 +583,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-
-
-
-
-
-
-
     }
 
 
@@ -583,7 +677,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         addOverlays(hand.corkLoc());
         addOverlays(hand.galwayLoc());
 
-        fingalPolygon();
+
 
 
 
@@ -591,14 +685,43 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     public void addSchoolCircles(){
 
+
         LatLng theLoc;
-        for(int i=755;i<1194;i++){
+
+
+        ArrayList<LatLng> theList;
+
+        theList = grab.locationList(getApplicationContext(), R.raw.full_read_primary_schools, 758, 1190);
+
+
+        for(int i=0;i<theList.size();i++){
+
+            theLoc = theList.get(i);
+
+            overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(25).fillColor(0x250000ff);
+            mMap.addCircle(overlayOptions);
+
+
+        }
+
+
+        //was until 1194
+
+        /*
+        for(int i=755;i<1105;i++){
+
             theLoc = grab.location(getApplicationContext(), R.raw.full_read_primary_schools, i);
 
-            overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(250).fillColor(Color.LTGRAY);
 
+           overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(250).fillColor(0x250000ff);
             mMap.addCircle(overlayOptions);
+
+
         }
+*/
+
+
+
 
     }
 

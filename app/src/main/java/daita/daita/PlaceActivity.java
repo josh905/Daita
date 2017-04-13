@@ -288,6 +288,10 @@ public class PlaceActivity extends AppCompatActivity {
                         open(R.raw.ireland_primary_schools, R.raw.ireland_primary_schools_res);
                     }
 
+                    if(chosen.equals("Primary Schools on Map")){
+                        goToMap("choose","schools");
+                    }
+
                     if(chosen.equals("Secondary Schools")){
                         open(R.raw.ireland_secondary_schools, R.raw.ireland_secondary_schools_res);
                     }
@@ -425,6 +429,16 @@ public class PlaceActivity extends AppCompatActivity {
         dispin.putExtra("place", place);
         startActivity(dispin);
 
+    }
+
+
+
+
+    public void goToMap(String choice, String whatToDisplay){
+        Intent mapIntent= new Intent(PlaceActivity.this,MapActivity.class);
+        mapIntent.putExtra("choice",choice);
+        mapIntent.putExtra("whatToDisplay", whatToDisplay);
+        startActivity(mapIntent);
     }
 
 
