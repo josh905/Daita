@@ -10,9 +10,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/crimeBtn"
+        android:id="@+id/schoolBtn"
         android:layout_gravity="right|top"
-        android:text="Show Crime"
+        android:text="Primary Schools"
         android:padding="10dp"
         android:layout_marginTop="20dp"
         android:paddingRight="10dp"/>

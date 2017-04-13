@@ -10,12 +10,14 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -53,6 +55,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private CameraPosition where;
     private FileGrabValue grab;
     private String theValue;
+    private CountDownTimer theTimer;
 
     private String choice = "";
     private Marker myLocMarker;
@@ -74,6 +77,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     private PolygonOptions polyOp;
     private Polygon poly;
+    private Button schoolBtn;
 
 
     MapHandler hand = new MapHandler();
@@ -113,15 +117,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    public int checkNearest(){
+    public int checkNearest(LatLng theLoc){
 
-        corkDistance = (int) Math.round(hand.myCurrentRadius(myLoc, hand.corkLoc()));
-        galwayDistance = (int) Math.round(hand.myCurrentRadius(myLoc, hand.galwayLoc()));
-        dubCenDistance = (int) Math.round(hand.myCurrentRadius(myLoc, hand.dubCenLoc()));
-        dubSouthDistance = (int) Math.round(hand.myCurrentRadius(myLoc, hand.dubSouthLoc()));
-        fingalDistance = (int) Math.round(hand.myCurrentRadius(myLoc, hand.fingalLoc()));
-        italyDistance = (int) Math.round(hand.myCurrentRadius(myLoc, hand.italyLoc()));
-        belfastDistance = (int) Math.round(hand.myCurrentRadius(myLoc, hand.belfastLoc()));
+        corkDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.corkLoc()));
+        galwayDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.galwayLoc()));
+        dubCenDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubCenLoc()));
+        dubSouthDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubSouthLoc()));
+        fingalDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.fingalLoc()));
+        italyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.italyLoc()));
+        belfastDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.belfastLoc()));
 
 
         int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance, belfastDistance};
@@ -146,10 +150,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     public void handleNearest(){
 
-        nearest = checkNearest()/1000;  //this updates the nearest location
+        nearest = checkNearest(myLoc);  //this updates the nearest location
 
+        int nearestInKm = nearest/1000;
 
-        if(nearest > 5000){
+        if(nearestInKm > 5000){
             print("Sorry, you are "+(nearest-5000)+"km away from the closest data");
 
         }
@@ -230,6 +235,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         grab = new FileGrabValue();
 
 
+        schoolBtn = (Button)findViewById(R.id.schoolBtn);
+
+        schoolBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addSchoolCircles();
+            }
+        });
 
 
         if(choice.equalsIgnoreCase("find")) {
@@ -555,7 +568,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         fingalPolygon();
 
-        addSchoolCircles();
+
 
     }
 
