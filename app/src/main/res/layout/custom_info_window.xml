@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E2E2E2"
+    android:background="#f2f2f2"
+
     android:weightSum="100"
     android:minWidth="500px">
 
@@ -29,7 +30,7 @@
             android:id="@+id/titleView"
             android:layout_gravity="center"
             android:textColor="#000"
-            android:textStyle="normal|bold"
+            android:textStyle="normal"
             android:fontFamily="sans-serif"
             android:textSize="16sp"
             android:paddingTop="5dp"

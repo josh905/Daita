@@ -18,6 +18,7 @@ public class Swiper implements View.OnTouchListener {
 
     private GestureDetector mySwipe;
 
+
     public Swiper(Context resultContext) {
         mySwipe = new GestureDetector(resultContext, new GestureListener());
     }
@@ -72,5 +73,7 @@ public class Swiper implements View.OnTouchListener {
             return false;
         }
     }
+
+
 
 }

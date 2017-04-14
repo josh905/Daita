@@ -41,6 +41,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -65,7 +67,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private FileGrabValue grab;
     private String theValue;
     private CountDownTimer theTimer;
-
+    private String selected = "";
     private String choice = "";
     private Marker myLocMarker;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
@@ -84,8 +86,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private ConnectivityManager conman;
 
 
+
     private PolygonOptions polyOp;
     private Polygon poly;
+
 
 
 
@@ -98,6 +102,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private ArrayList<String> spinnerList;
     private ArrayAdapter<String> spinnerAdapter;
     private Button setBtn;
+
+    private boolean timerOn = false;
+
+    private ArrayList<String> shownList;
+    private Swiper timeCheck;
+
 
 
     MapHandler hand = new MapHandler();
@@ -114,6 +124,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
+
+
+
+    /**
+     *
+     *         ____________         ON CREATE   __________________
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +152,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         spinnerList = new ArrayList<>();
 
         setSpinnerList(spinnerList);
+        shownList = new ArrayList<>();
+
 
 
         hideSplash();
@@ -147,6 +166,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
         whatToDisplay = getIn.getStringExtra("whatToDisplay"); //this key is sent from PlaceActivity
+
+
 
 
     }
@@ -180,9 +201,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
+
+
+
+
+
     public void setSpinnerList(ArrayList<String> list){
-        list.add("Filter by");
-        list.add("Primary schools");
+
+
+        list.add("↓ Filter by ↓");
+        list.add("Dublin primary schools");
+
+
+
         spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
 
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -206,8 +237,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     titleView = (TextView) v.findViewById(R.id.titleView);
 
 
-                    titleView.setText(marker.getTitle());
-                    titleView.append(marker.getSnippet());
+                    String theTitle = marker.getTitle()+":\n\n";
+                    String theSnippet = marker.getSnippet();
+
+                    titleView.setText(theTitle);
+                    titleView.append(theSnippet);
 
 
 
@@ -404,11 +438,27 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
+    public void handleFilters(){
+
+
+        if(selected.equals("Dublin primary schools")){
+            showBarFor(2000);
+            addSchoolCircles();
+        }
+
+    }
+
+
+    /**
+     *
+     *         ____________         ON MAP READY   __________________
+     */
 
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
         addFirstMarkers();   //add markers regardless of choice
@@ -416,23 +466,67 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         grab = new FileGrabValue();
 
 
+        timeCheck = new Swiper(getApplicationContext());
+
+
 
         setBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mapSpinner.getItemAtPosition(0).equals(mapSpinner.getSelectedItem())){
-                    print("Please select a filter");
-                }
-                String sel = mapSpinner.getSelectedItem().toString();
 
-                if(sel.equals("Primary schools")){
-                    showBarFor(2000);
-                    addSchoolCircles();
+                selected = mapSpinner.getSelectedItem().toString();
+
+                if(selected.equals(mapSpinner.getItemAtPosition(0).toString())){
+                    print("Please select a filter");
+                    return;
                 }
+
+                if(shownList.contains(selected)){
+                    print(selected +" data is already displayed");
+                    return;
+                }
+
+
+                if(timerOn){
+                    print("Please wait a few more seconds");
+                    return;
+                }
+
+
+
+                CountDownTimer buttonTimer = new CountDownTimer(6000,6000) { //8 seconds
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        timerOn = true;
+
+                         handleFilters();
+
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                        timerOn = false;
+                    }
+                };
+
+                buttonTimer.start();
 
 
 
             }
+
+
+
+
+
+
+
+
+
+
+
         });
 
 
@@ -451,40 +545,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-        /*
-        mapSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String sel = mapSpinner.getSelectedItem().toString();
-                if(sel.equals(mapSpinner.getItemAtPosition(0).toString())){
-                    print("Please select a filter");
-                }
-                if(sel.equals("Primary schools")){
-                    //showSplashFor(2000);
-                    addSchoolCircles();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-
-            }
-
-        });
-
-*/
 
         if(choice.equalsIgnoreCase("find")) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
+
 
                     requestPermissions(new String[]{
                             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -561,8 +628,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-
-
         //THIS MUST STAY AS LAST THING IN ONMAPREADY
         //SO DONT HAVE TO KEEP CALLING IT IN
 
@@ -571,6 +636,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             @Override
             public boolean onMarkerClick(Marker marker) {
 
+                //marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
                 if(marker.getTitle().equals("Click this pin to detect nearest data")){
 
@@ -643,6 +709,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     hand.zoomToPlace(mMap, hand.galwayLoc());
                     galway.setTitle("Click this pin for Galway stats");
                     galway.showInfoWindow();
+
                     return true;
                 }
                 if(marker.getTitle().equals("Cork")){
@@ -653,8 +720,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 }
                 if(marker.getTitle().equals("Central Dublin")){
                     hand.zoomToPlace(mMap, hand.dubCenLoc());
-                    dubCen.setTitle("Click this pin for Central Dublin stats");
-                    dubCen.setSnippet("\nMusic: 200\nSchool size with pupils: 204\nFood: Good");
+                    dubCen.setTitle("School name");
+                    marker.setSnippet("Subjects mainly taught in: English\nMale pupils: 23\nFemale pupils: 24\nTeachers: None");
+
                     dubCen.showInfoWindow();
                     return true;
                 }
@@ -803,6 +871,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
+        shownList.add("Dublin primary schools"); //this is a key
+        //we check if the list contains it
+        //so we can determine whether we want to add the circles for this data
+
+
         LatLng theLoc;
 
 
@@ -816,26 +889,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             theLoc = theList.get(i);
 
             overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(75).fillColor(0x250000ff);
-            mMap.addCircle(overlayOptions);
+            Circle theC = mMap.addCircle(overlayOptions);
+           // theC.setClickable(true);
 
 
         }
 
-
-        //was until 1194
-
-        /*
-        for(int i=755;i<1105;i++){
-
-            theLoc = grab.location(getApplicationContext(), R.raw.full_read_primary_schools, i);
-
-
-           overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(250).fillColor(0x250000ff);
-            mMap.addCircle(overlayOptions);
-
-
-        }
-*/
 
 
 
