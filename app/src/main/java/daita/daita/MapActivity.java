@@ -21,11 +21,15 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -85,12 +89,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    private Button schoolBtn;
+    private Spinner mapSpinner;
     private ImageView loadingpic;
     private ProgressBar theBar;
     private RelativeLayout mapSplashLayout;
     private String whatToDisplay = "";
-
+    private TextView titleView;
+    private ArrayList<String> spinnerList;
+    private ArrayAdapter<String> spinnerAdapter;
+    private Button setBtn;
 
 
     MapHandler hand = new MapHandler();
@@ -119,12 +126,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         theBar = (ProgressBar)findViewById(R.id.theBar);
         loadingpic = (ImageView)findViewById(R.id.loadingpic);
-        schoolBtn = (Button)findViewById(R.id.schoolBtn);
+        mapSpinner = (Spinner) findViewById(R.id.mapSpinner);
         mapSplashLayout = (RelativeLayout)findViewById(R.id.mapSplashLayout) ;
+        setBtn = (Button)findViewById(R.id.setBtn);
+        mapSpinner.setBackgroundColor(Color.LTGRAY);
+        setBtn.setBackgroundColor(Color.LTGRAY);
 
-        schoolBtn.setVisibility(View.GONE);
+        spinnerList = new ArrayList<>();
+
+        setSpinnerList(spinnerList);
+
 
         hideSplash();
+
 
 
 
@@ -145,7 +159,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         theBar.setVisibility(View.VISIBLE);
         loadingpic.setVisibility(View.VISIBLE);
         mapSplashLayout.setVisibility(View.VISIBLE);
-        schoolBtn.setVisibility(View.GONE);
+        mapSpinner.setVisibility(View.GONE);
+        setBtn.setVisibility(View.GONE);
         CountDownTimer theTimer = new CountDownTimer(mil,mil) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -165,12 +180,66 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
+    public void setSpinnerList(ArrayList<String> list){
+        list.add("Filter by");
+        list.add("Primary schools");
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mapSpinner.setAdapter(spinnerAdapter);
+    }
+
+
+    public void setInfoWindow(final int theWindow){
+
+        if (mMap != null) {
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(final Marker marker) {
+                    View v = getLayoutInflater().inflate(theWindow, null);
+                    titleView = (TextView) v.findViewById(R.id.titleView);
+
+
+                    titleView.setText(marker.getTitle());
+                    titleView.append(marker.getSnippet());
+
+
+
+
+
+
+                    return v;
+                }
+
+
+            });
+
+
+
+
+        }
+
+
+
+    }
+
+
 
 
     public void showBarFor(long mil){
 
 
+        mapSplashLayout.setVisibility(View.VISIBLE);
+        mapSplashLayout.setBackgroundColor(Color.TRANSPARENT);
+
         theBar.setVisibility(View.VISIBLE);
+        theBar.bringToFront();
 
         CountDownTimer theTimer = new CountDownTimer(mil,mil) {
             @Override
@@ -180,8 +249,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
             @Override
             public void onFinish() {
-               theBar.setVisibility(View.GONE);
-
+               hideSplash();
             }
         };
 
@@ -195,7 +263,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         theBar.setVisibility(View.GONE);
         loadingpic.setVisibility(View.GONE);
         mapSplashLayout.setVisibility(View.GONE);
-        schoolBtn.setVisibility(View.VISIBLE);
+        mapSpinner.setVisibility(View.VISIBLE);
+        setBtn.setVisibility(View.VISIBLE);
+
     }
 
 
@@ -347,17 +417,62 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-
-        schoolBtn.setOnClickListener(new View.OnClickListener() {
+        setBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSplashFor(2000);
-               addSchoolCircles();
+                if(mapSpinner.getItemAtPosition(0).equals(mapSpinner.getSelectedItem())){
+                    print("Please select a filter");
+                }
+                String sel = mapSpinner.getSelectedItem().toString();
+
+                if(sel.equals("Primary schools")){
+                    showBarFor(2000);
+                    addSchoolCircles();
+                }
+
 
 
             }
         });
 
+
+        setInfoWindow(R.layout.custom_info_window);
+
+
+
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                print("yo");
+            }
+        });
+
+
+
+        /*
+        mapSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String sel = mapSpinner.getSelectedItem().toString();
+                if(sel.equals(mapSpinner.getItemAtPosition(0).toString())){
+                    print("Please select a filter");
+                }
+                if(sel.equals("Primary schools")){
+                    //showSplashFor(2000);
+                    addSchoolCircles();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+
+        });
+
+*/
 
         if(choice.equalsIgnoreCase("find")) {
 
@@ -539,6 +654,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 if(marker.getTitle().equals("Central Dublin")){
                     hand.zoomToPlace(mMap, hand.dubCenLoc());
                     dubCen.setTitle("Click this pin for Central Dublin stats");
+                    dubCen.setSnippet("\nMusic: 200\nSchool size with pupils: 204\nFood: Good");
                     dubCen.showInfoWindow();
                     return true;
                 }
@@ -686,6 +802,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void addSchoolCircles(){
 
 
+
         LatLng theLoc;
 
 
@@ -698,7 +815,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
             theLoc = theList.get(i);
 
-            overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(25).fillColor(0x250000ff);
+            overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(75).fillColor(0x250000ff);
             mMap.addCircle(overlayOptions);
 
 
