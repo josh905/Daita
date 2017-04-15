@@ -5,7 +5,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.SphericalUtil;
+
+import java.util.ArrayList;
 
 
 /**
@@ -47,7 +50,7 @@ public class MapHandler {
 
     public LatLng belfastLoc() { return new LatLng (54.602642, -5.919522);}
 
-    public LatLng sydneyLoc() { return new LatLng (-33.856765, 151.215248);}
+    public LatLng sydneyLoc() { return new LatLng (-33.868425, 151.208483);}
 
 
     public double myCurrentRadius(LatLng firstLoc, LatLng secondLoc) {
@@ -67,6 +70,14 @@ public class MapHandler {
     public void zoomToPlace(GoogleMap theMap, LatLng thePlace, int zoomLevel){
         CameraPosition pos = new CameraPosition.Builder().target(thePlace).zoom(zoomLevel).tilt(89).bearing(20).build();
         theMap.animateCamera(CameraUpdateFactory.newCameraPosition(pos));
+    }
+
+
+
+    public void addDataToMarker(Marker marker, ArrayList<String> knimeData){
+
+        marker.setSnippet("Population: "+knimeData.get(1)+"\nAverage house price: "+knimeData.get(2)+"\nDaita rating: "+knimeData.get(3));
+
     }
 
 

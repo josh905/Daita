@@ -123,13 +123,41 @@ public class FileGrabValue {
 
 
 
+    public ArrayList<String> getKnimeData(Context con, int rowNum){
+
+        ArrayList<String> knimeData = new ArrayList<>();
+
+        InputStream input = con.getResources().openRawResource(R.raw.knime_result_output);
+        BufferedReader buff = new BufferedReader(new InputStreamReader(input));
+
+        String row;
+        String[] col;
+        int rowCount = 0;
+
+        try {
+            while ((row = buff.readLine()) != null) {
+
+                rowCount++; //title row is row number 1
+
+
+                if(rowCount==rowNum){
+                    col = row.split(",");
+                    knimeData.add(col[0]);
+                    knimeData.add(col[1]);
+                    knimeData.add(col[2]);
+                    knimeData.add(col[3]);
+                }
 
 
 
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        return knimeData;
 
-
-
+    }
 
 
 

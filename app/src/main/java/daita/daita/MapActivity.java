@@ -68,6 +68,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private FileGrabValue grab;
     private String theValue;
     private CountDownTimer theTimer;
+    private ArrayList<String> knimeData;
 
     private String placePick = "";
     private String showPick = "";
@@ -316,14 +317,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     public int checkNearest(LatLng theLoc){
 
-        corkDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.corkLoc()));
-        galwayDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.galwayLoc()));
-        dubCenDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubCenLoc()));
-        dubSouthDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubSouthLoc()));
-        fingalDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.fingalLoc()));
-        italyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.italyLoc()));
-        belfastDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.belfastLoc()));
-        sydneyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.sydneyLoc()));
+        //THESE VALUES ARE IN KILOMETRES BECAUSE THE ORIGINALS ARE DIVIDED BY 1000
+
+        corkDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.corkLoc()))/1000;
+        galwayDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.galwayLoc()))/1000;
+        dubCenDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubCenLoc()))/1000;
+        dubSouthDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubSouthLoc()))/1000;
+        fingalDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.fingalLoc()))/1000;
+        italyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.italyLoc()))/1000;
+        belfastDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.belfastLoc()))/1000;
+        sydneyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.sydneyLoc()))/1000;
 
 
         int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance, belfastDistance, sydneyDistance};
@@ -341,53 +344,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         }
 
-        return nearest;
+        return nearest; //THIS VALUE IS IN KILOMETRES
+
 
     }
 
 
-    public void handleNearest(){
+    public void handleMyLocation(){
 
         nearest = checkNearest(myLoc);  //this updates the nearest location
 
-        int nearestInKm = nearest/1000;
 
-        if(nearestInKm > 5000){
-            print("Sorry, you are "+(nearest-5000)+"km away from the closest data");
 
+        if(nearest > 200){
+            print("Sorry, you are "+(nearest-200)+" km away from the closest data");
         }
 
         else if(nearest==dubCenDistance){
-            //fygh
+            knimeData = grab.getKnimeData(getApplicationContext(),3);
+            myLocMarker.setTitle("Near Central Dublin");
+            hand.addDataToMarker(myLocMarker,knimeData);
+            myLocMarker.showInfoWindow();
         }
 
-        else if(nearest==fingalDistance){
-            openPlace("Fingal");
-        }
-
-        else if(nearest==dubSouthDistance){
-            openPlace("South Dublin");
-        }
-
-        else if(nearest==galwayDistance){
-            openPlace("Galway");
-        }
-
-        else if(nearest==italyDistance){
-            openPlace("Italia");
-        }
-
-        else if(nearest==corkDistance){
-            openPlace("Cork");
-        }
-
-        else if(nearest==belfastDistance){
-            openPlace("Belfast");
-        }
-
-        else if(nearest==sydneyDistance){
-            openPlace("Sydney");
-        }
 
         else{
             print ("Please ensure your location services are enabled");
@@ -402,6 +381,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
         galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Galway"));
+
 
 
 
@@ -425,15 +405,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         sydney = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Sydney"));
 
 
-        if(choice.equals("find")){
-            myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
-            myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-        }
 
 
 
 
     }
+
+
 
 
     public void handleShowSpinner(){
@@ -460,51 +438,68 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
         if(placePick.equals("Central Dublin")){
-            dubCen = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Central Dublin"));
+            dubCen = mMap.addMarker(new MarkerOptions().position(hand.dubCenLoc()).title("Central Dublin"));
+            knimeData = grab.getKnimeData(getApplicationContext(),3);
+            hand.addDataToMarker(dubCen,knimeData);
+
             hand.zoomToPlace(mMap,hand.dubCenLoc(), 18);
             dubCen.showInfoWindow();
         }
 
         if(placePick.equals("South Dublin")){
-            dubSouth = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("South Dublin"));
+            dubSouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("South Dublin"));
+            knimeData = grab.getKnimeData(getApplicationContext(),8);
+            hand.addDataToMarker(dubSouth,knimeData);
             hand.zoomToPlace(mMap,hand.dubSouthLoc(),18);
             dubSouth.showInfoWindow();
         }
 
         if(placePick.equals("Fingal")){
-            fingal = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Fingal"));
+            fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Fingal"));
+            knimeData = grab.getKnimeData(getApplicationContext(),5);
+            hand.addDataToMarker(fingal,knimeData);
             hand.zoomToPlace(mMap,hand.fingalLoc(),18);
             fingal.showInfoWindow();
         }
 
         if(placePick.equals("Galway")){
-            galway = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Galway"));
+            galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Galway"));
             hand.zoomToPlace(mMap,hand.galwayLoc(),18);
+            knimeData = grab.getKnimeData(getApplicationContext(),6);
+            hand.addDataToMarker(galway,knimeData);
             galway.showInfoWindow();
         }
 
         if(placePick.equals("Cork")){
-            cork = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Cork"));
+            cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Cork"));
             hand.zoomToPlace(mMap,hand.corkLoc(),18);
+            knimeData = grab.getKnimeData(getApplicationContext(),4);
+            hand.addDataToMarker(cork,knimeData);
             cork.showInfoWindow();
         }
 
         if(placePick.equals("Sydney")){
             sydney = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Sydney"));
             hand.zoomToPlace(mMap,hand.sydneyLoc(),18);
+            knimeData = grab.getKnimeData(getApplicationContext(),9);
+            hand.addDataToMarker(sydney,knimeData);
             sydney.showInfoWindow();
 
         }
 
         if(placePick.equals("Italy")){
-            italy = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Italy"));
+            italy = mMap.addMarker(new MarkerOptions().position(hand.italyLoc()).title("Italy"));
             hand.zoomToPlace(mMap,hand.italyLoc(),18);
+            knimeData = grab.getKnimeData(getApplicationContext(),7);
+            hand.addDataToMarker(italy,knimeData);
             italy.showInfoWindow();
         }
 
         if(placePick.equals("Belfast")){
-            belfast = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Belfast"));
+            belfast = mMap.addMarker(new MarkerOptions().position(hand.belfastLoc()).title("Belfast"));
             hand.zoomToPlace(mMap,hand.belfastLoc(),18);
+            knimeData = grab.getKnimeData(getApplicationContext(),2);
+            hand.addDataToMarker(belfast,knimeData);
             belfast.showInfoWindow();
         }
 
@@ -521,7 +516,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     /**
      *
-     *        *******************   ON MAP READY  *************************8888
+     *        *******************   ON MAP READY  *************************
      */
 
 
@@ -536,10 +531,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         grab = new FileGrabValue();
 
 
-
-
-
-
+        addMarkers();
 
 
 
@@ -661,8 +653,43 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
+                String title = marker.getTitle();
 
-                print("yo");
+
+                if(title.contains("Belfast")){
+                    openPlace("Belfast");
+                }
+
+                if(title.contains("Central Dublin")){
+                    openPlace("Central Dublin");
+                }
+
+                if(title.contains("Cork")){
+                    openPlace("Cork");
+                }
+
+                if(title.contains("Fingal")){
+                    openPlace("Fingal");
+                }
+
+                if(title.contains("Galway")){
+                    openPlace("Galway");
+                }
+
+                if(title.contains("Italy")){
+                    openPlace("Italia");        //must be italia
+                    //because italy page is in italian
+                }
+
+                if(title.contains("South Dublin")){
+                    openPlace("South Dublin");
+                }
+
+                if(title.contains("Sydney")){
+                    openPlace("Sydney");
+                }
+
+
             }
         });
 
@@ -761,19 +788,51 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+                hand.zoomToPlace(mMap,marker.getPosition(),18);
 
 
+                if(marker.getTitle().equals("Belfast")){
+                    knimeData = grab.getKnimeData(getApplicationContext(),2);
+                }
+
+                if(marker.getTitle().equals("Central Dublin")){
+                    knimeData = grab.getKnimeData(getApplicationContext(),3);
+                }
+
+                if(marker.getTitle().equals("Cork")){
+                    knimeData = grab.getKnimeData(getApplicationContext(),4);
+                }
+
+                if(marker.getTitle().equals("Fingal")){
+                    knimeData = grab.getKnimeData(getApplicationContext(),5);
+                }
+
+                if(marker.getTitle().equals("Galway")){
+                    knimeData = grab.getKnimeData(getApplicationContext(),6);
+                }
+
+                if(marker.getTitle().equals("Italy")){
+                    knimeData = grab.getKnimeData(getApplicationContext(),7);
+                }
+
+                if(marker.getTitle().equals("South Dublin")){
+                    knimeData = grab.getKnimeData(getApplicationContext(),8);
+                }
+
+                if(marker.getTitle().equals("Sydney")){
+                    knimeData = grab.getKnimeData(getApplicationContext(),9);
+                }
 
 
-
-
+                hand.addDataToMarker(marker,knimeData);
                 marker.showInfoWindow();
-
-
-                hand.zoomToPlace(mMap, marker.getPosition(),18);
-
                 return true;
+
+
+
+
 
             }
 
@@ -781,7 +840,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
 
 
-        addMarkers();
+
 
         if(choice.equals("find")){
             hand.zoomToPlace(mMap,myLoc,18);
@@ -794,9 +853,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
+        if(choice.equals("find")){
+            handleMyLocation();
+        }
 
         theMapListener();
-
 
 
     }
@@ -804,7 +865,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     /**
      *
- *          ****************************88  END OF ONMAPREADY  *************************************888
+ *          ****************************  END OF ONMAPREADY  *************************************
      */
 
 
@@ -832,8 +893,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             return;
         }
 
-        myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
 
+        if(choice.equals("find")){
+            myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
+            myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+        }
 
 
     }
@@ -856,33 +920,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-        mergeFindChoose();
-
     }
 
     private void chooseLoc(){
 
         hand.zoomToPlace(mMap,hand.dubCenLoc(),11);
 
-
-
-
-        mergeFindChoose();
     }
-
-
-
-    public void mergeFindChoose(){
-
-
-
-
-
-    }
-
-
-
-
 
 
 
