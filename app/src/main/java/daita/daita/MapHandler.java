@@ -49,41 +49,6 @@ public class MapHandler {
 
     public LatLng sydneyLoc() { return new LatLng (-33.856765, 151.215248);}
 
-    public LatLng dubCity1(){
-
-        return new LatLng(53.407156, -6.149158);
-
-    }
-
-    public LatLng dubCity2(){
-
-        return new LatLng(53.381002, -6.120705);
-
-    }
-
-    public LatLng dubCity3(){
-
-        return new LatLng(53.312958, -6.199670);
-
-    }
-
-    public LatLng dubCity4(){
-
-        return new LatLng(53.329979, -6.378541);
-
-    }
-
-    public LatLng dubCity5(){
-
-        return new LatLng(53.364515, -6.326452);
-
-    }
-
-    public LatLng dubCity6(){
-        return new LatLng(53.406486, -6.347180);
-    }
-
-
 
     public double myCurrentRadius(LatLng firstLoc, LatLng secondLoc) {
 
@@ -99,8 +64,8 @@ public class MapHandler {
     }
 
 
-    public void zoomToPlace(GoogleMap theMap, LatLng thePlace){
-        CameraPosition pos = new CameraPosition.Builder().target(thePlace).zoom(18).tilt(80).bearing(10).build();
+    public void zoomToPlace(GoogleMap theMap, LatLng thePlace, int zoomLevel){
+        CameraPosition pos = new CameraPosition.Builder().target(thePlace).zoom(zoomLevel).tilt(89).bearing(20).build();
         theMap.animateCamera(CameraUpdateFactory.newCameraPosition(pos));
     }
 

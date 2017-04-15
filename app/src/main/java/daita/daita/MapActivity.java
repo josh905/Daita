@@ -53,6 +53,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Timer;
 
 
@@ -67,7 +68,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private FileGrabValue grab;
     private String theValue;
     private CountDownTimer theTimer;
-    private String selected = "";
+
+    private String placePick = "";
+    private String showPick = "";
+
     private String choice = "";
     private Marker myLocMarker;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
@@ -82,6 +86,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, sydney;
 
+
+    /**
+     * MARKERS ARE ADDED WHEN USER CHOOSES TO GO TO A PLACE FROM THE DROPDOWN
+     *
+     * AND REMOVED WHEN THEY CHOOSE TO SHOW ON MAP (FILTER BY PRIMARY SCHOOLS, ETC.)
+     *
+     */
+
+
+
+
+
     private NetworkInfo netInfo;
     private ConnectivityManager conman;
 
@@ -93,24 +109,28 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    private Spinner mapSpinner;
+    private Spinner placeSpinner, showSpinner;
     private ImageView loadingpic;
     private ProgressBar theBar;
     private RelativeLayout mapSplashLayout;
     private String whatToDisplay = "";
     private TextView titleView;
-    private ArrayList<String> spinnerList;
-    private ArrayAdapter<String> spinnerAdapter;
-    private Button setBtn;
+    private ArrayList<String> placeSpinnerList, showSpinnerList;
+    private ArrayAdapter<String> placeAdapter,showAdapter;
+
 
     private boolean timerOn = false;
 
     private ArrayList<String> shownList;
     private Swiper timeCheck;
+    private Marker dropped;
+    private int dropCount = 0;
 
 
 
     MapHandler hand = new MapHandler();
+
+
 
 
 
@@ -141,84 +161,100 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        theBar = (ProgressBar)findViewById(R.id.theBar);
-        loadingpic = (ImageView)findViewById(R.id.loadingpic);
-        mapSpinner = (Spinner) findViewById(R.id.mapSpinner);
-        mapSplashLayout = (RelativeLayout)findViewById(R.id.mapSplashLayout) ;
-        setBtn = (Button)findViewById(R.id.setBtn);
-        mapSpinner.setBackgroundColor(Color.LTGRAY);
-        setBtn.setBackgroundColor(Color.LTGRAY);
-
-        spinnerList = new ArrayList<>();
-
-        setSpinnerList(spinnerList);
-        shownList = new ArrayList<>();
-
-
-
-        hideSplash();
-
-
-
-
         Intent getIn = getIntent();
         choice = getIn.getStringExtra("choice");
 
 
-        whatToDisplay = getIn.getStringExtra("whatToDisplay"); //this key is sent from PlaceActivity
+
+        placeSpinner = (Spinner) findViewById(R.id.placeSpinner);
+        showSpinner = (Spinner) findViewById(R.id.showSpinner);
+
+
+        placeSpinner.setBackgroundColor(Color.LTGRAY);
+        showSpinner.setBackgroundColor(Color.LTGRAY);
+
+        placeSpinnerList = new ArrayList<>();
+        showSpinnerList = new ArrayList<>();
+
+
+        setPlaceSpinner(placeSpinnerList);
+        setShowSpinner(showSpinnerList);
+
+
+        shownList = new ArrayList<>(); //TO SEE WHATS ALREADY BEEN OVERLAYED ON MAP
 
 
 
+
+
+
+
+
+    }
+
+
+    /**
+     * **************************************** ON CREATE ^^^  *********************8
+     *
+     */
+
+
+
+    public void showSplashFor(int duration){
+
+        //DURATION MUST BE IN MILLISECONDS
+
+        Intent splash = new Intent(MapActivity.this,SplashScreen.class);
+        splash.putExtra("duration", duration);
+        startActivity(splash);
 
     }
 
 
 
-    public void showSplashFor(long mil){
+    public void setPlaceSpinner(ArrayList<String> list){
 
 
-        theBar.setVisibility(View.VISIBLE);
-        loadingpic.setVisibility(View.VISIBLE);
-        mapSplashLayout.setVisibility(View.VISIBLE);
-        mapSpinner.setVisibility(View.GONE);
-        setBtn.setVisibility(View.GONE);
-        CountDownTimer theTimer = new CountDownTimer(mil,mil) {
-            @Override
-            public void onTick(long millisUntilFinished) {
+        list.add("Go to place");
 
-            }
+        if(choice.equals("find")){
+            list.add("My Location");
+        }
 
-            @Override
-            public void onFinish() {
-                hideSplash();
-
-            }
-        };
-
-        theTimer.start();
+        list.add("Belfast");
+        list.add("Central Dublin");
+        list.add("Cork");
+        list.add("Fingal");
+        list.add("Galway");
+        list.add("Italy");
+        list.add("South Dublin");
+        list.add("Sydney");
 
 
+
+
+        placeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+
+        placeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        placeSpinner.setAdapter(placeAdapter);
     }
 
 
 
 
+    public void setShowSpinner(ArrayList<String> list){
 
 
-
-    public void setSpinnerList(ArrayList<String> list){
-
-
-        list.add("↓ Filter by ↓");
+        list.add("Show on map");
         list.add("Dublin primary schools");
 
 
+        showAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
 
-        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        showAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        mapSpinner.setAdapter(spinnerAdapter);
+        showSpinner.setAdapter(showAdapter);
     }
 
 
@@ -237,8 +273,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     titleView = (TextView) v.findViewById(R.id.titleView);
 
 
-                    String theTitle = marker.getTitle()+":\n\n";
-                    String theSnippet = marker.getSnippet();
+                    String theTitle = marker.getTitle();
+                    String theSnippet = "\n\n"+marker.getSnippet()+"\nClick for more info...";
 
                     titleView.setText(theTitle);
                     titleView.append(theSnippet);
@@ -266,43 +302,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    public void showBarFor(long mil){
-
-
-        mapSplashLayout.setVisibility(View.VISIBLE);
-        mapSplashLayout.setBackgroundColor(Color.TRANSPARENT);
-
-        theBar.setVisibility(View.VISIBLE);
-        theBar.bringToFront();
-
-        CountDownTimer theTimer = new CountDownTimer(mil,mil) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-               hideSplash();
-            }
-        };
-
-        theTimer.start();
-
-
-    }
-
-
-    public void hideSplash(){
-        theBar.setVisibility(View.GONE);
-        loadingpic.setVisibility(View.GONE);
-        mapSplashLayout.setVisibility(View.GONE);
-        mapSpinner.setVisibility(View.VISIBLE);
-        setBtn.setVisibility(View.VISIBLE);
-
-    }
-
-
 
     public void openPlace(String thePlace){
         Intent i = new Intent(MapActivity.this, PlaceActivity.class);
@@ -312,15 +311,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-
-    public void imageToBack(ImageView theImage) {
-        final ImageView child = theImage;
-        final ViewGroup parent = (ViewGroup)child.getParent();
-        if (null != parent) {
-            parent.removeView(child);
-            parent.addView(child, 0);
-        }
-    }
 
 
 
@@ -368,10 +358,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
 
         else if(nearest==dubCenDistance){
-
-            dubCen.setTitle("Click this pin for Central Dublin stats");
-            dubCen.showInfoWindow();
-            hand.zoomToPlace(mMap,hand.dubCenLoc());
+            //fygh
         }
 
         else if(nearest==fingalDistance){
@@ -411,7 +398,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    public void addFirstMarkers(){
+    public void addMarkers(){
 
 
         galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Galway"));
@@ -421,11 +408,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Cork"));
 
 
+        dubCen = mMap.addMarker(new MarkerOptions().position(hand.dubCenLoc()).title("Central Dublin"));
 
-        dubCen = mMap.addMarker(new MarkerOptions().position(hand.dubCenLoc()).title("Dublin"));
+        fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Fingal"));
 
 
-        italy = mMap.addMarker(new MarkerOptions().position(hand.italyLoc()).title("Italia"));
+        dubSouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("South Dublin"));
+
+
+        italy = mMap.addMarker(new MarkerOptions().position(hand.italyLoc()).title("Italy"));
 
 
         belfast = mMap.addMarker(new MarkerOptions().position(hand.belfastLoc()).title("Belfast"));
@@ -434,24 +425,103 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         sydney = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Sydney"));
 
 
+        if(choice.equals("find")){
+            myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
+            myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+        }
+
+
+
 
     }
 
 
-    public void handleFilters(){
+    public void handleShowSpinner(){
 
+        mMap.clear();
+        //addMarkers();
 
-        if(selected.equals("Dublin primary schools")){
-            showBarFor(2000);
+        if(showPick.equals("Dublin primary schools")){
+            showSplashFor(1000);
             addSchoolCircles();
+            hand.zoomToPlace(mMap,hand.dubCenLoc(),11);
+            shownList.clear();
         }
+
+
+        shownList.add(showPick);
+
+    }
+
+
+
+    public void handlePlaceSpinner(){
+
+
+
+        if(placePick.equals("Central Dublin")){
+            dubCen = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Central Dublin"));
+            hand.zoomToPlace(mMap,hand.dubCenLoc(), 18);
+            dubCen.showInfoWindow();
+        }
+
+        if(placePick.equals("South Dublin")){
+            dubSouth = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("South Dublin"));
+            hand.zoomToPlace(mMap,hand.dubSouthLoc(),18);
+            dubSouth.showInfoWindow();
+        }
+
+        if(placePick.equals("Fingal")){
+            fingal = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Fingal"));
+            hand.zoomToPlace(mMap,hand.fingalLoc(),18);
+            fingal.showInfoWindow();
+        }
+
+        if(placePick.equals("Galway")){
+            galway = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Galway"));
+            hand.zoomToPlace(mMap,hand.galwayLoc(),18);
+            galway.showInfoWindow();
+        }
+
+        if(placePick.equals("Cork")){
+            cork = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Cork"));
+            hand.zoomToPlace(mMap,hand.corkLoc(),18);
+            cork.showInfoWindow();
+        }
+
+        if(placePick.equals("Sydney")){
+            sydney = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Sydney"));
+            hand.zoomToPlace(mMap,hand.sydneyLoc(),18);
+            sydney.showInfoWindow();
+
+        }
+
+        if(placePick.equals("Italy")){
+            italy = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Italy"));
+            hand.zoomToPlace(mMap,hand.italyLoc(),18);
+            italy.showInfoWindow();
+        }
+
+        if(placePick.equals("Belfast")){
+            belfast = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Belfast"));
+            hand.zoomToPlace(mMap,hand.belfastLoc(),18);
+            belfast.showInfoWindow();
+        }
+
+        if(placePick.equals("My Location")){
+            myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
+            myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+            hand.zoomToPlace(mMap,myLoc,18);
+            myLocMarker.showInfoWindow();
+        }
+
 
     }
 
 
     /**
      *
-     *         ____________         ON MAP READY   __________________
+     *        *******************   ON MAP READY  *************************8888
      */
 
 
@@ -461,45 +531,96 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         mMap = googleMap;
 
-        addFirstMarkers();   //add markers regardless of choice
+
 
         grab = new FileGrabValue();
 
 
-        timeCheck = new Swiper(getApplicationContext());
 
 
 
-        setBtn.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+        placeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                selected = mapSpinner.getSelectedItem().toString();
+                placePick = placeSpinner.getSelectedItem().toString();
 
-                if(selected.equals(mapSpinner.getItemAtPosition(0).toString())){
-                    print("Please select a filter");
-                    return;
-                }
 
-                if(shownList.contains(selected)){
-                    print(selected +" data is already displayed");
+                if(placeSpinner.getSelectedItem()==placeSpinner.getItemAtPosition(0)){
+                    placeSpinner.setSelection(0);
                     return;
                 }
 
 
                 if(timerOn){
                     print("Please wait a few more seconds");
+                    placeSpinner.setSelection(0);
                     return;
                 }
 
 
+                handlePlaceSpinner();
+
+                placeSpinner.setSelection(0);
+
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+
+
+
+
+        });
+
+
+
+
+
+
+        showSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                showPick = showSpinner.getSelectedItem().toString();
+
+
+                if(showPick.equals(showSpinner.getItemAtPosition(0).toString())){
+                    showSpinner.setSelection(0);
+                    return;
+                }
+
+                if(shownList.contains(showPick)){
+                    print(showPick +" data is already displayed");
+                    showSpinner.setSelection(0);
+                    return;
+                }
+
+
+                if(timerOn){
+                    print("Please wait a few more seconds");
+                    showSpinner.setSelection(0);
+                    return;
+                }
+
+
+                handleShowSpinner();
+
+                showSpinner.setSelection(0);
 
                 CountDownTimer buttonTimer = new CountDownTimer(6000,6000) { //8 seconds
                     @Override
                     public void onTick(long millisUntilFinished) {
                         timerOn = true;
 
-                         handleFilters();
+
 
 
                     }
@@ -512,25 +633,27 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 };
 
                 buttonTimer.start();
-
-
-
             }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
 
-
-
-
-
-
-
-
-
+            }
 
         });
 
 
+
+
+
+
+
         setInfoWindow(R.layout.custom_info_window);
+
+
+
+
+
 
 
 
@@ -636,126 +759,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                //marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-
-                if(marker.getTitle().equals("Click this pin to detect nearest data")){
-
-                    handleNearest();
 
 
-                    return true;
-                }
-
-
-                if(marker.getTitle().equals("Click this pin for Fingal stats")){
-                    openPlace("Fingal");
-                    return true;
-                }
-                if(marker.getTitle().equals("Click this pin for Central Dublin stats")){
-                    openPlace("Central Dublin");
-                    return true;
-                }
-
-                if(marker.getTitle().equals("Click this pin for South Dublin stats")){
-                    openPlace("South Dublin");
-                    return true;
-                }
-                if(marker.getTitle().equals("Click this pin for Galway stats")){
-                    openPlace("Galway");
-
-                    return true;
-                }
-                if(marker.getTitle().equals("Click this pin for Cork stats")){
-                    openPlace("Cork");
-                    return true;
-                }
-                if(marker.getTitle().equals("Clicca qui per i dati per l'Italia")){
-                    openPlace("Italia");
-                    return true;
-                }
-                if(marker.getTitle().equals("Click this pin for Belfast stats")) {
-                    openPlace("Belfast");
-                    return true;
-                }
-                if(marker.getTitle().equals("Click this pin for Sydney stats")) {
-                    openPlace("Sydney");
-                    return true;
-                }
-
-
-                if(marker.getTitle().equals("Dublin")){
-                    where = new CameraPosition.Builder().target(hand.dubCenLoc()).zoom(11).tilt(80).bearing(1).build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-                    //below adds the 2 new dublin sectors and updates the central one coz the dublin pin is located at dubCen by default
-                    fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Fingal"));
-
-
-                    dubSouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("South Dublin"));
-
-
-                    dubCen.setTitle("Central Dublin");
-
-                    return true;
-                }
-
-                if(marker.getTitle().equals("Fingal")){
-                    hand.zoomToPlace(mMap, hand.fingalLoc());
-                    fingal.setTitle("Click this pin for Fingal stats");
-                    fingal.showInfoWindow();
-                    return true;
-                }
-                if(marker.getTitle().equals("Galway")){
-                    hand.zoomToPlace(mMap, hand.galwayLoc());
-                    galway.setTitle("Click this pin for Galway stats");
-                    galway.showInfoWindow();
-
-                    return true;
-                }
-                if(marker.getTitle().equals("Cork")){
-                    hand.zoomToPlace(mMap, hand.corkLoc());
-                    cork.setTitle("Click this pin for Cork stats");
-                    cork.showInfoWindow();
-                    return true;
-                }
-                if(marker.getTitle().equals("Central Dublin")){
-                    hand.zoomToPlace(mMap, hand.dubCenLoc());
-                    dubCen.setTitle("School name");
-                    marker.setSnippet("Subjects mainly taught in: English\nMale pupils: 23\nFemale pupils: 24\nTeachers: None");
-
-                    dubCen.showInfoWindow();
-                    return true;
-                }
-
-                if(marker.getTitle().equals("South Dublin")){
-                    hand.zoomToPlace(mMap, hand.dubSouthLoc());
-                    dubSouth.setTitle("Click this pin for South Dublin stats");
-                    dubSouth.showInfoWindow();
-                    return true;
-                }
-                if(marker.getTitle().equals("Italia")){
-                    hand.zoomToPlace(mMap, hand.italyLoc());
-                    italy.setTitle("Clicca qui per i dati per l'Italia");
-                    italy.showInfoWindow();
-                    return true;
-                }
-                if(marker.getTitle().equals("Belfast")) {
-                    hand.zoomToPlace(mMap, hand.belfastLoc());
-                    belfast.setTitle("Click this pin for Belfast stats");
-                    belfast.showInfoWindow();
-                    return true;
-                }
-                if(marker.getTitle().equals("Sydney")) {
-                    hand.zoomToPlace(mMap, hand.sydneyLoc());
-                    sydney.setTitle("Click this pin for Sydney stats");
-                    sydney.showInfoWindow();
-                    return true;
-                }
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
 
 
-                return false; //must be false unless user clicks something
 
+
+
+                marker.showInfoWindow();
+
+
+                hand.zoomToPlace(mMap, marker.getPosition(),18);
+
+                return true;
 
             }
 
@@ -763,13 +781,31 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
 
 
+        addMarkers();
 
+        if(choice.equals("find")){
+            hand.zoomToPlace(mMap,myLoc,18);
+            myLocMarker.showInfoWindow();
+        }
+
+        if(choice.equals("choose")){
+            print("Click a pin or \"Go to place\"");
+        }
+
+
+
+
+        theMapListener();
 
 
 
     }
 
 
+    /**
+     *
+ *          ****************************88  END OF ONMAPREADY  *************************************888
+     */
 
 
 
@@ -787,8 +823,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     }
                 })
                 //ignore the line through getColor, its "deprecated" but its best this way for us
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
-                .show();
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light )).show();
     }
 
 
@@ -797,14 +832,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             return;
         }
 
-        myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Click this pin to detect nearest data"));
-
-        where = new CameraPosition.Builder().target(myLoc).zoom(18).tilt(80).bearing(10).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(where));
-
-        myLocMarker.showInfoWindow();
-
-
+        myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
 
 
 
@@ -826,11 +854,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             print("Turn on Wifi if you wish to improve location accuracy");
         }
 
-        fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Click this pin for Fingal stats"));
-        dubSouth = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Click this pin for South Dublin stats"));
-        dubCen.setTitle("Click this pin for Central Dublin stats");
-
-
 
 
         mergeFindChoose();
@@ -839,14 +862,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     private void chooseLoc(){
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(hand.midLoc(), 6.8f));
+        hand.zoomToPlace(mMap,hand.dubCenLoc(),11);
 
 
-
-        //hand.handleOverlays();
-        addOverlays(hand.dubCenLoc());
-        addOverlays(hand.corkLoc());
-        addOverlays(hand.galwayLoc());
 
 
         mergeFindChoose();
@@ -856,22 +874,58 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     public void mergeFindChoose(){
 
-        //hand.handleOverlays();
-        addOverlays(hand.dubCenLoc());
-        addOverlays(hand.corkLoc());
-        addOverlays(hand.galwayLoc());
-
 
 
 
 
     }
 
+
+
+
+
+
+
+    public void theMapListener(){
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng point) {
+
+
+
+                if(dropped==null){
+                    print("Hold and drag marker to move it");
+                }
+                else{
+                    dropped.remove();
+                }
+
+
+
+
+                dropped = mMap.addMarker(new MarkerOptions().position(point));
+                dropped.setDraggable(true);
+                dropped.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                dropped.setTitle("Placename");
+                dropped.setSnippet("line1\nline2\ndaita rating 7.5");
+                dropped.showInfoWindow();
+            }
+        });
+
+    }
+
+
+
+
+
+
     public void addSchoolCircles(){
 
 
 
-        shownList.add("Dublin primary schools"); //this is a key
+         //this is a key
         //we check if the list contains it
         //so we can determine whether we want to add the circles for this data
 
@@ -881,7 +935,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         ArrayList<LatLng> theList;
 
-        theList = grab.locationList(getApplicationContext(), R.raw.full_read_primary_schools, 758, 1190);
+        theList = grab.locationList(getApplicationContext(), R.raw.full_read_primary_schools, 751, 1173);
 
 
         for(int i=0;i<theList.size();i++){
@@ -889,8 +943,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             theLoc = theList.get(i);
 
             overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(75).fillColor(0x250000ff);
-            Circle theC = mMap.addCircle(overlayOptions);
-           // theC.setClickable(true);
+            mMap.addCircle(overlayOptions);
+
+
 
 
         }
@@ -899,46 +954,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    }
-
-
-
-
-
-    public void addOverlays(LatLng middle){
-
-
-
-        //theValue = value.getValue(getApplicationContext(), R.raw.overlay_info_test);
-        //print(theValue);
-
-
 
     }
 
 
-    public void fingalPolygon(){
-
-
-
-        polyOp = new PolygonOptions();
-                polyOp.add(
-
-                        hand.dubCity1(),hand.dubCity2(),hand.dubCity3(),hand.dubCity4(),hand.dubCity5(),hand.dubCity6()
-
-                        );
-
-        polyOp.strokeColor(Color.RED)
-                .fillColor(0x25FF0000)
-        .strokeWidth(3);
-
-        poly = mMap.addPolygon(polyOp);
 
 
 
 
 
-    }
 
 
 

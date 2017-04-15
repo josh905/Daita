@@ -17,10 +17,9 @@ public class MainActivity extends AppCompatActivity{
 
     private Button findBtn, chooseBtn;
 
-    public void goToMap(String choice, String whatToDisplay){
+    public void goToMap(String choice){
         Intent firstIntent= new Intent(MainActivity.this,MapActivity.class);
         firstIntent.putExtra("choice",choice);
-        firstIntent.putExtra("whatToDisplay", whatToDisplay);
         startActivity(firstIntent);
     }
 
@@ -57,6 +56,9 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent splash = new Intent(MainActivity.this,SplashScreen.class);
+        splash.putExtra("duration",1500);
+        startActivity(splash);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
 
 
-                goToMap("find", "none");
+                goToMap("find");
             }
         });
 
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-                goToMap("choose", "none");
+                goToMap("choose");
             }
         });
 
