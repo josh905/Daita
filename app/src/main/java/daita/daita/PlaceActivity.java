@@ -156,6 +156,7 @@ public class PlaceActivity extends AppCompatActivity {
         if(place.equals("Sydney")){
             img.setImageResource(R.drawable.sydneypic);
             list.add("Natural Gas Consumption");
+            list.add("Urban Water Supply");
         }
 
 
@@ -384,6 +385,9 @@ public class PlaceActivity extends AppCompatActivity {
 
                     if(chosen.equals("Natural Gas Consumption")){
                         open(R.raw.sydney_gas, R.raw.sydney_gas_res);
+                    }
+                    if(chosen.equals("Urban Water Supply")){
+                        open(R.raw.sydney_water, R.raw.sydney_water_res);
                     }
 
                 }
