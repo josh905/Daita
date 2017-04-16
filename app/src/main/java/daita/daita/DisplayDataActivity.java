@@ -169,6 +169,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
 
 
+        resultView.setVisibility(View.INVISIBLE);
 
         img.setBackgroundResource(R.drawable.verylightgrey);
         img.setVisibility(View.VISIBLE);
@@ -231,6 +232,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     @Override
     public void onBackPressed(){
+        resultView.setVisibility(View.INVISIBLE);
 
         if(visible.equals("result")){
             ad2();
@@ -253,7 +255,7 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     public void ad2(){
 
-
+        resultView.setVisibility(View.INVISIBLE);
 
         img.setBackgroundResource(R.drawable.verylightgrey);
         img.setVisibility(View.VISIBLE);

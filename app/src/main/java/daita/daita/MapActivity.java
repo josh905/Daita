@@ -245,7 +245,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         list.add("Show on map");
         list.add("Dublin primary schools");
         list.add("Northern Ireland street crime");
-
+        list.add("York road accidents");
 
         showAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
 
@@ -272,8 +272,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                     int nearestDistance = checkNearest(marker.getPosition());
 
-                    String theMessage = "No data found for";
-                    String thePlace = "this area";
+                    String theMessage = "";
+                    String thePlace = "";
 
 
 
@@ -315,9 +315,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                     String theSnippet = "\n\n"+marker.getSnippet()+"\n"+theMessage + " " + thePlace;
 
-                    if(nearestDistance>100000){
+                    if(nearestDistance>100000&&shownList.isEmpty()){
                         theTitle="No data in this area\n\n";
-                        theSnippet="This pin is "+nearestDistance/1000+"km away from the nearest data point\nClick \"Go to place\" to find data";
+                        theSnippet="This pin is "+nearestDistance/1000+"km away from the nearest data point\n\nClick \"Go to place\" to find data";
                     }
 
 
@@ -547,13 +547,33 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             showSplashFor(1000);
             addCircles(R.raw.map_dublin_primary_schools,Color.BLUE);
             hand.zoomToPlace(mMap,hand.dubCenLoc(),11);
-            shownList.clear();
         }
 
         if(showPick.equals("Northern Ireland street crime")){
             showSplashFor(2000);
-            addCircles(R.raw.map_northern_ireland_streetcrime, Color.RED);
+            addCircles(R.raw.map_northern_ireland_streetcrime, Color.BLUE);
             hand.zoomToPlace(mMap,hand.belfastLoc(),11);
+
+
+            CountDownTimer theTimer = new CountDownTimer(12000,12000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    print("Dangerous crimes are RED");
+                }
+            };
+            theTimer.start();
+
+        }
+
+        if(showPick.equals("York road accidents")){
+            showSplashFor(2000);
+            addCircles(R.raw.map_york_accidents, Color.RED);
+            hand.zoomToPlace(mMap,hand.yorkLoc(),11);
         }
 
         shownList.clear();
@@ -742,25 +762,28 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                 showSpinner.setSelection(0);
 
-                CountDownTimer buttonTimer = new CountDownTimer(10000,10000) { //8 seconds
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        timerOn = true;
+                if(!showPick.equals("Northern Ireland street crime")){
+                    CountDownTimer buttonTimer = new CountDownTimer(10000,10000) { //8 seconds
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            timerOn = true;
 
 
 
 
-                    }
+                        }
 
-                    @Override
-                    public void onFinish() {
+                        @Override
+                        public void onFinish() {
 
-                        timerOn = false;
-                        print("Drop a pin in a circle for data");
-                    }
-                };
+                            timerOn = false;
+                            print("Drop a pin in a circle for data");
+                        }
+                    };
 
-                buttonTimer.start();
+                    buttonTimer.start();
+                }
+
             }
 
             @Override
@@ -1394,7 +1417,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
             theLoc = locationList.get(i);
 
-            overlayOptions = new CircleOptions().strokeColor(color).center(theLoc).strokeWidth(3).radius(75).fillColor(fill);
+            if(infoLine2List.get(i).contains("violence")||infoLine2List.get(i).contains("sexual")||infoLine2List.get(i).contains("weapons")||infoLine2List.get(i).contains("murder")){
+                overlayOptions = new CircleOptions().strokeColor(Color.RED).center(theLoc).strokeWidth(3).radius(75).fillColor(0x75ff0000);
+            }
+            else{
+                overlayOptions = new CircleOptions().strokeColor(color).center(theLoc).strokeWidth(3).radius(75).fillColor(fill);
+            }
+
             mMap.addCircle(overlayOptions);
 
 

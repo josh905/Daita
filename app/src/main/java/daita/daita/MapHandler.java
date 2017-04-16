@@ -52,6 +52,10 @@ public class MapHandler {
 
     public LatLng sydneyLoc() { return new LatLng (-33.868425, 151.208483);}
 
+    public LatLng yorkLoc(){
+        return new LatLng(53.957449, -1.083699);
+    }
+
 
     public double myCurrentRadius(LatLng firstLoc, LatLng secondLoc) {
 
