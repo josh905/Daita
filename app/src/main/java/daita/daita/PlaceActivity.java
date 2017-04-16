@@ -157,6 +157,7 @@ public class PlaceActivity extends AppCompatActivity {
             img.setImageResource(R.drawable.sydneypic);
             list.add("Natural Gas Consumption");
             list.add("Urban Water Supply");
+            list.add("Urban Commuting Share Figures");
         }
 
 
@@ -389,7 +390,9 @@ public class PlaceActivity extends AppCompatActivity {
                     if(chosen.equals("Urban Water Supply")){
                         open(R.raw.sydney_water, R.raw.sydney_water_res);
                     }
-
+                    if(chosen.equals("Urban Commuting Share Figures")){
+                        open(R.raw.sydney_commute, R.raw.sydney_commute_res);
+                    }
                 }
 
 
