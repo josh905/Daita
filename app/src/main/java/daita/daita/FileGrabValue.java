@@ -42,53 +42,6 @@ public class FileGrabValue {
 
 
 
-
-
-
-    /*
-    public ArrayList<LatLng> locationList(Context con, int file, int from, int until){
-
-        ArrayList<LatLng> theLocList = new ArrayList<>();
-
-        InputStream input = con.getResources().openRawResource(file);
-        BufferedReader buff = new BufferedReader(new InputStreamReader(input));
-
-        String row;
-        String[] col;
-        LatLng theLoc;
-        double theLat;
-        double theLong;
-        int readLineCount = 0;
-
-        try {
-            while ((row = buff.readLine()) != null) {
-
-                readLineCount++;
-                if(readLineCount>from&&readLineCount<until){
-                    col = row.split(",");
-                    theLat = Double.parseDouble(col[18]);
-                    theLong = Double.parseDouble(col[17]);
-                    theLoc = new LatLng(theLat,theLong);
-                    theLocList.add(theLoc);
-                }
-               else if (readLineCount>until){
-                    break;
-                }
-
-
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return theLocList;
-
-    }
-    */
-
-
-
     public ArrayList<String> getKnimeData(Context con, int rowNum){
 
         ArrayList<String> knimeData = new ArrayList<>();

@@ -74,6 +74,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private CircleOptions overlayOptions;
 
     private int nearest, furthest;
+    private boolean tooFar = false;
 
 
     private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, sydney;
@@ -269,12 +270,59 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     titleView = (TextView) v.findViewById(R.id.titleView);
 
 
+                    int nearestDistance = checkNearest(marker.getPosition());
+
+                    String theMessage = "No data found for";
+                    String thePlace = "this area";
+
+
+
+                    if(nearestDistance<100000){
+                        theMessage = "Click for data on";
+                        if(nearestDistance==dubCenDistance){
+                            thePlace = "Central Dublin";
+                        }
+                        if(nearestDistance==belfastDistance){
+                            thePlace = "Belfast";
+                        }
+                        if(nearestDistance==corkDistance){
+                            thePlace = "Cork";
+                        }
+                        if(nearestDistance==fingalDistance){
+                            thePlace = "Fingal";
+                        }
+                        if(nearestDistance==galwayDistance){
+                            thePlace = "Galway";
+                        }
+                        if(nearestDistance==italyDistance){
+                            thePlace = "Italy";
+                        }
+                        if(nearestDistance==dubSouthDistance){
+                            thePlace = "South Dublin";
+                        }
+                        if(nearestDistance==sydneyDistance){
+                            thePlace = "Sydney";
+                        }
+
+
+                    }
+
+
+
+
                     String theTitle = marker.getTitle();
-                    String theSnippet = "\n\n"+marker.getSnippet()+"\nClick for more info on Place...";
+
+
+                    String theSnippet = "\n\n"+marker.getSnippet()+"\n"+theMessage + " " + thePlace;
+
+                    if(nearestDistance>100000){
+                        theTitle="No data in this area\n\n";
+                        theSnippet="This pin is "+nearestDistance/1000+"km away from the nearest data point\nClick \"Go to place\" to find data";
+                    }
+
 
                     titleView.setText(theTitle);
                     titleView.append(theSnippet);
-
 
 
 
@@ -314,14 +362,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         //THESE VALUES ARE IN KILOMETRES BECAUSE THE ORIGINALS ARE DIVIDED BY 1000
 
-        corkDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.corkLoc()))/1000;
-        galwayDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.galwayLoc()))/1000;
-        dubCenDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubCenLoc()))/1000;
-        dubSouthDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubSouthLoc()))/1000;
-        fingalDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.fingalLoc()))/1000;
-        italyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.italyLoc()))/1000;
-        belfastDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.belfastLoc()))/1000;
-        sydneyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.sydneyLoc()))/1000;
+        corkDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.corkLoc()));
+        galwayDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.galwayLoc()));
+        dubCenDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubCenLoc()));
+        dubSouthDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.dubSouthLoc()));
+        fingalDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.fingalLoc()));
+        italyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.italyLoc()));
+        belfastDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.belfastLoc()));
+        sydneyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.sydneyLoc()));
 
 
         int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance, belfastDistance, sydneyDistance};
@@ -339,7 +387,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         }
 
-        return nearest; //THIS VALUE IS IN KILOMETRES
+        return nearest; //THIS VALUE IS IN METRES
 
 
     }
@@ -348,24 +396,104 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void handleMyLocation(){
 
         nearest = checkNearest(myLoc);  //this updates the nearest location
+        int nearestKm = nearest/1000;
 
 
 
-        if(nearest > 200){
-            print("Sorry, you are "+(nearest-200)+" km away from the closest data");
+        if(nearest > 100000){
+            myLocMarker.setTitle("No data here");
+            myLocMarker.setSnippet("There is no data available for this area yet\nYou are "+nearestKm+" away from the closest data point");
+            print("Sorry, you are "+nearestKm+"km away from the closest data point");
+            return;
+        }
+
+        else if(nearest==belfastDistance){
+            knimeData = grab.getKnimeData(getApplicationContext(),2);
+            if(nearestKm<1){
+                myLocMarker.setTitle("In Central Belfast");
+            }
+            else{
+                myLocMarker.setTitle(nearestKm+"km from Central Belfast");
+            }
+
         }
 
         else if(nearest==dubCenDistance){
             knimeData = grab.getKnimeData(getApplicationContext(),3);
-            myLocMarker.setTitle("Near Central Dublin");
-            hand.addDataToMarker(myLocMarker,knimeData);
-            myLocMarker.showInfoWindow();
+            if(nearestKm<1){
+                myLocMarker.setTitle("In Central Dublin");
+            }
+            else{
+                myLocMarker.setTitle(nearestKm+"km from Central Dublin");
+            }
         }
 
+        else if(nearest==corkDistance){
+            knimeData = grab.getKnimeData(getApplicationContext(),4);
+            if(nearestKm<1){
+                myLocMarker.setTitle("In Central Cork");
+            }
+            else{
+                myLocMarker.setTitle(nearestKm+"km from Central Cork");
+            }
+        }
 
+        else if(nearest==fingalDistance){
+            knimeData = grab.getKnimeData(getApplicationContext(),5);
+            if(nearestKm<1){
+                myLocMarker.setTitle("In Swords Central, Fingal");
+            }
+            else{
+                myLocMarker.setTitle(nearestKm+"km from Swords Central, Fingal");
+            }
+        }
+
+        else if(nearest==galwayDistance){
+            knimeData = grab.getKnimeData(getApplicationContext(),6);
+            if(nearestKm<1){
+                myLocMarker.setTitle("In Central Galway");
+            }
+            else{
+                myLocMarker.setTitle(nearestKm+"km from Central Galway");
+            }
+        }
+
+        else if(nearest==italyDistance){
+            knimeData = grab.getKnimeData(getApplicationContext(),7);
+            if(nearestKm<1){
+                myLocMarker.setTitle("In Central Rome");
+            }
+            else{
+                myLocMarker.setTitle(nearestKm+"km from Central Rome");
+            }
+        }
+
+        else if(nearest==dubSouthDistance){
+            knimeData = grab.getKnimeData(getApplicationContext(),8);
+            if(nearestKm<1){
+                myLocMarker.setTitle("In Dundrum, South Dublin");
+            }
+            else{
+                myLocMarker.setTitle(nearestKm+"km from Dundrum, South Dublin");
+            }
+        }
+
+        else if(nearest==sydneyDistance){
+            knimeData = grab.getKnimeData(getApplicationContext(),9);
+            if(nearestKm<1){
+                myLocMarker.setTitle("In Central Sydney");
+            }
+            else{
+                myLocMarker.setTitle(nearestKm+"km from Central Sydney");
+            }
+        }
         else{
-            print ("Please ensure your location services are enabled");
+            print("Please ensure location services are enabled and permissions for Daita are granted");
         }
+
+        hand.addDataToMarker(myLocMarker,knimeData);
+        myLocMarker.showInfoWindow();
+
 
 
     }
@@ -793,42 +921,43 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                 hand.zoomToPlace(mMap,marker.getPosition(),18);
 
-                if(marker.getTitle().contains("Near")){
-                    marker.showInfoWindow();
-                    return true;
 
-                }
 
                 if(marker.getTitle().equals("Belfast")){
                     knimeData = grab.getKnimeData(getApplicationContext(),2);
                 }
 
-                if(marker.getTitle().equals("Central Dublin")){
+                else if(marker.getTitle().equals("Central Dublin")){
                     knimeData = grab.getKnimeData(getApplicationContext(),3);
                 }
 
-                if(marker.getTitle().equals("Cork")){
+                else if(marker.getTitle().equals("Cork")){
                     knimeData = grab.getKnimeData(getApplicationContext(),4);
                 }
 
-                if(marker.getTitle().equals("Fingal")){
+                else if(marker.getTitle().equals("Fingal")){
                     knimeData = grab.getKnimeData(getApplicationContext(),5);
                 }
 
-                if(marker.getTitle().equals("Galway")){
+                else if(marker.getTitle().equals("Galway")){
                     knimeData = grab.getKnimeData(getApplicationContext(),6);
                 }
 
-                if(marker.getTitle().equals("Italy")){
+                else if(marker.getTitle().equals("Italy")){
                     knimeData = grab.getKnimeData(getApplicationContext(),7);
                 }
 
-                if(marker.getTitle().equals("South Dublin")){
+                else if(marker.getTitle().equals("South Dublin")){
                     knimeData = grab.getKnimeData(getApplicationContext(),8);
                 }
 
-                if(marker.getTitle().equals("Sydney")){
+                else if(marker.getTitle().equals("Sydney")){
                     knimeData = grab.getKnimeData(getApplicationContext(),9);
+                }
+
+                else{
+                    marker.showInfoWindow();
+                    return true;
                 }
 
 
@@ -979,16 +1108,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    public void clickedOrDragged(){
+    public void clickedOrDragged() {
 
-        if(droppedMarker ==null){
+        int theDistance;
+
+        if (droppedMarker == null) {
             print("Hold and drag marker to move it");
-        }
-        else{
+        } else {
             droppedMarker.remove();
         }
-
-
 
 
         droppedMarker = mMap.addMarker(new MarkerOptions().position(droppedLocation));
@@ -996,25 +1124,198 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         droppedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
         droppedMarker.setTitle("Near place");
         droppedMarker.setSnippet("line1\nline2\ndaita rating 7.5");
-        droppedMarker.showInfoWindow();
 
 
-        if(!shownList.isEmpty()){
+
+        if (!shownList.isEmpty()) {
             closestCircleDistance = checkClosestCircle();
-            if(closestCircleDistance!=0){
+            if (closestCircleDistance != 0) {
                 circleHandler();
-            }
-            else{
-                droppedMarker.setTitle("Near place");
-                droppedMarker.setSnippet("No data at this location for "+shownList.get(0));
-                droppedMarker.showInfoWindow();
+            } else {
+                theDistance = checkNearest(droppedLocation); //in metres
+                int distanceKm = theDistance / 1000; //in KM
+                if (theDistance < 100000 && theDistance > 1000) {
+                    if (theDistance == belfastDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Belfast");
+                    }
+                    if (theDistance == dubCenDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Dublin");
+                    }
+                    if (theDistance == corkDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Cork");
+                    }
+                    if (theDistance == fingalDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Swords Central, Fingal");
+                    }
+                    if (theDistance == galwayDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Galway");
+                    }
+                    if (theDistance == italyDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Rome");
+                    }
+                    if (theDistance == dubSouthDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Dundrum, South Dublin");
+                    }
+                    if (theDistance == sydneyDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Sydney");
+                    }
+                    droppedMarker.setSnippet("No data at this location for " + shownList.get(0)+"\n");
+                } else if (theDistance < 1000) {
+                    if (theDistance == belfastDistance) {
+                        droppedMarker.setTitle("In Central Belfast");
+                    }
+                    if (theDistance == dubCenDistance) {
+                        droppedMarker.setTitle("In Central Dublin");
+                    }
+                    if (theDistance == corkDistance) {
+                        droppedMarker.setTitle("In Central Cork");
+                    }
+                    if (theDistance == fingalDistance) {
+                        droppedMarker.setTitle("In Swords Central, Fingal");
+                    }
+                    if (theDistance == galwayDistance) {
+                        droppedMarker.setTitle("In Central Galway");
+                    }
+                    if (theDistance == italyDistance) {
+                        droppedMarker.setTitle("In Central Rome");
+                    }
+                    if (theDistance == dubSouthDistance) {
+                        droppedMarker.setTitle("In Dundrum, South Dublin");
+                    }
+                    if (theDistance == sydneyDistance) {
+                        droppedMarker.setTitle("In Central Sydney");
+                    }
+                    droppedMarker.setSnippet("No data at this location for " + shownList.get(0)+"\n");
+                } else {
+                    droppedMarker.setTitle("No data available here");
+                    droppedMarker.setSnippet("Click the \"Go to place\" button to find data");
+                }
+
+
             }
         }
-        else{
-            droppedMarker.setTitle("Near place");
-            droppedMarker.setSnippet("The stats for this place from dubcen or wherever it is");
-            droppedMarker.showInfoWindow();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        else {   // if SHOWN LIST IS EMPTY
+
+
+                theDistance = checkNearest(droppedLocation); //in metres
+                int distanceKm = theDistance / 1000; //in KM
+                if (theDistance < 100000 && theDistance > 1000) {
+                    if (theDistance == belfastDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Belfast");
+                        knimeData = grab.getKnimeData(getApplicationContext(),2);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == dubCenDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Dublin");
+                        knimeData = grab.getKnimeData(getApplicationContext(),3);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == corkDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Cork");
+                        knimeData = grab.getKnimeData(getApplicationContext(),4);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == fingalDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Swords Central, Fingal");
+                        knimeData = grab.getKnimeData(getApplicationContext(),5);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == galwayDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Galway");
+                        knimeData = grab.getKnimeData(getApplicationContext(),6);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == italyDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Rome");
+                        knimeData = grab.getKnimeData(getApplicationContext(),7);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == dubSouthDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Dundrum, South Dublin");
+                        knimeData = grab.getKnimeData(getApplicationContext(),8);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == sydneyDistance) {
+                        droppedMarker.setTitle(distanceKm + "km from Central Sydney");
+                        knimeData = grab.getKnimeData(getApplicationContext(),9);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+
+                } else if (theDistance < 1000) {
+                    if (theDistance == belfastDistance) {
+                        droppedMarker.setTitle("In Central Belfast");
+                        knimeData = grab.getKnimeData(getApplicationContext(),2);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == dubCenDistance) {
+                        droppedMarker.setTitle("In Central Dublin");
+                        knimeData = grab.getKnimeData(getApplicationContext(),3);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == corkDistance) {
+                        droppedMarker.setTitle("In Central Cork");
+                        knimeData = grab.getKnimeData(getApplicationContext(),4);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == fingalDistance) {
+                        droppedMarker.setTitle("In Swords Central, Fingal");
+                        knimeData = grab.getKnimeData(getApplicationContext(),5);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == galwayDistance) {
+                        droppedMarker.setTitle("In Central Galway");
+                        knimeData = grab.getKnimeData(getApplicationContext(),6);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == italyDistance) {
+                        droppedMarker.setTitle("In Central Rome");
+                        knimeData = grab.getKnimeData(getApplicationContext(),7);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == dubSouthDistance) {
+                        droppedMarker.setTitle("In Dundrum, South Dublin");
+                        knimeData = grab.getKnimeData(getApplicationContext(),8);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+                    if (theDistance == sydneyDistance) {
+                        droppedMarker.setTitle("In Central Sydney");
+                        knimeData = grab.getKnimeData(getApplicationContext(),9);
+                        hand.addDataToMarker(droppedMarker,knimeData);
+                    }
+
+                } else {
+                    droppedMarker.setTitle("No data available here");
+                    droppedMarker.setSnippet("Click the \"Go to place\" button to find data");
+                }
+
+
+
+
+
+
+
         }
+
+
+        /**
+         * THE BELOW LINE IS CRUCIAL
+         */
+
+        droppedMarker.showInfoWindow();
 
     }
 
@@ -1045,8 +1346,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void circleHandler(){
 
         droppedMarker.setTitle(titleList.get(2)+": "+infoLine1List.get(circlePositionInList));
-        droppedMarker.setSnippet(titleList.get(3)+": "+infoLine2List.get(circlePositionInList)+"\n");
-        droppedMarker.showInfoWindow();
+        droppedMarker.setSnippet(titleList.get(3)+": "+infoLine2List.get(circlePositionInList));
 
     }
 
