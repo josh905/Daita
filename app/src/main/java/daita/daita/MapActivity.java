@@ -545,6 +545,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         if(showPick.equals("Dublin primary schools")){
             showSplashFor(1000);
+            addCircles(R.raw.map_dublin_primary_schools,Color.BLUE);
             hand.zoomToPlace(mMap,hand.dubCenLoc(),11);
             shownList.clear();
         }
@@ -557,6 +558,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         shownList.clear();
         shownList.add(showPick);
+
+
+
 
     }
 
@@ -732,11 +736,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 }
 
 
+
+
                 showHandler();
 
                 showSpinner.setSelection(0);
 
-                CountDownTimer buttonTimer = new CountDownTimer(6000,6000) { //8 seconds
+                CountDownTimer buttonTimer = new CountDownTimer(10000,10000) { //8 seconds
                     @Override
                     public void onTick(long millisUntilFinished) {
                         timerOn = true;
@@ -750,6 +756,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     public void onFinish() {
 
                         timerOn = false;
+                        print("Drop a pin in a circle for data");
                     }
                 };
 
