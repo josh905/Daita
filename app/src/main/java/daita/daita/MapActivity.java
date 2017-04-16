@@ -182,11 +182,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         shownList = new ArrayList<>(); //TO SEE WHATS ALREADY BEEN OVERLAYED ON MAP
 
-
-
-
-
-
+        boolean created = true;
 
 
     }
