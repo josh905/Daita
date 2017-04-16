@@ -8,24 +8,19 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -37,11 +32,9 @@ import android.widget.Toast;
 import android.graphics.Color;
 
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -53,8 +46,6 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Timer;
 
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -86,6 +77,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
     private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, sydney;
+
+    private LatLng droppedLocation;
+
+    private ArrayList<String> titleList, infoLine1List, infoLine2List;
 
 
     /**
@@ -124,8 +119,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     private ArrayList<String> shownList;
     private Swiper timeCheck;
-    private Marker dropped;
+    private Marker droppedMarker;
     private int dropCount = 0;
+    private ArrayList<LatLng> locationList;
+    private int closestCircleDistance;
+    private int circlePositionInList;
 
 
 
@@ -249,6 +247,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         list.add("Show on map");
         list.add("Dublin primary schools");
+        list.add("Northern Ireland street crime");
 
 
         showAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
@@ -275,7 +274,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
                     String theTitle = marker.getTitle();
-                    String theSnippet = "\n\n"+marker.getSnippet()+"\nClick for more info...";
+                    String theSnippet = "\n\n"+marker.getSnippet()+"\nClick for more info on Place...";
 
                     titleView.setText(theTitle);
                     titleView.append(theSnippet);
@@ -414,26 +413,32 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
-    public void handleShowSpinner(){
+    public void showHandler(){
 
         mMap.clear();
-        //addMarkers();
+
+
 
         if(showPick.equals("Dublin primary schools")){
             showSplashFor(1000);
-            addSchoolCircles();
             hand.zoomToPlace(mMap,hand.dubCenLoc(),11);
             shownList.clear();
         }
 
+        if(showPick.equals("Northern Ireland street crime")){
+            showSplashFor(2000);
+            addCircles(R.raw.map_northern_ireland_streetcrime, Color.RED);
+            hand.zoomToPlace(mMap,hand.belfastLoc(),11);
+        }
 
+        shownList.clear();
         shownList.add(showPick);
 
     }
 
 
 
-    public void handlePlaceSpinner(){
+    public void placeHandler(){
 
 
 
@@ -555,7 +560,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 }
 
 
-                handlePlaceSpinner();
+                placeHandler();
 
                 placeSpinner.setSelection(0);
 
@@ -603,7 +608,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 }
 
 
-                handleShowSpinner();
+                showHandler();
 
                 showSpinner.setSelection(0);
 
@@ -792,6 +797,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                 hand.zoomToPlace(mMap,marker.getPosition(),18);
 
+                if(marker.getTitle().contains("Near")){
+                    marker.showInfoWindow();
+                    return true;
+
+                }
 
                 if(marker.getTitle().equals("Belfast")){
                     knimeData = grab.getKnimeData(getApplicationContext(),2);
@@ -824,6 +834,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 if(marker.getTitle().equals("Sydney")){
                     knimeData = grab.getKnimeData(getApplicationContext(),9);
                 }
+
+
 
 
                 hand.addDataToMarker(marker,knimeData);
@@ -888,6 +900,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
+
+
     public void handleRequests(){
         if(myLoc == null){
             return;
@@ -937,24 +951,31 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             @Override
             public void onMapClick(LatLng point) {
 
-
-
-                if(dropped==null){
-                    print("Hold and drag marker to move it");
-                }
-                else{
-                    dropped.remove();
-                }
+                droppedLocation = point;
+                clickedOrDragged();
 
 
 
+            }
+        });
 
-                dropped = mMap.addMarker(new MarkerOptions().position(point));
-                dropped.setDraggable(true);
-                dropped.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                dropped.setTitle("Placename");
-                dropped.setSnippet("line1\nline2\ndaita rating 7.5");
-                dropped.showInfoWindow();
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+
+                droppedLocation = marker.getPosition();
+                clickedOrDragged();
+
             }
         });
 
@@ -962,42 +983,119 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
 
+    public void clickedOrDragged(){
 
-
-
-    public void addSchoolCircles(){
-
-
-
-         //this is a key
-        //we check if the list contains it
-        //so we can determine whether we want to add the circles for this data
-
-
-        LatLng theLoc;
-
-
-        ArrayList<LatLng> theList;
-
-        theList = grab.locationList(getApplicationContext(), R.raw.full_read_primary_schools, 751, 1173);
-
-
-        for(int i=0;i<theList.size();i++){
-
-            theLoc = theList.get(i);
-
-            overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(75).fillColor(0x250000ff);
-            mMap.addCircle(overlayOptions);
-
-
-
-
+        if(droppedMarker ==null){
+            print("Hold and drag marker to move it");
+        }
+        else{
+            droppedMarker.remove();
         }
 
 
 
 
+        droppedMarker = mMap.addMarker(new MarkerOptions().position(droppedLocation));
+        droppedMarker.setDraggable(true);
+        droppedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        droppedMarker.setTitle("Near place");
+        droppedMarker.setSnippet("line1\nline2\ndaita rating 7.5");
+        droppedMarker.showInfoWindow();
 
+
+        if(!shownList.isEmpty()){
+            closestCircleDistance = checkClosestCircle();
+            if(closestCircleDistance!=0){
+                circleHandler();
+            }
+            else{
+                droppedMarker.setTitle("Near place");
+                droppedMarker.setSnippet("No data at this location for "+shownList.get(0));
+                droppedMarker.showInfoWindow();
+            }
+        }
+        else{
+            droppedMarker.setTitle("Near place");
+            droppedMarker.setSnippet("The stats for this place from dubcen or wherever it is");
+            droppedMarker.showInfoWindow();
+        }
+
+    }
+
+
+    public int checkClosestCircle(){
+
+
+        if(locationList.isEmpty()){
+            return 0;
+        }
+
+        int theDistance;
+
+        for(int i=0;i<locationList.size();i++){
+            theDistance = (int) Math.round(hand.myCurrentRadius(droppedLocation, locationList.get(i)));
+            if(theDistance<=75){
+                circlePositionInList = i;
+                return theDistance;
+            }
+
+        }
+
+        return 0;
+
+    }
+
+
+    public void circleHandler(){
+
+        droppedMarker.setTitle(titleList.get(2)+": "+infoLine1List.get(circlePositionInList));
+        droppedMarker.setSnippet(titleList.get(3)+": "+infoLine2List.get(circlePositionInList)+"\n");
+        droppedMarker.showInfoWindow();
+
+    }
+
+
+
+
+
+    public void addCircles(int file, int color){
+
+
+
+        int fill;
+
+        if(color==Color.RED){
+            fill = 0x18ff0000;
+        }
+        else  if(color==Color.BLUE){
+            fill = 0x180000ff;
+        }
+        else if(color==Color.GREEN){
+            fill = 0x18008000;
+        }
+        else{
+            fill = 0x180000ff;
+        }
+
+        LatLng theLoc;
+
+
+
+        locationList = grab.getLocationList(getApplicationContext(), file);
+        titleList = grab.getTitles(getApplicationContext(),file);
+        infoLine1List = grab.getInfoLine1(getApplicationContext(),file);
+        infoLine2List = grab.getInfoLine2(getApplicationContext(),file);
+
+
+        for(int i=0;i<locationList.size();i++){
+
+            theLoc = locationList.get(i);
+
+            overlayOptions = new CircleOptions().strokeColor(color).center(theLoc).strokeWidth(3).radius(75).fillColor(fill);
+            mMap.addCircle(overlayOptions);
+
+
+        }
 
     }
 

@@ -39,52 +39,13 @@ public class FileGrabValue {
     }
 
 
-    public LatLng location(Context con, int file, int rowNum){
-
-
-
-        InputStream input = con.getResources().openRawResource(file);
-        BufferedReader buff = new BufferedReader(new InputStreamReader(input));
-
-        LatLng theFullLoc = null;
-        double theLat;
-        double theLong;
-        String row;
-        String[] col;
-
-        String rowNumStr = Integer.toString(rowNum);
-        try {
-            while ((row = buff.readLine()) != null) {
-                col = row.split(",");
-
-
-                if(col[0].equalsIgnoreCase(rowNumStr)){
-                    theLat = Double.parseDouble(col[18]);
-                    theLong = Double.parseDouble(col[17]);
-                    theFullLoc = new LatLng(theLat,theLong);
-                    break;
-                }
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return theFullLoc;
-
-    }
 
 
 
 
 
 
-
-
-
-
-
-
+    /*
     public ArrayList<LatLng> locationList(Context con, int file, int from, int until){
 
         ArrayList<LatLng> theLocList = new ArrayList<>();
@@ -110,6 +71,10 @@ public class FileGrabValue {
                     theLoc = new LatLng(theLat,theLong);
                     theLocList.add(theLoc);
                 }
+               else if (readLineCount>until){
+                    break;
+                }
+
 
 
             }
@@ -120,6 +85,7 @@ public class FileGrabValue {
         return theLocList;
 
     }
+    */
 
 
 
@@ -161,5 +127,160 @@ public class FileGrabValue {
 
 
 
+
+
+
+    public ArrayList<LatLng> getLocationList(Context con, int file){
+
+        ArrayList<LatLng> locationList = new ArrayList<>();
+
+        InputStream input = con.getResources().openRawResource(file);
+        BufferedReader buff = new BufferedReader(new InputStreamReader(input));
+
+        String row;
+        String[] col;
+        LatLng theLoc;
+        double theLat;
+        double theLong;
+        int readLineCount = 0;
+
+        try {
+            while ((row = buff.readLine()) != null) {
+
+                readLineCount++; //starts on row 1
+
+                if(readLineCount>1){ //dont include titles
+                    col = row.split(",");
+                    theLat = Double.parseDouble(col[0]);
+                    theLong = Double.parseDouble(col[1]);
+                    theLoc = new LatLng(theLat,theLong);
+                    locationList.add(theLoc);
+                }
+
+
+
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return locationList;
+
+    }
+
+
+
+
+    public ArrayList<String> getInfoLine1(Context con, int file){
+
+        ArrayList<String> infoLine1 = new ArrayList<>();
+
+        InputStream input = con.getResources().openRawResource(file);
+        BufferedReader buff = new BufferedReader(new InputStreamReader(input));
+
+        String row;
+        String[] col;
+        int rowCount = 0;
+
+        try {
+            while ((row = buff.readLine()) != null) {
+
+                rowCount++; //title row is row number 1
+
+
+                if(rowCount>1){ //skip title row
+                    col = row.split(",");
+                    infoLine1.add(col[2]);
+                }
+
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return infoLine1;
+
+    }
+
+
+
+    public ArrayList<String> getInfoLine2(Context con, int file){
+
+        ArrayList<String> infoLine2 = new ArrayList<>();
+
+        InputStream input = con.getResources().openRawResource(file);
+        BufferedReader buff = new BufferedReader(new InputStreamReader(input));
+
+        String row;
+        String[] col;
+        int rowCount = 0;
+
+        try {
+            while ((row = buff.readLine()) != null) {
+
+                rowCount++; //title row is row number 1
+
+
+                if(rowCount>1){ //skip title row
+                    col = row.split(",");
+                    infoLine2.add(col[3]);
+                }
+
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return infoLine2;
+
+    }
+
+
+
+
+    public ArrayList<String> getTitles(Context con, int file){
+
+        ArrayList<String> knimeData = new ArrayList<>();
+
+        InputStream input = con.getResources().openRawResource(file);
+        BufferedReader buff = new BufferedReader(new InputStreamReader(input));
+
+        String row;
+        String[] col;
+        int rowCount = 0;
+
+        try {
+            while ((row = buff.readLine()) != null) {
+
+                rowCount++; //title row is row number 1
+
+
+                if(rowCount==1){
+                    col = row.split(",");
+                    knimeData.add(col[0]);
+                    knimeData.add(col[1]);
+                    knimeData.add(col[2]);
+                    knimeData.add(col[3]);
+                }
+                else{
+                    break;
+                }
+
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return knimeData;
+
+    }
 
 }
