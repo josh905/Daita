@@ -63,9 +63,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     private String placePick = "";
     private String showPick = "";
+    private String theMessage = "";
+    private String thePlace = "";
 
     private String choice = "";
-    private Marker myLocMarker;
+    private Marker myLocMarker = null;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
     fingalDistance, italyDistance, belfastDistance, londonDistance, sydneyDistance;
 
@@ -244,7 +246,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         list.add("Show on map");
         list.add("Dublin primary schools");
+        list.add("North Dakota earthquakes");
         list.add("Northern Ireland street crime");
+        list.add("Prato public wifi spots");
         list.add("York road accidents");
 
         showAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
@@ -272,8 +276,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                     int nearestDistance = checkNearest(marker.getPosition());
 
-                    String theMessage = "";
-                    String thePlace = "";
+                    theMessage = "";
+                    thePlace = "";
 
 
 
@@ -461,10 +465,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         else if(nearest==italyDistance){
             knimeData = grab.getKnimeData(getApplicationContext(),7);
             if(nearestKm<1){
-                myLocMarker.setTitle("In Central Rome");
+                myLocMarker.setTitle("In Central Rome, Italy");
             }
             else{
-                myLocMarker.setTitle(nearestKm+"km from Central Rome");
+                myLocMarker.setTitle(nearestKm+"km from Central Rome, Italy");
             }
         }
 
@@ -527,9 +531,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         sydney = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Sydney"));
 
+        if(myLoc!=null){
+            myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
+            myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+            handleMyLocation();
+            myLocMarker.hideInfoWindow();
 
-
-
+        }
 
 
     }
@@ -574,6 +582,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             showSplashFor(2000);
             addCircles(R.raw.map_york_accidents, Color.RED);
             hand.zoomToPlace(mMap,hand.yorkLoc(),11);
+        }
+
+        if(showPick.equals("Prato public wifi spots")){
+            showSplashFor(1500);
+            addCircles(R.raw.map_public_wifi_in_prato, Color.GREEN);
+            hand.zoomToPlace(mMap,hand.pratoLoc(),12);
+        }
+
+        if(showPick.equals("North Dakota earthquakes")){
+            showSplashFor(1000);
+            addCircles(R.raw.map_usa_earthquakes, Color.RED);
+            hand.zoomToPlace(mMap,hand.dakotaLoc(),5);
         }
 
         shownList.clear();
@@ -784,6 +804,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     buttonTimer.start();
                 }
 
+                addMarkers();
+
             }
 
             @Override
@@ -813,38 +835,39 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             @Override
             public void onInfoWindowClick(Marker marker) {
                 String title = marker.getTitle();
+                String snippet = marker.getSnippet();
 
 
-                if(title.contains("Belfast")){
+                if(title.contains("Belfast")||snippet.contains("Belfast")||thePlace.contains("Belfast")||theMessage.contains("Belfast")){
                     openPlace("Belfast");
                 }
 
-                if(title.contains("Central Dublin")){
+                if(title.contains("Central Dublin")||snippet.contains("Central Dublin")||thePlace.contains("Central Dublin")||theMessage.contains("Central Dublin")){
                     openPlace("Central Dublin");
                 }
 
-                if(title.contains("Cork")){
+                if(title.contains("Cork")||snippet.contains("Cork")||thePlace.contains("Cork")||theMessage.contains("Cork")){
                     openPlace("Cork");
                 }
 
-                if(title.contains("Fingal")){
+                if(title.contains("Fingal")||snippet.contains("Fingal")||thePlace.contains("Fingal")||theMessage.contains("Fingal")){
                     openPlace("Fingal");
                 }
 
-                if(title.contains("Galway")){
+                if(title.contains("Galway")||snippet.contains("Galway")||thePlace.contains("Galway")||theMessage.contains("Galway")){
                     openPlace("Galway");
                 }
 
-                if(title.contains("Italy")){
+                if(title.contains("Italy")||snippet.contains("Italy")||thePlace.contains("Italy")||theMessage.contains("Italy")){
                     openPlace("Italia");        //must be italia
                     //because italy page is in italian
                 }
 
-                if(title.contains("South Dublin")){
+                if(title.contains("South Dublin")||snippet.contains("South Dublin")||thePlace.contains("South Dublin")||theMessage.contains("South Dublin")){
                     openPlace("South Dublin");
                 }
 
-                if(title.contains("Sydney")){
+                if(title.contains("Sydney")||snippet.contains("Sydney")||thePlace.contains("Sydney")||theMessage.contains("Sydney")){
                     openPlace("Sydney");
                 }
 
@@ -1181,7 +1204,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         droppedMarker.setTitle(distanceKm + "km from Central Galway");
                     }
                     if (theDistance == italyDistance) {
-                        droppedMarker.setTitle(distanceKm + "km from Central Rome");
+                        droppedMarker.setTitle(distanceKm + "km from Central Rome, Italy");
                     }
                     if (theDistance == dubSouthDistance) {
                         droppedMarker.setTitle(distanceKm + "km from Dundrum, South Dublin");
@@ -1207,7 +1230,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         droppedMarker.setTitle("In Central Galway");
                     }
                     if (theDistance == italyDistance) {
-                        droppedMarker.setTitle("In Central Rome");
+                        droppedMarker.setTitle("In Central Rome, Italy");
                     }
                     if (theDistance == dubSouthDistance) {
                         droppedMarker.setTitle("In Dundrum, South Dublin");
@@ -1217,12 +1240,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     }
                     droppedMarker.setSnippet("No data at this location for " + shownList.get(0)+"\n");
                 } else {
-                    droppedMarker.setTitle("No data available here");
+                    droppedMarker.setTitle("No data available here for "+shownList.get(0));
                     droppedMarker.setSnippet("Click the \"Go to place\" button to find data");
                 }
 
 
             }
+
+
+
         }
 
 
@@ -1270,7 +1296,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         hand.addDataToMarker(droppedMarker,knimeData);
                     }
                     if (theDistance == italyDistance) {
-                        droppedMarker.setTitle(distanceKm + "km from Central Rome");
+                        droppedMarker.setTitle(distanceKm + "km from Central Rome, Italy");
                         knimeData = grab.getKnimeData(getApplicationContext(),7);
                         hand.addDataToMarker(droppedMarker,knimeData);
                     }
@@ -1312,7 +1338,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         hand.addDataToMarker(droppedMarker,knimeData);
                     }
                     if (theDistance == italyDistance) {
-                        droppedMarker.setTitle("In Central Rome");
+                        droppedMarker.setTitle("In Central Rome, Italy");
                         knimeData = grab.getKnimeData(getApplicationContext(),7);
                         hand.addDataToMarker(droppedMarker,knimeData);
                     }
@@ -1359,14 +1385,31 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         int theDistance;
 
-        for(int i=0;i<locationList.size();i++){
-            theDistance = (int) Math.round(hand.myCurrentRadius(droppedLocation, locationList.get(i)));
-            if(theDistance<=75){
-                circlePositionInList = i;
-                return theDistance;
-            }
 
+        if(shownList.get(0).equals("North Dakota earthquakes")){
+            for(int i=0;i<locationList.size();i++){
+                theDistance = (int) Math.round(hand.myCurrentRadius(droppedLocation, locationList.get(i)));
+                if(theDistance<=50000){
+                    circlePositionInList = i;
+                    return theDistance;
+                }
+
+            }
         }
+
+        else{
+            for(int i=0;i<locationList.size();i++){
+                theDistance = (int) Math.round(hand.myCurrentRadius(droppedLocation, locationList.get(i)));
+                if(theDistance<=75){
+                    circlePositionInList = i;
+                    return theDistance;
+                }
+
+            }
+        }
+
+
+
 
         return 0;
 
@@ -1376,7 +1419,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void circleHandler(){
 
         droppedMarker.setTitle(titleList.get(2)+": "+infoLine1List.get(circlePositionInList));
-        droppedMarker.setSnippet(titleList.get(3)+": "+infoLine2List.get(circlePositionInList));
+        droppedMarker.setSnippet(titleList.get(3)+": "+infoLine2List.get(circlePositionInList)+"\n");
 
     }
 
@@ -1419,6 +1462,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
             if(infoLine2List.get(i).contains("violence")||infoLine2List.get(i).contains("sexual")||infoLine2List.get(i).contains("weapons")||infoLine2List.get(i).contains("murder")){
                 overlayOptions = new CircleOptions().strokeColor(Color.RED).center(theLoc).strokeWidth(3).radius(75).fillColor(0x75ff0000);
+            }
+            else if(file==R.raw.map_usa_earthquakes){
+                overlayOptions = new CircleOptions().strokeColor(Color.RED).center(theLoc).strokeWidth(3).radius(50000).fillColor(0x75ff0000);
             }
             else{
                 overlayOptions = new CircleOptions().strokeColor(color).center(theLoc).strokeWidth(3).radius(75).fillColor(fill);

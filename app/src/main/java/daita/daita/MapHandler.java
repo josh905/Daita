@@ -56,6 +56,14 @@ public class MapHandler {
         return new LatLng(53.957449, -1.083699);
     }
 
+    public LatLng pratoLoc(){
+        return new LatLng(43.879574, 11.104937);
+    }
+
+    public LatLng dakotaLoc(){
+        return new LatLng(47.736944, -102.273119);
+    }
+
 
     public double myCurrentRadius(LatLng firstLoc, LatLng secondLoc) {
 
