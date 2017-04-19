@@ -10,8 +10,10 @@ import android.location.LocationManager;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -26,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 
 import android.graphics.Color;
@@ -69,7 +70,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private String choice = "";
     private Marker myLocMarker = null;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
-    fingalDistance, italyDistance, belfastDistance, londonDistance, sydneyDistance;
+            fingalDistance, italyDistance, belfastDistance, londonDistance, sydneyDistance;
 
 
     private Circle overlay;
@@ -94,18 +95,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
      */
 
 
-
-
-
     private NetworkInfo netInfo;
     private ConnectivityManager conman;
 
 
-
     private PolygonOptions polyOp;
     private Polygon poly;
-
-
 
 
     private Spinner placeSpinner, showSpinner;
@@ -115,7 +110,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private String whatToDisplay = "";
     private TextView titleView;
     private ArrayList<String> placeSpinnerList, showSpinnerList;
-    private ArrayAdapter<String> placeAdapter,showAdapter;
+    private ArrayAdapter<String> placeAdapter, showAdapter;
 
 
     private boolean timerOn = false;
@@ -127,15 +122,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private ArrayList<LatLng> locationList;
     private int closestCircleDistance;
     private int circlePositionInList;
-
+    private boolean locFound = false;
 
 
     MapHandler hand = new MapHandler();
-
-
-
-
-
 
 
     //create instance of interface for MainActivity class
@@ -143,10 +133,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
     //then check is fab clicked
-
-
-
-
 
 
     /**
@@ -165,7 +151,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         Intent getIn = getIntent();
         choice = getIn.getStringExtra("choice");
-
 
 
         placeSpinner = (Spinner) findViewById(R.id.placeSpinner);
@@ -197,25 +182,23 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
      */
 
 
-
-    public void showSplashFor(int duration){
+    public void showSplashFor(int duration) {
 
         //DURATION MUST BE IN MILLISECONDS
 
-        Intent splash = new Intent(MapActivity.this,SplashScreen.class);
+        Intent splash = new Intent(MapActivity.this, SplashScreen.class);
         splash.putExtra("duration", duration);
         startActivity(splash);
 
     }
 
 
-
-    public void setPlaceSpinner(ArrayList<String> list){
+    public void setPlaceSpinner(ArrayList<String> list) {
 
 
         list.add("Go to place");
 
-        if(choice.equals("find")){
+        if (choice.equals("find")) {
             list.add("My Location");
         }
 
@@ -229,8 +212,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         list.add("Sydney");
 
 
-
-
         placeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
 
         placeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -239,9 +220,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
-
-
-    public void setShowSpinner(ArrayList<String> list){
+    public void setShowSpinner(ArrayList<String> list) {
 
 
         list.add("Show on map");
@@ -249,6 +228,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         list.add("North Dakota earthquakes");
         list.add("Northern Ireland street crime");
         list.add("Prato public wifi spots");
+        list.add("South Dublin planning permissions");
         list.add("York road accidents");
 
         showAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
@@ -259,7 +239,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
-    public void setInfoWindow(final int theWindow){
+    public void setInfoWindow(final int theWindow) {
 
         if (mMap != null) {
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -280,31 +260,30 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     thePlace = "";
 
 
-
-                    if(nearestDistance<100000){
+                    if (nearestDistance < 100000) {
                         theMessage = "Click for data on";
-                        if(nearestDistance==dubCenDistance){
+                        if (nearestDistance == dubCenDistance) {
                             thePlace = "Central Dublin";
                         }
-                        if(nearestDistance==belfastDistance){
+                        if (nearestDistance == belfastDistance) {
                             thePlace = "Belfast";
                         }
-                        if(nearestDistance==corkDistance){
+                        if (nearestDistance == corkDistance) {
                             thePlace = "Cork";
                         }
-                        if(nearestDistance==fingalDistance){
+                        if (nearestDistance == fingalDistance) {
                             thePlace = "Fingal";
                         }
-                        if(nearestDistance==galwayDistance){
+                        if (nearestDistance == galwayDistance) {
                             thePlace = "Galway";
                         }
-                        if(nearestDistance==italyDistance){
+                        if (nearestDistance == italyDistance) {
                             thePlace = "Italy";
                         }
-                        if(nearestDistance==dubSouthDistance){
+                        if (nearestDistance == dubSouthDistance) {
                             thePlace = "South Dublin";
                         }
-                        if(nearestDistance==sydneyDistance){
+                        if (nearestDistance == sydneyDistance) {
                             thePlace = "Sydney";
                         }
 
@@ -312,24 +291,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     }
 
 
-
-
                     String theTitle = marker.getTitle();
 
 
-                    String theSnippet = "\n\n"+marker.getSnippet()+"\n"+theMessage + " " + thePlace;
+                    String theSnippet = "\n\n" + marker.getSnippet() + "\n" + theMessage + " " + thePlace;
 
-                    if(nearestDistance>100000&&shownList.isEmpty()){
-                        theTitle="No data in this area\n\n";
-                        theSnippet="This pin is "+nearestDistance/1000+"km away from the nearest data point\n\nClick \"Go to place\" to find data";
+                    if (nearestDistance > 100000 && shownList.isEmpty()) {
+                        theTitle = "No data in this area\n\n";
+                        theSnippet = "This pin is " + nearestDistance / 1000 + "km away from the nearest data point\n\nClick \"Go to place\" to find data";
                     }
 
 
                     titleView.setText(theTitle);
                     titleView.append(theSnippet);
-
-
-
 
 
                     return v;
@@ -339,30 +313,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             });
 
 
-
-
         }
-
 
 
     }
 
 
-
-
-
-    public void openPlace(String thePlace){
+    public void openPlace(String thePlace) {
         Intent i = new Intent(MapActivity.this, PlaceActivity.class);
         i.putExtra("place", thePlace);
         startActivity(i);
     }
 
 
-
-
-
-
-    public int checkNearest(LatLng theLoc){
+    public int checkNearest(LatLng theLoc) {
 
         //THESE VALUES ARE IN KILOMETRES BECAUSE THE ORIGINALS ARE DIVIDED BY 1000
 
@@ -376,15 +340,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         sydneyDistance = (int) Math.round(hand.myCurrentRadius(theLoc, hand.sydneyLoc()));
 
 
-        int myDistanceArray[] = new int[]{corkDistance,galwayDistance,dubCenDistance,dubSouthDistance,fingalDistance,italyDistance, belfastDistance, sydneyDistance};
+        int myDistanceArray[] = new int[]{corkDistance, galwayDistance, dubCenDistance, dubSouthDistance, fingalDistance, italyDistance, belfastDistance, sydneyDistance};
 
 
-        nearest= myDistanceArray[0];
+        nearest = myDistanceArray[0];
         furthest = myDistanceArray[0];
 
-        for(int i=0; i< myDistanceArray.length; i++)
-        {
-            if(myDistanceArray[i] > furthest)
+        for (int i = 0; i < myDistanceArray.length; i++) {
+            if (myDistanceArray[i] > furthest)
                 furthest = myDistanceArray[i];
             else if (myDistanceArray[i] < nearest)
                 nearest = myDistanceArray[i];
@@ -397,119 +360,92 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
-    public void handleMyLocation(){
+    public void handleMyLocation() {
+
+        myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
+        myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
 
         nearest = checkNearest(myLoc);  //this updates the nearest location
-        int nearestKm = nearest/1000;
+        int nearestKm = nearest / 1000;
 
 
-
-        if(nearest > 100000){
+        if (nearest > 100000) {
             myLocMarker.setTitle("No data here");
-            myLocMarker.setSnippet("There is no data available for this area yet\nYou are "+nearestKm+" away from the closest data point");
-            print("Sorry, you are "+nearestKm+"km away from the closest data point");
+            myLocMarker.setSnippet("There is no data available for this area yet\nYou are " + nearestKm + " away from the closest data point");
+            print("Sorry, you are " + nearestKm + "km away from the closest data point");
             return;
-        }
-
-        else if(nearest==belfastDistance){
-            knimeData = grab.getKnimeData(getApplicationContext(),2);
-            if(nearestKm<1){
+        } else if (nearest == belfastDistance) {
+            knimeData = grab.getKnimeData(getApplicationContext(), 2);
+            if (nearestKm < 1) {
                 myLocMarker.setTitle("In Central Belfast");
-            }
-            else{
-                myLocMarker.setTitle(nearestKm+"km from Central Belfast");
+            } else {
+                myLocMarker.setTitle(nearestKm + "km from Central Belfast");
             }
 
-        }
-
-        else if(nearest==dubCenDistance){
-            knimeData = grab.getKnimeData(getApplicationContext(),3);
-            if(nearestKm<1){
+        } else if (nearest == dubCenDistance) {
+            knimeData = grab.getKnimeData(getApplicationContext(), 3);
+            if (nearestKm < 1) {
                 myLocMarker.setTitle("In Central Dublin");
+            } else {
+                myLocMarker.setTitle(nearestKm + "km from Central Dublin");
             }
-            else{
-                myLocMarker.setTitle(nearestKm+"km from Central Dublin");
-            }
-        }
-
-        else if(nearest==corkDistance){
-            knimeData = grab.getKnimeData(getApplicationContext(),4);
-            if(nearestKm<1){
+        } else if (nearest == corkDistance) {
+            knimeData = grab.getKnimeData(getApplicationContext(), 4);
+            if (nearestKm < 1) {
                 myLocMarker.setTitle("In Central Cork");
+            } else {
+                myLocMarker.setTitle(nearestKm + "km from Central Cork");
             }
-            else{
-                myLocMarker.setTitle(nearestKm+"km from Central Cork");
-            }
-        }
-
-        else if(nearest==fingalDistance){
-            knimeData = grab.getKnimeData(getApplicationContext(),5);
-            if(nearestKm<1){
+        } else if (nearest == fingalDistance) {
+            knimeData = grab.getKnimeData(getApplicationContext(), 5);
+            if (nearestKm < 1) {
                 myLocMarker.setTitle("In Swords Central, Fingal");
+            } else {
+                myLocMarker.setTitle(nearestKm + "km from Swords Central, Fingal");
             }
-            else{
-                myLocMarker.setTitle(nearestKm+"km from Swords Central, Fingal");
-            }
-        }
-
-        else if(nearest==galwayDistance){
-            knimeData = grab.getKnimeData(getApplicationContext(),6);
-            if(nearestKm<1){
+        } else if (nearest == galwayDistance) {
+            knimeData = grab.getKnimeData(getApplicationContext(), 6);
+            if (nearestKm < 1) {
                 myLocMarker.setTitle("In Central Galway");
+            } else {
+                myLocMarker.setTitle(nearestKm + "km from Central Galway");
             }
-            else{
-                myLocMarker.setTitle(nearestKm+"km from Central Galway");
-            }
-        }
-
-        else if(nearest==italyDistance){
-            knimeData = grab.getKnimeData(getApplicationContext(),7);
-            if(nearestKm<1){
+        } else if (nearest == italyDistance) {
+            knimeData = grab.getKnimeData(getApplicationContext(), 7);
+            if (nearestKm < 1) {
                 myLocMarker.setTitle("In Central Rome, Italy");
+            } else {
+                myLocMarker.setTitle(nearestKm + "km from Central Rome, Italy");
             }
-            else{
-                myLocMarker.setTitle(nearestKm+"km from Central Rome, Italy");
-            }
-        }
-
-        else if(nearest==dubSouthDistance){
-            knimeData = grab.getKnimeData(getApplicationContext(),8);
-            if(nearestKm<1){
+        } else if (nearest == dubSouthDistance) {
+            knimeData = grab.getKnimeData(getApplicationContext(), 8);
+            if (nearestKm < 1) {
                 myLocMarker.setTitle("In Dundrum, South Dublin");
+            } else {
+                myLocMarker.setTitle(nearestKm + "km from Dundrum, South Dublin");
             }
-            else{
-                myLocMarker.setTitle(nearestKm+"km from Dundrum, South Dublin");
-            }
-        }
-
-        else if(nearest==sydneyDistance){
-            knimeData = grab.getKnimeData(getApplicationContext(),9);
-            if(nearestKm<1){
+        } else if (nearest == sydneyDistance) {
+            knimeData = grab.getKnimeData(getApplicationContext(), 9);
+            if (nearestKm < 1) {
                 myLocMarker.setTitle("In Central Sydney");
+            } else {
+                myLocMarker.setTitle(nearestKm + "km from Central Sydney");
             }
-            else{
-                myLocMarker.setTitle(nearestKm+"km from Central Sydney");
-            }
-        }
-        else{
+        } else {
             print("Please ensure location services are enabled and permissions for Daita are granted");
         }
 
-        hand.addDataToMarker(myLocMarker,knimeData);
-        myLocMarker.showInfoWindow();
+        hand.addDataToMarker(myLocMarker, knimeData);
 
 
 
     }
 
 
-
-    public void addMarkers(){
+    public void addMarkers() {
 
 
         galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Galway"));
-
-
 
 
         cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Cork"));
@@ -531,39 +467,33 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         sydney = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Sydney"));
 
-        if(myLoc!=null){
-            myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
-            myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+        if (myLoc != null) {
             handleMyLocation();
             myLocMarker.hideInfoWindow();
-
         }
 
 
     }
 
 
-
-
-    public void showHandler(){
+    public void showHandler() {
 
         mMap.clear();
 
 
-
-        if(showPick.equals("Dublin primary schools")){
+        if (showPick.equals("Dublin primary schools")) {
             showSplashFor(1000);
-            addCircles(R.raw.map_dublin_primary_schools,Color.BLUE);
-            hand.zoomToPlace(mMap,hand.dubCenLoc(),11);
+            addCircles(R.raw.map_dublin_primary_schools, Color.BLUE);
+            hand.zoomToPlace(mMap, hand.dubCenLoc(), 11);
         }
 
-        if(showPick.equals("Northern Ireland street crime")){
+        if (showPick.equals("Northern Ireland street crime")) {
             showSplashFor(2000);
             addCircles(R.raw.map_northern_ireland_streetcrime, Color.BLUE);
-            hand.zoomToPlace(mMap,hand.belfastLoc(),11);
+            hand.zoomToPlace(mMap, hand.belfastLoc(), 11);
 
 
-            CountDownTimer theTimer = new CountDownTimer(12000,12000) {
+            CountDownTimer theTimer = new CountDownTimer(12000, 12000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
@@ -578,109 +508,132 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         }
 
-        if(showPick.equals("York road accidents")){
+        if (showPick.equals("York road accidents")) {
             showSplashFor(2000);
             addCircles(R.raw.map_york_accidents, Color.RED);
-            hand.zoomToPlace(mMap,hand.yorkLoc(),11);
+            hand.zoomToPlace(mMap, hand.yorkLoc(), 11);
         }
 
-        if(showPick.equals("Prato public wifi spots")){
+        if (showPick.equals("Prato public wifi spots")) {
             showSplashFor(1500);
             addCircles(R.raw.map_public_wifi_in_prato, Color.GREEN);
-            hand.zoomToPlace(mMap,hand.pratoLoc(),12);
+            hand.zoomToPlace(mMap, hand.pratoLoc(), 12);
         }
 
-        if(showPick.equals("North Dakota earthquakes")){
+        if (showPick.equals("North Dakota earthquakes")) {
             showSplashFor(1000);
             addCircles(R.raw.map_usa_earthquakes, Color.RED);
-            hand.zoomToPlace(mMap,hand.dakotaLoc(),5);
+            hand.zoomToPlace(mMap, hand.dakotaLoc(), 5);
+        }
+
+
+        if (showPick.equals("South Dublin planning permissions")) {
+            showSplashFor(2000);
+            addCircles(R.raw.map_south_dublin_planning_permissions, Color.BLUE);
+            hand.zoomToPlace(mMap, hand.dubSouthLoc(), 11);
+            CountDownTimer theTimer = new CountDownTimer(14000,14000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    print("Green for granted, Red for refused.");
+                }
+            };
+            theTimer.start();
         }
 
         shownList.clear();
         shownList.add(showPick);
 
 
-
-
     }
 
 
-
-    public void placeHandler(){
-
+    public void placeHandler() {
 
 
-        if(placePick.equals("Central Dublin")){
+        if (placePick.equals("Central Dublin")) {
             dubCen = mMap.addMarker(new MarkerOptions().position(hand.dubCenLoc()).title("Central Dublin"));
-            knimeData = grab.getKnimeData(getApplicationContext(),3);
-            hand.addDataToMarker(dubCen,knimeData);
+            knimeData = grab.getKnimeData(getApplicationContext(), 3);
+            hand.addDataToMarker(dubCen, knimeData);
 
-            hand.zoomToPlace(mMap,hand.dubCenLoc(), 18);
+            hand.zoomToPlace(mMap, hand.dubCenLoc(), 18);
             dubCen.showInfoWindow();
         }
 
-        if(placePick.equals("South Dublin")){
+        if (placePick.equals("South Dublin")) {
             dubSouth = mMap.addMarker(new MarkerOptions().position(hand.dubSouthLoc()).title("South Dublin"));
-            knimeData = grab.getKnimeData(getApplicationContext(),8);
-            hand.addDataToMarker(dubSouth,knimeData);
-            hand.zoomToPlace(mMap,hand.dubSouthLoc(),18);
+            knimeData = grab.getKnimeData(getApplicationContext(), 8);
+            hand.addDataToMarker(dubSouth, knimeData);
+            hand.zoomToPlace(mMap, hand.dubSouthLoc(), 18);
             dubSouth.showInfoWindow();
         }
 
-        if(placePick.equals("Fingal")){
+        if (placePick.equals("Fingal")) {
+
+            Location myLocationObject = mMap.getMyLocation();
+            LatLng myLatLngObject = new LatLng(myLocationObject.getLatitude(), myLocationObject.getLongitude());
+            print(myLatLngObject+"");
+
+            /*
             fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Fingal"));
             knimeData = grab.getKnimeData(getApplicationContext(),5);
             hand.addDataToMarker(fingal,knimeData);
             hand.zoomToPlace(mMap,hand.fingalLoc(),18);
             fingal.showInfoWindow();
+            */
         }
 
-        if(placePick.equals("Galway")){
+        if (placePick.equals("Galway")) {
             galway = mMap.addMarker(new MarkerOptions().position(hand.galwayLoc()).title("Galway"));
-            hand.zoomToPlace(mMap,hand.galwayLoc(),18);
-            knimeData = grab.getKnimeData(getApplicationContext(),6);
-            hand.addDataToMarker(galway,knimeData);
+            hand.zoomToPlace(mMap, hand.galwayLoc(), 18);
+            knimeData = grab.getKnimeData(getApplicationContext(), 6);
+            hand.addDataToMarker(galway, knimeData);
             galway.showInfoWindow();
         }
 
-        if(placePick.equals("Cork")){
+        if (placePick.equals("Cork")) {
             cork = mMap.addMarker(new MarkerOptions().position(hand.corkLoc()).title("Cork"));
-            hand.zoomToPlace(mMap,hand.corkLoc(),18);
-            knimeData = grab.getKnimeData(getApplicationContext(),4);
-            hand.addDataToMarker(cork,knimeData);
+            hand.zoomToPlace(mMap, hand.corkLoc(), 18);
+            knimeData = grab.getKnimeData(getApplicationContext(), 4);
+            hand.addDataToMarker(cork, knimeData);
             cork.showInfoWindow();
         }
 
-        if(placePick.equals("Sydney")){
+        if (placePick.equals("Sydney")) {
             sydney = mMap.addMarker(new MarkerOptions().position(hand.sydneyLoc()).title("Sydney"));
-            hand.zoomToPlace(mMap,hand.sydneyLoc(),18);
-            knimeData = grab.getKnimeData(getApplicationContext(),9);
-            hand.addDataToMarker(sydney,knimeData);
+            hand.zoomToPlace(mMap, hand.sydneyLoc(), 18);
+            knimeData = grab.getKnimeData(getApplicationContext(), 9);
+            hand.addDataToMarker(sydney, knimeData);
             sydney.showInfoWindow();
 
         }
 
-        if(placePick.equals("Italy")){
+        if (placePick.equals("Italy")) {
             italy = mMap.addMarker(new MarkerOptions().position(hand.italyLoc()).title("Italy"));
-            hand.zoomToPlace(mMap,hand.italyLoc(),18);
-            knimeData = grab.getKnimeData(getApplicationContext(),7);
-            hand.addDataToMarker(italy,knimeData);
+            hand.zoomToPlace(mMap, hand.italyLoc(), 18);
+            knimeData = grab.getKnimeData(getApplicationContext(), 7);
+            hand.addDataToMarker(italy, knimeData);
             italy.showInfoWindow();
         }
 
-        if(placePick.equals("Belfast")){
+        if (placePick.equals("Belfast")) {
             belfast = mMap.addMarker(new MarkerOptions().position(hand.belfastLoc()).title("Belfast"));
-            hand.zoomToPlace(mMap,hand.belfastLoc(),18);
-            knimeData = grab.getKnimeData(getApplicationContext(),2);
-            hand.addDataToMarker(belfast,knimeData);
+            hand.zoomToPlace(mMap, hand.belfastLoc(), 18);
+            knimeData = grab.getKnimeData(getApplicationContext(), 2);
+            hand.addDataToMarker(belfast, knimeData);
             belfast.showInfoWindow();
         }
 
-        if(placePick.equals("My Location")){
-            myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
-            myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-            hand.zoomToPlace(mMap,myLoc,18);
-            myLocMarker.showInfoWindow();
+        if (placePick.equals("My Location")) {
+            if (myLoc != null) {
+                handleMyLocation();
+                myLocMarker.showInfoWindow();
+                hand.zoomToPlace(mMap, myLoc, 18);
+            }
         }
 
 
@@ -693,19 +646,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
      */
 
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
 
 
-
         grab = new FileGrabValue();
 
 
         addMarkers();
-
 
 
         placeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -715,13 +665,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 placePick = placeSpinner.getSelectedItem().toString();
 
 
-                if(placeSpinner.getSelectedItem()==placeSpinner.getItemAtPosition(0)){
+                if (placeSpinner.getSelectedItem() == placeSpinner.getItemAtPosition(0)) {
                     placeSpinner.setSelection(0);
                     return;
                 }
 
 
-                if(timerOn){
+                if (timerOn) {
                     print("Please wait a few more seconds");
                     placeSpinner.setSelection(0);
                     return;
@@ -733,7 +683,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 placeSpinner.setSelection(0);
 
 
-
             }
 
             @Override
@@ -742,13 +691,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
 
 
-
-
         });
-
-
-
-
 
 
         showSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -757,38 +700,34 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 showPick = showSpinner.getSelectedItem().toString();
 
 
-                if(showPick.equals(showSpinner.getItemAtPosition(0).toString())){
+                if (showPick.equals(showSpinner.getItemAtPosition(0).toString())) {
                     showSpinner.setSelection(0);
                     return;
                 }
 
-                if(shownList.contains(showPick)){
-                    print(showPick +" data is already displayed");
+                if (shownList.contains(showPick)) {
+                    print(showPick + " data is already displayed");
                     showSpinner.setSelection(0);
                     return;
                 }
 
 
-                if(timerOn){
+                if (timerOn) {
                     print("Please wait a few more seconds");
                     showSpinner.setSelection(0);
                     return;
                 }
 
 
-
-
                 showHandler();
 
                 showSpinner.setSelection(0);
 
-                if(!showPick.equals("Northern Ireland street crime")){
-                    CountDownTimer buttonTimer = new CountDownTimer(10000,10000) { //8 seconds
+                if (!showPick.equals("Northern Ireland street crime")) {
+                    CountDownTimer buttonTimer = new CountDownTimer(10000, 10000) { //8 seconds
                         @Override
                         public void onTick(long millisUntilFinished) {
                             timerOn = true;
-
-
 
 
                         }
@@ -816,19 +755,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
 
 
-
-
-
-
-
         setInfoWindow(R.layout.custom_info_window);
-
-
-
-
-
-
-
 
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -838,36 +765,36 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 String snippet = marker.getSnippet();
 
 
-                if(title.contains("Belfast")||snippet.contains("Belfast")||thePlace.contains("Belfast")||theMessage.contains("Belfast")){
+                if (title.contains("Belfast") || snippet.contains("Belfast") || thePlace.contains("Belfast") || theMessage.contains("Belfast")) {
                     openPlace("Belfast");
                 }
 
-                if(title.contains("Central Dublin")||snippet.contains("Central Dublin")||thePlace.contains("Central Dublin")||theMessage.contains("Central Dublin")){
+                if (title.contains("Central Dublin") || snippet.contains("Central Dublin") || thePlace.contains("Central Dublin") || theMessage.contains("Central Dublin")) {
                     openPlace("Central Dublin");
                 }
 
-                if(title.contains("Cork")||snippet.contains("Cork")||thePlace.contains("Cork")||theMessage.contains("Cork")){
+                if (title.contains("Cork") || snippet.contains("Cork") || thePlace.contains("Cork") || theMessage.contains("Cork")) {
                     openPlace("Cork");
                 }
 
-                if(title.contains("Fingal")||snippet.contains("Fingal")||thePlace.contains("Fingal")||theMessage.contains("Fingal")){
+                if (title.contains("Fingal") || snippet.contains("Fingal") || thePlace.contains("Fingal") || theMessage.contains("Fingal")) {
                     openPlace("Fingal");
                 }
 
-                if(title.contains("Galway")||snippet.contains("Galway")||thePlace.contains("Galway")||theMessage.contains("Galway")){
+                if (title.contains("Galway") || snippet.contains("Galway") || thePlace.contains("Galway") || theMessage.contains("Galway")) {
                     openPlace("Galway");
                 }
 
-                if(title.contains("Italy")||snippet.contains("Italy")||thePlace.contains("Italy")||theMessage.contains("Italy")){
+                if (title.contains("Italy") || snippet.contains("Italy") || thePlace.contains("Italy") || theMessage.contains("Italy")) {
                     openPlace("Italia");        //must be italia
                     //because italy page is in italian
                 }
 
-                if(title.contains("South Dublin")||snippet.contains("South Dublin")||thePlace.contains("South Dublin")||theMessage.contains("South Dublin")){
+                if (title.contains("South Dublin") || snippet.contains("South Dublin") || thePlace.contains("South Dublin") || theMessage.contains("South Dublin")) {
                     openPlace("South Dublin");
                 }
 
-                if(title.contains("Sydney")||snippet.contains("Sydney")||thePlace.contains("Sydney")||theMessage.contains("Sydney")){
+                if (title.contains("Sydney") || snippet.contains("Sydney") || thePlace.contains("Sydney") || theMessage.contains("Sydney")) {
                     openPlace("Sydney");
                 }
 
@@ -876,88 +803,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
 
 
-
-
-        if(choice.equalsIgnoreCase("find")) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-
-
-                    requestPermissions(new String[]{
-                            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.INTERNET
-                    }, 10);
-
-                    //Toast.makeText(MapActivity.this, "Please allow location for this app", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-
-            mMap.setMyLocationEnabled(true);
-            locman = (LocationManager) getSystemService(LOCATION_SERVICE);
-            listen = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    myLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            };
-
-            //8000 = 8000 milliseconds
-            locman.requestLocationUpdates("gps", 8000, 0, listen);
-
-
-            if (ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    ActivityCompat.requestPermissions(MapActivity.this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_LOCATION);
-                } else {
-                    ActivityCompat.requestPermissions(MapActivity.this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_LOCATION);
-                }
-            } else {
-                LocationManager locM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                Location loc = locM.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                try {
-                    myLoc = new LatLng(loc.getLatitude(), loc.getLongitude());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(MapActivity.this, "Please ensure permissions are granted", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-
-
-            handleRequests();
-            findLoc();
-        }
-
-
-        else if (choice.equalsIgnoreCase("choose")){
+        if (choice.equalsIgnoreCase("choose")) {
             chooseLoc();
         }
-
-
-
 
 
         //THIS MUST STAY AS LAST THING IN ONMAPREADY
@@ -969,59 +817,36 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             public boolean onMarkerClick(Marker marker) {
 
 
-
                 marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
-                hand.zoomToPlace(mMap,marker.getPosition(),18);
+                hand.zoomToPlace(mMap, marker.getPosition(), 18);
 
 
-
-                if(marker.getTitle().equals("Belfast")){
-                    knimeData = grab.getKnimeData(getApplicationContext(),2);
-                }
-
-                else if(marker.getTitle().equals("Central Dublin")){
-                    knimeData = grab.getKnimeData(getApplicationContext(),3);
-                }
-
-                else if(marker.getTitle().equals("Cork")){
-                    knimeData = grab.getKnimeData(getApplicationContext(),4);
-                }
-
-                else if(marker.getTitle().equals("Fingal")){
-                    knimeData = grab.getKnimeData(getApplicationContext(),5);
-                }
-
-                else if(marker.getTitle().equals("Galway")){
-                    knimeData = grab.getKnimeData(getApplicationContext(),6);
-                }
-
-                else if(marker.getTitle().equals("Italy")){
-                    knimeData = grab.getKnimeData(getApplicationContext(),7);
-                }
-
-                else if(marker.getTitle().equals("South Dublin")){
-                    knimeData = grab.getKnimeData(getApplicationContext(),8);
-                }
-
-                else if(marker.getTitle().equals("Sydney")){
-                    knimeData = grab.getKnimeData(getApplicationContext(),9);
-                }
-
-                else{
+                if (marker.getTitle().equals("Belfast")) {
+                    knimeData = grab.getKnimeData(getApplicationContext(), 2);
+                } else if (marker.getTitle().equals("Central Dublin")) {
+                    knimeData = grab.getKnimeData(getApplicationContext(), 3);
+                } else if (marker.getTitle().equals("Cork")) {
+                    knimeData = grab.getKnimeData(getApplicationContext(), 4);
+                } else if (marker.getTitle().equals("Fingal")) {
+                    knimeData = grab.getKnimeData(getApplicationContext(), 5);
+                } else if (marker.getTitle().equals("Galway")) {
+                    knimeData = grab.getKnimeData(getApplicationContext(), 6);
+                } else if (marker.getTitle().equals("Italy")) {
+                    knimeData = grab.getKnimeData(getApplicationContext(), 7);
+                } else if (marker.getTitle().equals("South Dublin")) {
+                    knimeData = grab.getKnimeData(getApplicationContext(), 8);
+                } else if (marker.getTitle().equals("Sydney")) {
+                    knimeData = grab.getKnimeData(getApplicationContext(), 9);
+                } else {
                     marker.showInfoWindow();
                     return true;
                 }
 
 
-
-
-                hand.addDataToMarker(marker,knimeData);
+                hand.addDataToMarker(marker, knimeData);
                 marker.showInfoWindow();
                 return true;
-
-
-
 
 
             }
@@ -1030,24 +855,50 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
 
 
-
-
-        if(choice.equals("find")){
-            hand.zoomToPlace(mMap,myLoc,18);
-            myLocMarker.showInfoWindow();
-        }
-
-        if(choice.equals("choose")){
+        if (choice.equals("choose")) {
             print("Click a pin or \"Go to place\"");
         }
 
 
 
-        if(choice.equals("find")){
-            handleMyLocation();
-        }
-
         theMapListener();
+
+        if(choice.equals("find")){
+            findLoc();
+            if(locFound){
+                CountDownTimer theTimer = new CountDownTimer(4000,4000) { //wait 4 seconds then get location
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        Location myLocationObject = mMap.getMyLocation();
+                        myLoc = new LatLng(myLocationObject.getLatitude(), myLocationObject.getLongitude());
+                        if(myLoc!=null){
+                            handleMyLocation();
+                            myLocMarker.showInfoWindow();
+                            hand.zoomToPlace(mMap,myLoc,18);
+                        }
+                        else{
+                            print("Please allow Daita permissions and turn network location on");
+                            hand.zoomToPlace(mMap,hand.dubCenLoc(),11);
+                        }
+
+                    }
+                };
+                theTimer.start();
+                print("Determining location...");
+                Toast.makeText(getApplicationContext(), "3 seconds remaining", Toast.LENGTH_LONG).show();
+               // showSplashFor(2400);
+
+            }
+
+
+
+
+        }
 
 
     }
@@ -1055,18 +906,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     /**
      *
- *          ****************************  END OF ONMAPREADY  *************************************
+     *          ****************************  END OF ONMAPREADY  *************************************
      */
 
 
-
-
-    public void print(String msg){
-        if(msg.isEmpty()){
+    public void print(String msg) {
+        if (msg.isEmpty()) {
             msg = "N/A";
         }
         View v = findViewById(R.id.map);
-            Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+        Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
                 .setAction("CLOSE", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1074,45 +923,98 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     }
                 })
                 //ignore the line through getColor, its "deprecated" but its best this way for us
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light )).show();
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light)).show();
     }
-
-
-
-
-    public void handleRequests(){
-        if(myLoc == null){
-            return;
-        }
-
-
-        if(choice.equals("find")){
-            myLocMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Your area"));
-            myLocMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-        }
-
-
-    }
-
-
-
-
-
 
 
     private void findLoc() {
 
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
-        conman = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        if (!netInfo.isConnected()) {
-            print("Turn on Wifi if you wish to improve location accuracy");
+        //if location permissions are not granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            final Intent appset = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", getPackageName(), null));
+            appset.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            CountDownTimer theTimer = new CountDownTimer(3000,3000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    startActivity(appset);
+                    finish();
+                }
+            };
+            theTimer.start();
+            print("Please allow location for Daita. You will be redirected in 3 seconds.");
+
         }
 
 
 
+        //if network location is not turned on
+        else if ( !manager.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) ) {
+            final Intent locset = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+
+            CountDownTimer theTimer = new CountDownTimer(3000,3000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    startActivity(locset);
+                    finish();
+                }
+            };
+            theTimer.start();
+            print("Please allow MOBILE NETWORKS. You will be redirected in 3 seconds.");
+        }
+
+        //if permissions and network location are ready to use
+        else if(manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            mMap.setMyLocationEnabled(true);
+
+
+            conman = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            if (!netInfo.isConnected()) {
+
+                CountDownTimer theTimer = new CountDownTimer(4500,4500) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        print("Turn on Wifi if you wish to improve location accuracy");
+                    }
+                };
+                theTimer.start();
+
+
+            }
+
+
+            locFound = true;
+        }
+
+
+
+
     }
+
+
+
+
+
 
     private void chooseLoc(){
 
@@ -1465,6 +1367,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
             else if(file==R.raw.map_usa_earthquakes){
                 overlayOptions = new CircleOptions().strokeColor(Color.RED).center(theLoc).strokeWidth(3).radius(50000).fillColor(0x75ff0000);
+            }
+            else if(file==R.raw.map_south_dublin_planning_permissions){
+                if(infoLine2List.get(i).contains("GRANT")){
+                    overlayOptions = new CircleOptions().strokeColor(Color.GREEN).center(theLoc).strokeWidth(3).radius(75).fillColor(0x18008000);
+                }
+                else if(infoLine2List.get(i).contains("REFUSE")){
+                    overlayOptions = new CircleOptions().strokeColor(Color.RED).center(theLoc).strokeWidth(3).radius(75).fillColor(0x18ff0000);
+                }
+                else{
+                    overlayOptions = new CircleOptions().strokeColor(Color.BLUE).center(theLoc).strokeWidth(3).radius(75).fillColor(0x180000ff);
+                }
             }
             else{
                 overlayOptions = new CircleOptions().strokeColor(color).center(theLoc).strokeWidth(3).radius(75).fillColor(fill);

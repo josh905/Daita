@@ -129,7 +129,6 @@ public class PlaceActivity extends AppCompatActivity {
 
         if(place.equals("Galway")){
             img.setImageResource(R.drawable.galwaypic);
-            list.add("Galway City Attractions");
             list.add("Galway City Property Prices");
         }
 
