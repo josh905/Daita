@@ -225,6 +225,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
+    /**
+     * gave us knowledge for new intent from map and marker click listeners which we then changed to infowindowclicklistener
+     * http://stackoverflow.com/questions/16635530/android-google-map-clicked-marker-opens-new-activity-or-bigger-window
+     */
+
+
     public void setInfoWindow(final int theWindow) {
 
         if (mMap != null) {
@@ -1010,6 +1016,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
     }
+
+    /**
+     * We used this link as a guide for the above method
+     * https://developer.android.com/guide/topics/location/index.html
+     */
+
 
 
 
