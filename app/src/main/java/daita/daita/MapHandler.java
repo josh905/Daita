@@ -12,7 +12,13 @@ import java.util.ArrayList;
 
 
 /**
- * Created on 13/03/2017.
+ *
+ * created on 13/3/17
+ *
+ * @author Sean Barrett x15561177
+ * @author Josh Reynolds x15389521
+ * @author Gavin Mulvany x15448892
+
  */
 
 public class MapHandler {

@@ -1,3 +1,6 @@
+
+
+
 package daita.daita;
 
 import android.Manifest;
@@ -5,26 +8,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,29 +34,31 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.ArrayList;
+
+
+
+
+/**
+        * @author Sean Barrett x15561177
+        * @author Josh Reynolds x15389521
+        * @author Brendan Martin x13342426
+        * @author David O'Connor x15366381
+        * @author Gavin Mulvany x15448892
+
+*/
 
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private static final int MY_PERMISSION_REQUEST_LOCATION = 1;
     private LatLng myLoc = null;
-    private LocationListener listen;
-    private LocationManager locman;
-    private CameraPosition where;
     private FileGrabValue grab;
-    private String theValue;
-    private CountDownTimer theTimer;
     private ArrayList<String> knimeData;
 
     private String placePick = "";
@@ -70,14 +69,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private String choice = "";
     private Marker myLocMarker = null;
     private int corkDistance, dubCenDistance, galwayDistance, dubSouthDistance,
-            fingalDistance, italyDistance, belfastDistance, londonDistance, sydneyDistance;
+            fingalDistance, italyDistance, belfastDistance, sydneyDistance;
 
 
-    private Circle overlay;
     private CircleOptions overlayOptions;
 
     private int nearest, furthest;
-    private boolean tooFar = false;
 
 
     private Marker fingal, dubCen, dubSouth, galway, cork, italy, belfast, sydney;
@@ -99,15 +96,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private ConnectivityManager conman;
 
 
-    private PolygonOptions polyOp;
-    private Polygon poly;
-
-
     private Spinner placeSpinner, showSpinner;
-    private ImageView loadingpic;
-    private ProgressBar theBar;
-    private RelativeLayout mapSplashLayout;
-    private String whatToDisplay = "";
     private TextView titleView;
     private ArrayList<String> placeSpinnerList, showSpinnerList;
     private ArrayAdapter<String> placeAdapter, showAdapter;
@@ -116,9 +105,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private boolean timerOn = false;
 
     private ArrayList<String> shownList;
-    private Swiper timeCheck;
     private Marker droppedMarker;
-    private int dropCount = 0;
     private ArrayList<LatLng> locationList;
     private int closestCircleDistance;
     private int circlePositionInList;
@@ -170,7 +157,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         shownList = new ArrayList<>(); //TO SEE WHATS ALREADY BEEN OVERLAYED ON MAP
 
-        boolean created = true;
 
 
     }
@@ -560,7 +546,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             knimeData = grab.getKnimeData(getApplicationContext(), 3);
             hand.addDataToMarker(dubCen, knimeData);
 
-            hand.zoomToPlace(mMap, hand.dubCenLoc(), 18);
+            hand.zoomToPlace(mMap, hand.dubCenLoc(), 18); //18 is the zoomLevel
             dubCen.showInfoWindow();
         }
 
@@ -574,17 +560,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         if (placePick.equals("Fingal")) {
 
-            Location myLocationObject = mMap.getMyLocation();
-            LatLng myLatLngObject = new LatLng(myLocationObject.getLatitude(), myLocationObject.getLongitude());
-            print(myLatLngObject+"");
 
-            /*
             fingal = mMap.addMarker(new MarkerOptions().position(hand.fingalLoc()).title("Fingal"));
             knimeData = grab.getKnimeData(getApplicationContext(),5);
             hand.addDataToMarker(fingal,knimeData);
             hand.zoomToPlace(mMap,hand.fingalLoc(),18);
             fingal.showInfoWindow();
-            */
+
         }
 
         if (placePick.equals("Galway")) {
@@ -644,6 +626,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
      *
      *        *******************   ON MAP READY  *************************
      */
+
+
+    /**
+     * https://www.youtube.com/watch?v=sJBlQv6IptQ
+     *
+     * THIS HELPED WITH TROUBLE WITH THE API KEY
+     *
+     */
+
+
 
 
     @Override
@@ -927,6 +919,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
 
+    /**
+     * @reference
+     * https://developer.android.com/reference/android/location/LocationManager.html
+     * the above list of methods built into the LocationManager was helpful
+     * we did not want a GPS or anything requiring high battery use
+     *
+     */
+
     private void findLoc() {
 
         final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
@@ -1078,7 +1078,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         droppedMarker.setDraggable(true);
         droppedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
         droppedMarker.setTitle("Near place");
-        droppedMarker.setSnippet("line1\nline2\ndaita rating 7.5");
+
+
+        droppedMarker.setSnippet("line1\nline2\ndaita rating number here");
 
 
 

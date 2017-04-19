@@ -3,22 +3,13 @@ package daita.daita;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
+
 import android.view.GestureDetector;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -30,8 +21,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collections;
+/**
+ * @author Sean Barrett x15561177
+ * @author Josh Reynolds x15389521
+
+ * @author Gavin Mulvany x15448892
+ */
 
 
 public class DisplayDataActivity extends AppCompatActivity implements View.OnTouchListener {
@@ -128,9 +123,6 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
 
 
-    public int transparent(){
-        return getResources().getColor(android.R.color.transparent);
-    }
 
 
     public void print(String msg){
@@ -151,17 +143,6 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
     }
 
 
-
-
-
-    public void theLVToBack() {
-        final ListView child = theLV;
-        final ViewGroup parent = (ViewGroup)child.getParent();
-        if (null != parent) {
-            parent.removeView(child);
-            parent.addView(child, 0);
-        }
-    }
 
 
 
@@ -417,6 +398,14 @@ public class DisplayDataActivity extends AppCompatActivity implements View.OnTou
 
     }
 
+
+    /**
+     * Code followed from
+     *  @reference
+     *             http://stackoverflow.com/questions/4139288/android-how-to-handle-right-to-left-swipe-gestures
+     *  Numerous changes and additions
+     *  @author Josh Reynolds x15389521
+     */
 
 
     public void handleSwipes(){

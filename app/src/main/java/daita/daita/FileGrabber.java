@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 
 /**
  * Created on 15/03/2017.
+ * @author Josh Reynolds x15389521
  */
 
 public class FileGrabber extends ArrayAdapter<FileSender>{

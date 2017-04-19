@@ -13,6 +13,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+/**
+ * @author Sean Barrett x15561177
+ * @author Josh Reynolds x15389521
+ * @author Brendan Martin x13342426
+ * @author David O'Connor x15366381
+ * @author Gavin Mulvany x15448892
+ */
+
 public class MainActivity extends AppCompatActivity{
 
     private Button findBtn, chooseBtn;
@@ -26,27 +34,6 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-
-
-    /*
-    private boolean fabClicked, findBtnClicked;
-
-    public boolean isMainFabClicked(){
-        return fabClicked;
-    }
-
-    public boolean unsetMainFabClicked(){
-        return fabClicked = false;
-    }
-
-    public boolean isFindBtnClicked(){
-        return findBtnClicked;
-    }
-
-    public boolean unsetFindBtnClicked(){
-        return findBtnClicked = false;
-    }
-    */
 
 
 

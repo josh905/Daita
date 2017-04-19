@@ -3,7 +3,8 @@ package daita.daita;
 import java.util.ArrayList;
 
 /**
- * Created on 15/03/2017.
+ * Created on 15/03/2017
+ * @author  Josh Reynolds x15389521
  */
 
 public class FileSender {

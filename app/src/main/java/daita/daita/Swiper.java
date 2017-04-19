@@ -4,14 +4,18 @@ import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Adapter;
-
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
- * Created on 20/03/2017.
+ * This code was followed from
+ * @reference http://stackoverflow.com/questions/4139288/android-how-to-handle-right-to-left-swipe-gestures
+ * Numerous changes have been made
+ *
+ * Date: 15/03/2017
+ *
+ * @author Josh Reynolds x15389521
+ * @author Gavin Mulvany x15448892
  */
+
 
 public class Swiper implements View.OnTouchListener {
 
@@ -33,11 +37,11 @@ public class Swiper implements View.OnTouchListener {
 
 
     public void onSwipeLeft() {
-        //leave empty coz functionality is in the display class
+        //leave empty because functionality is in the display class
     }
 
     public void onSwipeRight() {
-        //leave empty coz functionality is in the display class
+        //leave empty because functionality is in the display class
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {

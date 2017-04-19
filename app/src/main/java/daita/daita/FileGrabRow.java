@@ -14,7 +14,15 @@ import java.io.InputStreamReader;
 
 /**
  * Created on 17/03/2017.
+ *
+ * @author Sean Barrett x15561177
+ * @author Josh Reynolds x15389521
+
  */
+
+
+
+
 
 public class FileGrabRow extends ArrayAdapter<FileSender>{
 

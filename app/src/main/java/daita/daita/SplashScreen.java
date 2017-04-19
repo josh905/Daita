@@ -5,6 +5,14 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * @reference
+ * https://www.youtube.com/watch?v=kp_Msx1sPs8
+ * numerous changes such as intent getting duration from a different activity
+ * @author Sean Barrett x15561177
+
+ */
+
 public class SplashScreen extends AppCompatActivity {
 
     private int duration = 0;

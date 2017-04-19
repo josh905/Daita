@@ -22,6 +22,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * @author Sean Barrett x15561177
+ * @author Josh Reynolds x15389521
+ * @author Brendan Martin x13342426
+ * @author David O'Connor x15366381
+ * @author Gavin Mulvany x15448892
+
+ */
+
 public class PlaceActivity extends AppCompatActivity {
 
     private String place = "";
@@ -38,6 +48,7 @@ public class PlaceActivity extends AppCompatActivity {
 
     private int file;
     private int res;
+
 
 
 
@@ -79,9 +90,6 @@ public class PlaceActivity extends AppCompatActivity {
 
     }
 
-    public void choosePlace(){
-        String newPlace = "place";
-    }
 
 
 
@@ -96,7 +104,6 @@ public class PlaceActivity extends AppCompatActivity {
         if(place.equals("all of Ireland")){
             img.setImageResource(R.drawable.irelandtransp);
             list.add("Crime");
-            list.add("Construction");
             list.add("New House Prices");
             list.add("Primary Schools");
             list.add("Secondary Schools");
@@ -125,6 +132,7 @@ public class PlaceActivity extends AppCompatActivity {
 
         if(place.equals("South Dublin")){
             img.setImageResource(R.drawable.dubsouthpic);
+            list.add("Training Centres");
         }
 
         if(place.equals("Galway")){
@@ -391,6 +399,13 @@ public class PlaceActivity extends AppCompatActivity {
                     }
                     if(chosen.equals("Urban Commuting Share Figures")){
                         open(R.raw.sydney_commute, R.raw.sydney_commute_res);
+                    }
+                }
+
+                if(place.equals("South Dublin")){
+
+                    if(chosen.equals("Training Centres")) {
+                        open(R.raw.southdublintraining, R.raw.southdublintraining_res);
                     }
                 }
 
